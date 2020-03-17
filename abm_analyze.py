@@ -196,7 +196,7 @@ def make_df():
     columns = ['TUMOR ID',
                'SEED',
                'PLATE',
-               'DAMAGE',
+               'NUTRIENTS',
                'DOSE',
                'TREAT RATIO',
                'CAR AFFINITY',
@@ -344,7 +344,7 @@ def make_dict():
     simsDict = {    'TUMOR ID': None,
                     'SEED': None,
                     'PLATE': None,
-                    'DAMAGE': None,
+                    'NUTRIENTS': None,
                     'DOSE': None,
                     'TREAT RATIO': None,
                     'CAR AFFINITY': None,
@@ -501,7 +501,7 @@ def analyze_sim(simsDF, agents, T, TUMORID, SEED):
     tsplit = TUMORID.split('_')
 
     simsDict['PLATE'] = tsplit[1]
-    simsDict['DAMAGE'] = 'NO'
+    simsDict['NUTRIENTS'] = 'CONSTANT' if tsplit[1] == 'VITRO' else 'GRAPH VASCULATURE'
     simsDict['DOSE'] = int(tsplit[4])
     simsDict['TREAT RATIO'] = tsplit[5].replace('-',':') if tsplit[5] != "NA" else tsplit[5]
     simsDict['CAR AFFINITY'] = float(tsplit[6]) if tsplit[6] != "NA" else tsplit[6]
