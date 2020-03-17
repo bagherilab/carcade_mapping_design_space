@@ -313,16 +313,16 @@ def make_df():
                'ANERG T-CELL %',
                'ANERG CD4 %',
                'ANERG CD8 %',
-               'STARV T - CELL',
+               'STARV T-CELL',
                'STARV CD4',
                'STARV CD8',
-               'STARV T - CELL %',
+               'STARV T-CELL %',
                'STARV CD4 %',
                'STARV CD8 %',
-               'PAUSE T - CELL',
+               'PAUSE T-CELL',
                'PAUSE CD4',
                'PUASE CD8',
-               'PAUSE T - CELL %',
+               'PAUSE T-CELL %',
                'PAUSE CD4 %',
                'PUASE CD8 %',
                'AVG CELL CYCLES CANCER',
@@ -461,16 +461,16 @@ def make_dict():
                     'ANERG T-CELL %': [],
                     'ANERG CD4 %': [],
                     'ANERG CD8 %': [],
-                    'STARV T - CELL': [],
+                    'STARV T-CELL': [],
                     'STARV CD4': [],
                     'STARV CD8': [],
-                    'STARV T - CELL %': [],
+                    'STARV T-CELL %': [],
                     'STARV CD4 %': [],
                     'STARV CD8 %': [],
-                    'PAUSE T - CELL': [],
+                    'PAUSE T-CELL': [],
                     'PAUSE CD4': [],
                     'PUASE CD8': [],
-                    'PAUSE T - CELL %': [],
+                    'PAUSE T-CELL %': [],
                     'PAUSE CD4 %': [],
                     'PUASE CD8 %': [],
                     'AVG CELL CYCLES CANCER': [],
@@ -506,7 +506,7 @@ def analyze_sim(simsDF, agents, T, TUMORID, SEED):
     simsDict['TREAT RATIO'] = tsplit[5].replace('-',':') if tsplit[5] != "NA" else tsplit[5]
     simsDict['CAR AFFINITY'] = float(tsplit[6]) if tsplit[6] != "NA" else tsplit[6]
     simsDict['ANTIGENS CANCER'] = int(tsplit[7])
-    simsDict['ANTIGENS HEALTHY'] = int(tsplit[8]) if tsplit[7] != "NA" else tsplit[7]
+    simsDict['ANTIGENS HEALTHY'] = int(tsplit[8]) if tsplit[8] != "NA" else tsplit[8]
 
     # CELL POP NUMBERS
     POP_CANCER = 0
