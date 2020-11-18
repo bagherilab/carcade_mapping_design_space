@@ -45,10 +45,12 @@ and saves it to a .pkl. Also include a number of utility functions for
 extracting data into metrics and plots.
 
 Usage:
-    python abm_parse.py FILES [-h] [--nosave] [--noprint]
+    python abm_parse.py FILES [--exclude EXCLUDE] [-h] [--nosave] [--noprint]
 
     FILES
         Path to .json, .tar.xz, or directory
+    [--exclude EXCLUDE]
+        Comma separated list of seeds to exclude from parsing
     [--nosave]
         Do not save results to file
     [--noprint]
@@ -185,9 +187,9 @@ def get_symmetry(C, R, inds):
     unique_coord_sets = [set([tuple(sorted(list(np.abs(c)))) for c in coords]) for coords in all_coord_sets]
 
     symmetries = []
-    add = 0
-
+    
     for unique_coord_set, all_coord_set in zip(unique_coord_sets, all_coord_sets):
+        add = 0
         checked = { unique_coord: False for unique_coord in unique_coord_set }
         deltas = []
 
@@ -200,14 +202,18 @@ def get_symmetry(C, R, inds):
 
                 sym_coords = get_symmetric(coord) # set of symmetric coordinates
                 delta_set = sym_coords - all_coord_set # symmetric coordinates not in full set
-                deltas.append(len(delta_set)/len(sym_coords))
+
+                if len(sym_coords) == 1:
+                    deltas.append(len(delta_set))
+                else:
+                    deltas.append(len(delta_set)/(len(sym_coords) - 1))
 
                 # special case for rectangular coordinates where certain coordinate
                 # combos have twice as many possible symmetries
                 if len(coord) == 2 and not (0 in unique or unique[0] == unique[1]):
                     alt_sym_coords = {(x, -y) for x, y in sym_coords}
                     alt_delta_set = alt_sym_coords - all_coord_set
-                    deltas.append(len(alt_delta_set)/len(alt_sym_coords))
+                    deltas.append(len(alt_delta_set)/(len(alt_sym_coords) - 1))
                     add = add + 1
 
         numer = np.sum(deltas)
@@ -500,8 +506,8 @@ def make_fracs(D, C, H, inds):
 # ------------------------------------------------------------------------------
 
 def get_struct(c):
-    if c[5]:
-        return (c[1], c[2], np.round(c[4]), np.round(np.mean(c[5])))
+    if c[-1]:
+        return (c[1], c[2], np.round(c[4]), np.round(np.mean(c[-1])))
     else:
         return (c[1], c[2], np.round(c[4]), -1)
 
@@ -530,7 +536,15 @@ def _parse(jsn, container):
 
     # Check first entry in timepoints to see if simulation is in hexagonal or
     # rectangular coordinates.
-    geometry = len(jsn["timepoints"][0]['cells'][0][0])
+    geometry = -1
+    for timepoint in jsn["timepoints"]:
+        if len(timepoint['cells']) > 0:
+            geometry =len(timepoint['cells'][0][0])
+            break
+
+    if geometry == -1:
+        error("No timepoints contain cells")
+
     if geometry == 3:
         coords = get_rect_coords(R)
         N = 64
@@ -564,7 +578,13 @@ if __name__ == "__main__":
     # Setup argument parser.
     parser = ABM.get_parser("Parses simulation files", setup = False)
     parser.add_argument(dest="files", help="Path to .json, .tar.xz, or directory")
+    parser.add_argument("--exclude", dest="exclude", default=[], help="Comma separated list of seeds to exclude")
     args = parser.parse_args()
+
+    exclude = args.exclude
+
+    if len(exclude) > 0:
+        exclude = [int(seed) for seed in exclude.split(",")]
 
     # Load json either directly or extract from archive.
     for f in ABM.get_files(args.files):
@@ -581,9 +601,18 @@ if __name__ == "__main__":
             }
         }
 
+        envdtypes = { "glucose": np.float16,
+                      "oxygen": np.float16,
+                      "tgfa": np.float16,
+                      "IL-2": np.float32
+        }
+
         if ABM.is_tar(f):
             tar_file = tar.open(f, "r:xz")
             for i, member in enumerate(tar_file.getmembers()):
+                seed = int(member.name.replace(".json", "").split("_")[-1])
+                if seed in exclude:
+                    continue
                 print("   > " + member.name) if not args.noprint else []
                 _parse(ABM.load_tar(tar_file, member), container)
         else:
@@ -592,7 +621,7 @@ if __name__ == "__main__":
         # Compile data.
         data = {
             "agents": np.array(container['agents']),
-            "environments": { x: np.array(container['environments'][x], dtype=np.float16)
+            "environments": { x: np.array(container['environments'][x], dtype=envdtypes[x])
                 for x in container["environments"].keys() },
             "setup": container["setup"]
         }
