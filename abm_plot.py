@@ -6,9 +6,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from colour import Color
+from matplotlib import cm as mplcm
 from matplotlib import colors as mcolors
 from matplotlib.colors import to_rgba
 from argparse import ArgumentParser
+from math import exp
 
 '''
 ABM_PLOT takes a directory of (or a single) .pkl simulation files that result from ABM_ANALYZE and
@@ -20,10 +22,12 @@ Usage:
     FILES
         Path to .pkl or directory
     [--color COLOR]
-        Feature by which to color data by. If X given, will color by axis along which data varies..
+        Feature by which to color data by. If X given, will color by axis along which data varies.
         If two featuers vary, default will be used. (default: CAR AFFINITY)
     [--marker MARKER]
         Feature by which to change marker of data by (default: TREAT RATIO)
+    [--partial]
+        Flag indicating only partial dataset present instead of full combinatoral set.
     [--saveLoc SAVELOC]
         Location of where to save file, default will save here
 '''
@@ -39,6 +43,8 @@ def get_parser():
                         help="Feature by which to color data by (default: CAR AFFINITY)")
     parser.add_argument("--marker", default="TREAT RATIO", dest="marker",
                         help="Feature by which to change marker of data by (default: TREAT RATIO)")
+    parser.add_argument("--partial", default=False, dest="partial",
+                        action='store_true', help="Flag indicating only partial dataset present instead of full combinatoral set.")
     parser.add_argument("--saveLoc", default="", dest="saveLoc",
                         help="Location of where to save file, default will save here")
 
@@ -76,33 +82,60 @@ TISSUE_TIMES = [22, 26, 29, 31]
 FIG_SIZE_X = 7
 FIG_SIZE_Y = 7
 
+TICKSIZE = 30
+FONTSIZE_AXES_VALUES = 20
+FONTSIZE_AXES_TITLES = 25
+LABELPAD = 10
+
+# Set DOSE color scale
+DCOLORS = []
+dcmap = mplcm.get_cmap('Greens')
+dvalues = [0.33, 0.66, 1.0]
+for v in dvalues:
+    DCOLORS.append(dcmap(v))
+
 # Set AFFINITY color scale
-colors = dict(mcolors.BASE_COLORS, **mcolors.CSS4_COLORS)
-acolor1 = Color(colors['peachpuff'])
-ACOLORS = list(acolor1.range_to((Color(colors['saddlebrown'])), 5))
-for i in range(0, len(ACOLORS)):
-    ACOLORS[i] = Color(ACOLORS[i]).rgb
+ACOLORS = []
+acmap = mplcm.get_cmap('Oranges')
+avalues = [0.2, 0.4, 0.6, 0.8, 1.0]
+for v in avalues:
+    ACOLORS.append(acmap(v))
 
 # Set TREAT RATIO color scale
-trcolor1 = Color(colors['lightcoral'])
-TRCOLORS = list(trcolor1.range_to((Color(colors['maroon'])), 5))
-for i in range(0, len(TRCOLORS)):
-    TRCOLORS[i] = Color(TRCOLORS[i]).rgb
+TRCOLORS = []
+trcmap = mplcm.get_cmap('Reds')
+trvalues = [0.2, 0.4, 0.6, 0.8, 1.0]
+for v in trvalues:
+    TRCOLORS.append(trcmap(v))
+
+# Set ANTIGENS CANCER color scale
+ACCOLORS = []
+accmap = mplcm.get_cmap('Blues')
+acvalues = [0.2, 0.4, 0.6, 0.8, 1.0]
+for v in acvalues:
+    ACCOLORS.append(accmap(v))
+
+# Set ANTIGENS CANCER color scale
+AHCOLORS = []
+ahcmap = mplcm.get_cmap('Purples')
+ahvalues = [0.5, 1.0]
+for v in ahvalues:
+    AHCOLORS.append(ahcmap(v))
 
 doseColorDict = {
     "0": 'black',
-    "250": 'lightgreen',
-    "500": "green",
-    "1000": "darkgreen"
+    "250": DCOLORS[0],
+    "500": DCOLORS[1],
+    "1000": DCOLORS[2]
 }
 
 trColorDict = {
     "NA": 'black',
-    "0:100": 'pink',
-    "25:75": 'lightcoral',
-    "50:50": 'crimson',
-    "75:25": 'indianred',
-    "100:0": 'maroon',
+    "0:100": TRCOLORS[0],
+    "25:75": TRCOLORS[1],
+    "50:50": TRCOLORS[2],
+    "75:25": TRCOLORS[3],
+    "100:0": TRCOLORS[4],
 }
 
 affinityColorDict = {
@@ -117,17 +150,17 @@ affinityColorDict = {
 
 acColorDict = {
     "0": 'black',
-    "100": 'skyblue',
-    "500": "dodgerblue",
-    "1000": "cornflowerblue",
-    "5000": "royalblue",
-    "10000": "navy"
+    "100": ACCOLORS[0],
+    "500": ACCOLORS[1],
+    "1000": ACCOLORS[2],
+    "5000": ACCOLORS[3],
+    "10000": ACCOLORS[4]
 }
 
 ahColorDict = {
     "CONTROL": "black",
-    "0": 'plum',
-    "100": 'blueviolet'
+    "0": AHCOLORS[0],
+    "100": AHCOLORS[1]
 }
 
 COLOR_DICT = {
@@ -271,7 +304,7 @@ Arcangeli2017 = {
 }
 
 # NOTE: Data from Figure 2C, used 1:1 data
-Wantabe2014 = {
+Wantanabe2015 = {
     "CARS": {
         "CD20": {
             "Data": {
@@ -290,7 +323,7 @@ Wantabe2014 = {
         }
     },
     "CITATION": "Wantabe 2014 (CD20-CD28-CD3\u03B6, in vitro, E:T Ratio: 10:1,3:1,1:1)",
-    "SAVE": "Wantabe2014",
+    "SAVE": "Watanabe2015",
     "MARKER": "^"
 }
 
@@ -558,7 +591,54 @@ Liu2015 = {
     "MARKER": "X"
 }
 
-litDict = [Arcangeli2017, Wantabe2014, Ghorashian2019, Caruso2015, Chmielewski2004, Liu2015]
+# NOTE: Data from Fig 2A upper pannel
+HernandezLopez2021 = {
+    "CARS": {
+        "Low Affinity": {
+            "Data": {
+                "Antigens": [1000, 50118.72, 158489.3, 501187.2, 1584893.2, 7943282.3],  # THP-1, U937, TIME, MHH-CALL-4
+                "Ant Err": [0, 0, 0, 0, 0, 0],
+                "Kill %": [0, 0.7, 0.65, 0.67, 0.78, 0.85],
+                "Kill % Err": [0.15, 0, 0.05, 0.02, 0, 0]
+            },
+            "Normalized Data": {
+                "Antigens": [0.00013, 0.0063, 0.02, 0.063, 0.2, 1],
+                "Ant Err": [0, 0, 0, 0, 0, 0],
+                "Kill %": [0, 0.71, 0.66, 0.68, 0.79, 0.86],
+                "Kill % Err": [0, 0, 0.05, 0.02, 0, 0]
+            },
+            "KD": 2.1e-7
+        },
+        "High Affinity": {
+            "Data": {
+                "Antigens": [1000, 50118.72, 158489.3, 501187.2, 1584893.2, 7943282.3],
+                "Ant Err": [0, 0, 0, 0, 0, 0],
+                "Kill %": [0.43, 0.98, 0.85, 0.99, 0.985, 0.9],
+                "Kill % Err": [0.05, 0, 0.1, 0, 0, 0]
+            },
+            "Normalized Data": {
+                "Antigens": [0.00013, 0.0063, 0.02, 0.063, 0.2, 1],
+                "Ant Err": [0, 0, 0, 0, 0, 0],
+                "Kill %": [0.43, 0.99, 0.86, 1, 0.995, 0.91],
+                "Kill % Err": [0.05, 0, 0.1, 0, 0 , 0]
+            },
+            "KD": 1.76e-8
+        },
+    },
+    "CITATION": "Hernandez-Lopez 2021 (HER2-41BB-CD3\u03B6, in vitro)",
+    "SAVE": "HernandezLopez2021",
+    "MARKER": "p"
+
+}
+
+litDict = [Arcangeli2017, Caruso2015, Chmielewski2004, Ghorashian2019, HernandezLopez2021, Liu2015, Wantanabe2015]
+
+def get_max(LIST, INDEX):
+
+    values = [i[INDEX] for i in LIST]
+    maxval = max(values)
+
+    return maxval
 
 # ---------------- DICT AND DF FUNCTIONS ---------------------
 
@@ -609,27 +689,29 @@ def plot_counts(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
             ax.plot(plot_time, counts,
                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS\n(NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
 
     if 'VITRO' in FILEID:
-        ax.set_xticks(simsDF.iloc[0]['TIME'])
-        if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
             ymax = 100000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 80000
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
-                    ymax = 1500
+                    ymax = 1400
                 else:
                     ymax = 6000
             else:
                 ymax = 7000
     if 'VIVO' in FILEID:
-        ax.set_xticks(plot_time[::10])
-        if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 90000
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 60000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 50000
         elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
             ymax = 4000
         else:
@@ -641,6 +723,12 @@ def plot_counts(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -673,27 +761,30 @@ def plot_counts_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
         else:
             ax.plot(plot_time, counts,
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS\n(NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
+    ax.set_xticks(ticks=plot_time[::2])
 
     if 'VITRO' in FILEID:
-        ax.set_xticks(simsDF.iloc[0]['TIME'])
-        if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
             ymax = 100000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 80000
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
-                    ymax=1500
+                    ymax = 1400
                 else:
                     ymax = 6000
             else:
                 ymax = 7000
     if 'VIVO' in FILEID:
-        ax.set_xticks(plot_time[::10])
-        if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 90000
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 60000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 50000
         elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
             ymax = 4000
         else:
@@ -703,6 +794,12 @@ def plot_counts_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for color in colorDict:
         ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -749,26 +846,29 @@ def plot_counts_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
             ax.plot(plot_time, counts_live,
                     linestyle=liveLineDict['LIVE'],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS\n(NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
+
     if 'VITRO' in FILEID:
-        ax.set_xticks(simsDF.iloc[0]['TIME'])
-        if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
             ymax = 100000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 80000
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
-                    ymax = 1500
+                    ymax = 1400
                 else:
                     ymax = 6000
             else:
                 ymax = 7000
     if 'VIVO' in FILEID:
-        ax.set_xticks(plot_time[::10])
-        if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 90000
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 60000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 50000
         elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
             ymax = 4000
         else:
@@ -781,10 +881,238 @@ def plot_counts_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
         ax.plot([0],[0], color='black', label=type, linestyle=liveLineDict[type])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
 
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
     if SAVELOC == '':
         plt.show()
     else:
         plt.savefig(SAVELOC + FILEID + '_COUNTS_MERGE_' + POP_NAME.replace(' ','') + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_counts_treat(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
+
+    colorDict = COLOR_DICT[COLOR]
+
+    figCounts = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+    ax = figCounts.add_subplot(1, 1, 1)
+    for i in range(0, len(simsDF)):
+
+        if 'VITRO' in FILEID:
+            plot_time = simsDF.iloc[i]['TIME']
+            counts = simsDF.iloc[i][POP_NAME]
+        else:
+            plot_time = [t-1 for t in simsDF.iloc[i]['TIME'][44:]]
+            counts = simsDF.iloc[i][POP_NAME][44:]
+
+        if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
+            ax.plot(plot_time, counts,
+                    linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
+                    color=colorDict[str(0)])
+        elif int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS HEALTHY':
+            ax.plot(plot_time, counts,
+                    linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
+                    color=colorDict["CONTROL"])
+        else:
+            ax.plot(plot_time, counts,
+                    linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
+                    color=colorDict[str(simsDF.iloc[i][COLOR])])
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS\n(NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlim([min(plot_time), max(plot_time)])
+
+    if 'VITRO' in FILEID:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 100000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 80000
+        else:
+            if '_CH_' in FILEID:
+                if 'HEALTHY' in POP_NAME:
+                    ymax = 1400
+                else:
+                    ymax = 6000
+            else:
+                ymax = 7000
+    if 'VIVO' in FILEID:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 60000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 50000
+        elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
+            ymax = 4000
+        else:
+            ymax = 2000
+    ax.set_ylim(bottom=0, top=ymax)
+
+    for color in colorDict:
+        ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
+    for dose in doseLineDict:
+        ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
+    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + FILEID + '_COUNTSTREAT_' + POP_NAME.replace(' ','') + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_counts_treat_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
+
+    colorDict = COLOR_DICT[COLOR]
+
+    figCounts = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+    ax = figCounts.add_subplot(1, 1, 1)
+    for i in range(0, len(simsDF)):
+
+        if 'VITRO' in FILEID:
+            plot_time = simsDF.iloc[i]['TIME']
+            counts = simsDF.iloc[i][POP_NAME]
+        else:
+            plot_time = [t-1 for t in simsDF.iloc[i]['TIME'][44:]]
+            counts = simsDF.iloc[i][POP_NAME][44:]
+
+        if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
+            ax.plot(plot_time, counts,
+                    color=colorDict[str(0)])
+        elif int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS HEALTHY':
+            ax.plot(plot_time, counts,
+                    color=colorDict["CONTROL"])
+        else:
+            ax.plot(plot_time, counts,
+                    color=colorDict[str(simsDF.iloc[i][COLOR])])
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS\n(NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlim([min(plot_time), max(plot_time)])
+
+    if 'VITRO' in FILEID:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 100000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 80000
+        else:
+            if '_CH_' in FILEID:
+                if 'HEALTHY' in POP_NAME:
+                    ymax = 1400
+                else:
+                    ymax = 6000
+            else:
+                ymax = 7000
+    if 'VIVO' in FILEID:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 60000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 50000
+        elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
+            ymax = 4000
+        else:
+            ymax = 2000
+    ax.set_ylim(bottom=0, top=ymax)
+
+    for color in colorDict:
+        ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
+    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + FILEID + '_COUNTSTREAT_' + POP_NAME.replace(' ','') + '_DOSE.svg', bbox_inches='tight')
+
+    return
+
+def plot_counts_treat_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
+
+    colorDict = COLOR_DICT[COLOR]
+
+    figCounts = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+    ax = figCounts.add_subplot(1, 1, 1)
+    for i in range(0, len(simsDF)):
+
+        if 'VITRO' in FILEID:
+            plot_time = simsDF.iloc[i]['TIME']
+            counts = simsDF.iloc[i][POP_NAME]
+            counts_live = simsDF.iloc[i][POP_NAME + ' LIVE']
+        else:
+            plot_time = [t - 1 for t in simsDF.iloc[i]['TIME'][44:]]
+            counts = simsDF.iloc[i][POP_NAME][44:]
+            counts_live = simsDF.iloc[i][POP_NAME + ' LIVE'][44:]
+
+        if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
+            ax.plot(plot_time, counts,
+                    linestyle=liveLineDict['TOTAL'],
+                    color=colorDict[str(0)])
+            ax.plot(plot_time, counts_live,
+                    linestyle=liveLineDict['LIVE'],
+                    color=colorDict[str(0)])
+        elif int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS HEALTHY':
+            ax.plot(plot_time, counts,
+                    linestyle=liveLineDict['TOTAL'],
+                    color=colorDict["CONTROL"])
+            ax.plot(plot_time, counts_live,
+                    linestyle=liveLineDict['LIVE'],
+                    color=colorDict["CONTROL"])
+        else:
+            ax.plot(plot_time, counts,
+                    linestyle=liveLineDict['TOTAL'],
+                    color=colorDict[str(simsDF.iloc[i][COLOR])])
+            ax.plot(plot_time, counts_live,
+                    linestyle=liveLineDict['LIVE'],
+                    color=colorDict[str(simsDF.iloc[i][COLOR])])
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS\n(NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlim([min(plot_time), max(plot_time)])
+
+    if 'VITRO' in FILEID:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 100000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 80000
+        else:
+            if '_CH_' in FILEID:
+                if 'HEALTHY' in POP_NAME:
+                    ymax = 1400
+                else:
+                    ymax = 6000
+            else:
+                ymax = 7000
+    if 'VIVO' in FILEID:
+        if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
+            ymax = 60000
+        elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
+            ymax = 50000
+        elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
+            ymax = 4000
+        else:
+            ymax = 2000
+    ax.set_ylim(bottom=0, top=ymax)
+
+    for color in colorDict:
+        ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
+    for type in liveLineDict:
+        ax.plot([0],[0], color='black', label=type, linestyle=liveLineDict[type])
+    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + FILEID + '_COUNTSTREAT_MERGE_' + POP_NAME.replace(' ','') + '.svg', bbox_inches='tight')
 
     return
 
@@ -837,31 +1165,29 @@ def plot_counts_norm(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
                 ax.plot(plot_time, counts,
                         linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
                         color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS NORAMLIZED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL\nCOUNTS NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
 
     if 'VITRO' in FILEID:
-        ax.set_xticks(simsDF.iloc[0]['TIME'])
         if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 400
+            ymax = 250
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
-                    ymax = 1.5
+                    ymax = 1.4
                 else:
                     ymax = 6
             else:
-                ymax = 4
+                ymax = 3.5
     if 'VIVO' in FILEID:
-        ax.set_xticks(plot_time[::10])
         if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 90
+            ymax = 300
         elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
-            ymax = 4
+            ymax = 1.2
         else:
-            ymax = 2
+            ymax = 150
     ax.set_ylim(bottom=0, top=ymax)
 
     for color in colorDict:
@@ -869,6 +1195,12 @@ def plot_counts_norm(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -923,36 +1255,40 @@ def plot_counts_norm_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
             else:
                 ax.plot(plot_time, counts,
                         color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS NORAMLIZED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL\nCOUNTS NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
 
     if 'VITRO' in FILEID:
-        ax.set_xticks(simsDF.iloc[0]['TIME'])
         if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 400
+            ymax = 250
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
-                    ymax = 1.5
+                    ymax = 1.4
                 else:
                     ymax = 6
             else:
-                ymax = 4
+                ymax = 3.5
     if 'VIVO' in FILEID:
-        ax.set_xticks(plot_time[::10])
         if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 90
+            ymax = 300
         elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
-            ymax = 4
+            ymax = 1.2
         else:
-            ymax = 2
+            ymax = 150
     ax.set_ylim(bottom=0, top=ymax)
 
     for color in colorDict:
         ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -1026,31 +1362,29 @@ def plot_counts_norm_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
                 ax.plot(plot_time, counts_live,
                         linestyle=liveLineDict['LIVE'],
                         color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS NORAMLIZED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL\nCOUNTS NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nOVER TIME NORAMLIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
 
     if 'VITRO' in FILEID:
-        ax.set_xticks(simsDF.iloc[0]['TIME'])
         if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 400
+            ymax = 250
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
-                    ymax = 1.5
+                    ymax = 1.4
                 else:
                     ymax = 6
             else:
-                ymax = 4
+                ymax = 3.5
     if 'VIVO' in FILEID:
-        ax.set_xticks(plot_time[::10])
         if POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-            ymax = 90
+            ymax = 300
         elif POP_NAME in ['HEALTHY', 'HEALTHY LIVE']:
-            ymax = 4
+            ymax = 1.2
         else:
-            ymax = 2
+            ymax = 150
     ax.set_ylim(bottom=0, top=ymax)
 
     for color in colorDict:
@@ -1058,6 +1392,12 @@ def plot_counts_norm_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for type in liveLineDict:
         ax.plot([0],[0], color='black', label=type, linestyle=liveLineDict[type])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -1094,9 +1434,9 @@ def plot_count_fracs(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
             ax.plot(plot_time, count_frac,
                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL FRACTION", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL FRACTION", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
     ax.set_ylim([0, 1])
 
@@ -1110,6 +1450,12 @@ def plot_count_fracs(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -1143,23 +1489,24 @@ def plot_counts_frac_remaining(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
             ax.plot(plot_time, killed,
                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL FRACTION REMAINING", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL\nFRACTION REMAINING", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " FRACTION\n REMAINING OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
+
     if 'VITRO' in FILEID:
         ax.set_xticks(simsDF.iloc[0]['TIME'])
         if '_CH_' in FILEID:
             if 'HEALTHY' in POP_NAME:
-                ymax = 1.5
+                ymax = 1.4
             else:
                 ymax = 6
         else:
-            ymax = 3.5
+            ymax = 4
     else:
         ax.set_xticks([int(i) for i in plot_time[::2]])
         if 'CANCER' in POP_NAME:
-            ymax = 4
+            ymax = 3
         else:
             ymax = 1.2
     ax.set_ylim(bottom=0, top=ymax)
@@ -1169,6 +1516,9 @@ def plot_counts_frac_remaining(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -1199,23 +1549,24 @@ def plot_counts_frac_remaining_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
         else:
             ax.plot(plot_time, killed,
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL FRACTION REMAINING", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL\nFRACTION REMAINING", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " FRACTION\n REMAINING OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
+
     if 'VITRO' in FILEID:
         ax.set_xticks(simsDF.iloc[0]['TIME'])
         if '_CH_' in FILEID:
             if 'HEALTHY' in POP_NAME:
-                ymax = 1.5
+                ymax = 1.4
             else:
                 ymax = 6
         else:
-            ymax = 3.5
+            ymax = 4
     else:
         ax.set_xticks([int(i) for i in plot_time[::2]])
         if 'CANCER' in POP_NAME:
-            ymax = 4
+            ymax = 3
         else:
             ymax = 1.2
     ax.set_ylim(bottom=0, top=ymax)
@@ -1225,6 +1576,9 @@ def plot_counts_frac_remaining_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -1271,23 +1625,24 @@ def plot_counts_frac_remaining_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
             ax.plot(plot_time, killed_live,
                     linestyle=liveLineDict['LIVE'],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL FRACTION REMAINING", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL\nFRACTION REMAINING", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " FRACTION\n REMAINING OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
+
     if 'VITRO' in FILEID:
         ax.set_xticks(simsDF.iloc[0]['TIME'])
         if '_CH_' in FILEID:
             if 'HEALTHY' in POP_NAME:
-                ymax = 1.5
+                ymax = 1.4
             else:
                 ymax = 6
         else:
-            ymax = 3.5
+            ymax = 4
     else:
         ax.set_xticks([int(i) for i in plot_time[::2]])
         if 'CANCER' in POP_NAME:
-            ymax = 4
+            ymax = 3
         else:
             ymax = 1.2
     ax.set_ylim(bottom=0, top=ymax)
@@ -1297,6 +1652,9 @@ def plot_counts_frac_remaining_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for type in liveLineDict:
         ax.plot([0],[0], color='black', label=type, linestyle=liveLineDict[type])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -1709,16 +2067,20 @@ def plot_volumes(simsDF, COLOR, FILEID, SAVELOC, TIME):
                     figV = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
                     ax = figV.add_subplot(1, 1, 1)
                     ax = sns.violinplot(x=X, y=Y, order=order, palette=colorDict)
-                    ax.set_xlabel(POP_NAMES[p] + " POPULATION", fontname='Arial', fontweight='bold', fontsize=14,
-                                  labelpad=5)
-                    ax.set_ylabel("VOLUME (um^3)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-                    ax.set_title(POP_NAMES[p] + " VOLUME DISTRIBUTIONS AT TIME " + str(TIME), fontname='Arial',
-                                 fontweight='bold', fontsize=12, pad=5)
+                    ax.set_xlabel(POP_NAMES[p] + " POPULATION", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES,
+                                  labelpad=LABELPAD)
+                    ax.set_ylabel("VOLUME (um^3)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+                    ax.set_title(POP_NAMES[p] + " VOLUME\nDISTRIBUTIONS AT TIME " + str(TIME), fontname='Arial',
+                                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
                     # ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
                     ymax = 7000
                     if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
                         ymax = 700
                     ax.set_ylim(bottom=0, top=ymax)
+
+                    plt.xticks(fontsize=TICKSIZE, rotation=45)
+                    plt.yticks(fontsize=TICKSIZE)
+
                     if SAVELOC == '':
                         plt.show()
                     else:
@@ -1726,7 +2088,7 @@ def plot_volumes(simsDF, COLOR, FILEID, SAVELOC, TIME):
 
     return
 
-def plot_cycles(simsDF, COLOR, FILEID, SAVELOC, TIME):
+def plot_cycles(simsDF, COLOR, FILEID, SAVELOC, TIME, HOURS):
     colorDict = COLOR_DICT[COLOR]
 
     TIMES = simsDF.iloc[0]['TIME']
@@ -1765,27 +2127,211 @@ def plot_cycles(simsDF, COLOR, FILEID, SAVELOC, TIME):
                         order.append(key)
 
                 if X != [] and Y != []:
-                    figV = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
-                    ax = figV.add_subplot(1, 1, 1)
+
+                    if HOURS:
+                        Y = [float(c)/float(60) for c in Y]
+
+                    figC = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+                    ax = figC.add_subplot(1, 1, 1)
                     ax = sns.violinplot(x=X, y=Y, order=order, palette=colorDict)
-                    ax.set_xlabel(POP_NAMES[p] + " POPULATION", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-                    ax.set_ylabel("CYCLE LENGTH (min)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-                    ax.set_title(POP_NAMES[p] + " CELL CYCLE DISTRIBUTIONS AT TIME " + str(TIME), fontname='Arial',
-                                 fontweight='bold', fontsize=12, pad=5)
+                    unit = "(hrs)" if HOURS else "(min)"
+                    ax.set_xlabel(POP_NAMES[p] + " POPULATION", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+                    ax.set_ylabel("CYCLE LENGTH " + unit, fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+                    ax.set_title(POP_NAMES[p] + " CELL CYCLE\nDISTRIBUTIONS AT TIME " + str(TIME), fontname='Arial',
+                                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
                     # ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
-                    if 'VITRO' in FILEID:
-                        if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-                            ymax = 1600
+                    if not HOURS:
+                        if 'VITRO' in FILEID:
+                            if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                                ymax = 1600
+                            else:
+                                ymax = 2000
                         else:
                             ymax = 2000
                     else:
-                        ymax = 2000
+                        if 'VITRO' in FILEID:
+                            if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                                ymax = 25
+                            else:
+                                ymax = 35
+                        else:
+                            ymax = 35
                     ax.set_ylim(bottom=0, top=ymax)
+                    plt.xticks(fontsize=TICKSIZE, rotation=45)
+                    plt.yticks(fontsize=TICKSIZE)
+                    if SAVELOC == '':
+                        plt.show()
+                    else:
+                        if HOURS:
+                            units = '_HOURS'
+                        else:
+                            units = '_MINUTES'
+                        plt.savefig(SAVELOC + FILEID.replace('_CYCLES','') + '_CYCLES_' + POP_NAMES[p].replace(' ', '') + '_DAY_' + str(TIME) + units + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_volumes_split(simsDF, COLOR, FILEID, SAVELOC, TIME):
+
+    colorDict = COLOR_DICT[COLOR]
+
+    filesplit = FILEID.split('_')
+
+    for p in range(0,len(POP_NAMES)):
+        if filesplit[8] == 'NA' and 'HEALTHY' in POP_NAMES[p]:
+            continue
+        else:
+            if 'LIVE' not in POP_NAMES[p]:
+
+                TIMES_SIM = simsDF.iloc[0]['TIME']
+                index = -1
+
+                key = 'CELL VOLUMES ' + POP_NAMES[p]
+                Y = []
+                X = []
+                order = []
+                T = []
+
+                for time in TIME:
+                    for t in range(0, len(TIMES_SIM)):
+                        if float(TIMES_SIM[t]) == float(time):
+                            index = t
+                            for i in range(0, len(simsDF)):
+                                y = simsDF.iloc[i][key][index]
+                                times = [time] * len(y)
+                                if COLOR == 'ANTIGENS CANCER' and int(simsDF.iloc[i]['DOSE']) == 0:
+                                    x = [str(0)] * len(y)
+                                elif COLOR == 'ANTIGENS HEALTHY' and int(simsDF.iloc[i]['DOSE']) == 0:
+                                    x = ["CONTROL"] * len(y)
+                                else:
+                                    x = [str(simsDF.iloc[i][COLOR])] * len(y)
+
+                                Y = Y + y
+                                X = X + x
+                                T = T + times
+
+                dictVols = {'TIME': T, 'FEATURE': X, 'VOLUME': Y}
+                dfVols = pd.DataFrame(dictVols, columns={'TIME': pd.Series([], dtype='float'),
+                                                         'FEATURE': pd.Series([], dtype='str'),
+                                                         'VOLUME': pd.Series([], dtype='float')})
+                for key in colorDict:
+                    if key in X:
+                        order.append(key)
+
+                if X != [] and Y != []:
+                    figV = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+                    ax = figV.add_subplot(1, 1, 1)
+                    sns.violinplot(ax=ax, data=dfVols, x="FEATURE", y="VOLUME", order=order, hue="TIME", split=True)#, palette=colorDict)
+                    ax.set_xlabel(POP_NAMES[p] + " POPULATION", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES,
+                                  labelpad=LABELPAD)
+                    ax.set_ylabel("VOLUME (um^3)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+                    ax.set_title(POP_NAMES[p] + " VOLUME\nDISTRIBUTIONS AT TIME " + str(TIME[0]) + " AND " + str(TIME[1]), fontname='Arial',
+                                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+                    ax.legend(bbox_to_anchor=(1.15, 1.0), frameon=False)
+                    ymax = 7000
+                    if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                        ymax = 700
+                    ax.set_ylim(bottom=0, top=ymax)
+
+                    plt.xticks(fontsize=TICKSIZE, rotation=45)
+                    plt.yticks(fontsize=TICKSIZE)
 
                     if SAVELOC == '':
                         plt.show()
                     else:
-                        plt.savefig(SAVELOC + FILEID.replace('_CYCLES','') + '_CYCLES_' + POP_NAMES[p].replace(' ', '') + '_DAY_' + str(TIME) + '.svg', bbox_inches='tight')
+                        plt.savefig(SAVELOC + FILEID.replace('_VOLUMES','') + '_VOLUMES_' + POP_NAMES[p].replace(' ', '') + '_DAY_' + str(TIME[0]) + str(TIME[1]) + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_cycles_split(simsDF, COLOR, FILEID, SAVELOC, TIME, HOURS):
+
+    colorDict = COLOR_DICT[COLOR]
+
+    filesplit = FILEID.split('_')
+
+    for p in range(0,len(POP_NAMES)):
+        if filesplit[8] == 'NA' and 'HEALTHY' in POP_NAMES[p]:
+            continue
+        else:
+            if 'LIVE' not in POP_NAMES[p]:
+
+                TIMES_SIM = simsDF.iloc[0]['TIME']
+                index = -1
+
+                key = 'AVG CELL CYCLES ' + POP_NAMES[p]
+                Y = []
+                X = []
+                order = []
+                T = []
+
+                for time in TIME:
+                    for t in range(0, len(TIMES_SIM)):
+                        if float(TIMES_SIM[t]) == float(time):
+                            index = t
+                            for i in range(0, len(simsDF)):
+                                y = simsDF.iloc[i][key][index]
+                                times = [time] * len(y)
+                                if COLOR == 'ANTIGENS CANCER' and int(simsDF.iloc[i]['DOSE']) == 0:
+                                    x = [str(0)] * len(y)
+                                elif COLOR == 'ANTIGENS HEALTHY' and int(simsDF.iloc[i]['DOSE']) == 0:
+                                    x = ["CONTROL"] * len(y)
+                                else:
+                                    x = [str(simsDF.iloc[i][COLOR])] * len(y)
+
+                                Y = Y + y
+                                X = X + x
+                                T = T + times
+                if HOURS:
+                    Y = [float(c) / float(60) for c in Y]
+
+                dictVols = {'TIME': T, 'FEATURE': X, 'CYCLE': Y}
+                dfVols = pd.DataFrame(dictVols, columns={'TIME': pd.Series([], dtype='float'),
+                                                         'FEATURE': pd.Series([], dtype='str'),
+                                                         'CYCLE': pd.Series([], dtype='float')})
+                for key in colorDict:
+                    if key in X:
+                        order.append(key)
+
+                if X != [] and Y != []:
+                    figV = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+                    ax = figV.add_subplot(1, 1, 1)
+                    sns.violinplot(ax=ax, data=dfVols, x="FEATURE", y="CYCLE", order=order, hue="TIME", split=True)#, palette=colorDict)
+                    ax.set_xlabel(POP_NAMES[p] + " POPULATION", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES,
+                                  labelpad=LABELPAD)
+                    unit = "(hrs)" if HOURS else "(min)"
+                    ax.set_ylabel("CYCLE LENGTH " + unit, fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+                    ax.set_title(POP_NAMES[p] + " CELL CYCLE\nDISTRIBUTIONS AT TIME " + str(TIME[0]) + " AND " + str(TIME[1]), fontname='Arial',
+                                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+                    ax.legend(bbox_to_anchor=(1.15, 1.0), frameon=False)
+
+                    if not HOURS:
+                        if 'VITRO' in FILEID:
+                            if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                                ymax = 1600
+                            else:
+                                ymax = 2000
+                        else:
+                            ymax = 2000
+                    else:
+                        if 'VITRO' in FILEID:
+                            if POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                                ymax = 25
+                            else:
+                                ymax = 35
+                        else:
+                            ymax = 35
+                    ax.set_ylim(bottom=0, top=ymax)
+
+                    plt.xticks(fontsize=TICKSIZE, rotation=45)
+                    plt.yticks(fontsize=TICKSIZE)
+
+                    if SAVELOC == '':
+                        plt.show()
+                    else:
+                        if HOURS:
+                            units = '_HOURS'
+                        else:
+                            units = '_MINUTES'
+                        plt.savefig(SAVELOC + FILEID.replace('_CYCLES','') + '_CYCLES_' + POP_NAMES[p].replace(' ', '') + '_DAY_' + str(TIME[0]) + str(TIME[1]) + units + '.svg', bbox_inches='tight')
 
     return
 
@@ -1941,12 +2487,15 @@ def plot_kill_curve_sim(simsDF, FILEID, SAVELOC, TIME):
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
 
     ax.set_title("KILL CURVE (SIMULATED DATA)", fontname='Arial',
-                 fontweight='bold', fontsize=14, pad=5)
-    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_ylabel("% LYSIS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("% LYSIS\n(1 - CANCER LIVE %)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
     ax.set_ylim([0, 1])
     ax.set_xlim([0, 10000])
     ax.legend(bbox_to_anchor=(1, 1), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE, rotation=45)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -2110,17 +2659,189 @@ def plot_kill_curve_relative_sim(simsDF, FILEID, SAVELOC, TIME):
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
 
     ax.set_title("KILL CURVE (SIMULATED DATA)", fontname='Arial',
-                 fontweight='bold', fontsize=14, pad=5)
-    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_ylabel("% LYSIS (INIT LIVE SEEDED/CANCER LIVE END", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("% LYSIS\n[1 - (CANCER LIVE END/CANCER LIVE SEEDED)]", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
     ax.set_ylim([0, 1])
     ax.set_xlim([0, 10000])
     ax.legend(bbox_to_anchor=(1, 1), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE, rotation=45)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
     else:
         plt.savefig(SAVELOC + FILEID + '_KILLCURVEREALATIVESIM_' + str(TIME) + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_kill_curve_normalized_sim(simsDF, FILEID, SAVELOC, TIME):
+
+    TIMES = simsDF.iloc[0]['TIME']
+    index = -1
+    for t in range(0,len(TIMES)):
+        if float(TIMES[t]) == float(TIME):
+            index = t
+
+    figKC = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+    ax = figKC.add_subplot(1, 1, 1)
+
+    KD6D250 = []
+    KD7D250 = []
+    KD8D250 = []
+    KD9D250 = []
+
+    KD6D500 = []
+    KD7D500 = []
+    KD8D500 = []
+    KD9D500 = []
+
+    KD6D1000 = []
+    KD7D1000 = []
+    KD8D1000 = []
+    KD9D1000 = []
+
+
+    # Make ANTIGEN and % KILLING CANCER CELLS array sorted by dose
+    for i in range(0, len(simsDF)):
+        antigen = simsDF.iloc[i]['ANTIGENS CANCER']
+        dose = simsDF.iloc[i]['DOSE']
+        affinity = simsDF.iloc[i]['CAR AFFINITY']
+        killed = 1-(simsDF.iloc[i]['CANCER LIVE'][index]/simsDF.iloc[i]['CANCER LIVE'][0])
+
+        if dose == 250:
+            if affinity >= 1e-6:
+                KD6D250.append([antigen, killed])
+            elif 1e-6 > affinity >= 1e-7:
+                KD7D250.append([antigen, killed])
+            elif 1e-7 > affinity >= 1e-8:
+                KD8D250.append([antigen, killed])
+            elif 1e-8 > affinity >= 1e-9:
+                KD9D250.append([antigen, killed])
+            elif 1e-9 > affinity >= 1e-10:
+                continue
+            else:
+                continue
+
+        elif dose == 500:
+            if affinity >= 1e-6:
+                KD6D500.append([antigen, killed])
+            elif 1e-6 > affinity >= 1e-7:
+                KD7D500.append([antigen, killed])
+            elif 1e-7 > affinity >= 1e-8:
+                KD8D500.append([antigen, killed])
+            elif 1e-8 > affinity >= 1e-9:
+                KD9D500.append([antigen, killed])
+            elif 1e-9 > affinity >= 1e-10:
+                continue
+            else:
+                continue
+
+        elif dose == 1000:
+            if affinity >= 1e-6:
+                KD6D1000.append([antigen, killed])
+            elif 1e-6 > affinity >= 1e-7:
+                KD7D1000.append([antigen, killed])
+            elif 1e-7 > affinity >= 1e-8:
+                KD8D1000.append([antigen, killed])
+            elif 1e-8 > affinity >= 1e-9:
+                KD9D1000.append([antigen, killed])
+            elif 1e-9 > affinity >= 1e-10:
+                continue
+            else:
+                continue
+
+    dataLists = [KD6D250, KD7D250, KD8D250, KD9D250,
+                 KD6D500, KD7D500, KD8D500, KD9D500,
+                 KD6D1000, KD7D1000, KD8D1000, KD9D1000]
+
+    KD6D250AVG = []
+    KD7D250AVG = []
+    KD8D250AVG = []
+    KD9D250AVG = []
+
+    KD6D500AVG = []
+    KD7D500AVG = []
+    KD8D500AVG = []
+    KD9D500AVG = []
+
+    KD6D1000AVG = []
+    KD7D1000AVG = []
+    KD8D1000AVG = []
+    KD9D1000AVG = []
+
+    dataListsSorted = []
+
+    avgLists = [KD6D250AVG, KD7D250AVG, KD8D250AVG, KD9D250AVG,
+                KD6D500AVG, KD7D500AVG, KD8D500AVG, KD9D500AVG,
+                KD6D1000AVG, KD7D1000AVG, KD8D1000AVG, KD9D1000AVG]
+
+    for dList in dataLists:
+        dList.sort(key=lambda x: x[0])
+        dataListsSorted.append(dList)
+
+    x = [0,10,20,30,40,50]
+    for a in range(0,len(avgLists)):
+        if dataListsSorted[a] != []:
+            for i in range(0, 5):
+                antSum = 0
+                killSum = 0
+                for j in range(x[i], x[i+1]):
+                    antSum += dataListsSorted[a][j][0]
+                    killSum += dataListsSorted[a][j][1]
+                antAvg = antSum/len(dataListsSorted[a][x[i]:x[i+1]])
+                killAvg = killSum / len(dataListsSorted[a][x[i]:x[i + 1]])
+                avgLists[a].append([antAvg, killAvg])
+
+    ax.plot([a[0]/get_max(KD6D250AVG, 0) for a in KD6D250AVG], [a[1]/get_max(KD6D250AVG, 1) for a in KD6D250AVG],
+            linestyle=doseLineDict['250'], color=COLOR_DICT["CAR AFFINITY"]["1e-06"], linewidth=4)
+    ax.plot([a[0]/get_max(KD7D250AVG, 0) for a in KD7D250AVG], [a[1]/get_max(KD7D250AVG, 1) for a in KD7D250AVG],
+            linestyle=doseLineDict['250'],color=COLOR_DICT["CAR AFFINITY"]["1e-07"], linewidth=4)
+    ax.plot([a[0]/get_max(KD8D250AVG, 0) for a in KD8D250AVG], [a[1]/get_max(KD8D250AVG, 1) for a in KD8D250AVG],
+            linestyle=doseLineDict['250'], color=COLOR_DICT["CAR AFFINITY"]["1e-08"], linewidth=4)
+    ax.plot([a[0]/get_max(KD9D250AVG, 0) for a in KD9D250AVG], [a[1]/get_max(KD9D250AVG, 1) for a in KD9D250AVG],
+            linestyle=doseLineDict['250'], color=COLOR_DICT["CAR AFFINITY"]["1e-09"], linewidth=4)
+
+    ax.plot([a[0]/get_max(KD6D500AVG, 0) for a in KD6D500AVG], [a[1]/get_max(KD6D500AVG, 1) for a in KD6D500AVG],
+            linestyle=doseLineDict['500'], color=COLOR_DICT["CAR AFFINITY"]["1e-06"], linewidth=4)
+    ax.plot([a[0]/get_max(KD7D500AVG, 0) for a in KD7D500AVG], [a[1]/get_max(KD7D500AVG, 1) for a in KD7D500AVG],
+            linestyle=doseLineDict['500'], color=COLOR_DICT["CAR AFFINITY"]["1e-07"], linewidth=4)
+    ax.plot([a[0]/get_max(KD8D500AVG, 0) for a in KD8D500AVG], [a[1]/get_max(KD8D500AVG, 1) for a in KD8D500AVG],
+            linestyle=doseLineDict['500'], color=COLOR_DICT["CAR AFFINITY"]["1e-08"], linewidth=4)
+    ax.plot([a[0]/get_max(KD9D500AVG, 0) for a in KD9D500AVG], [a[1]/get_max(KD9D500AVG, 1) for a in KD9D500AVG],
+            linestyle=doseLineDict['500'], color=COLOR_DICT["CAR AFFINITY"]["1e-09"], linewidth=4)
+
+    ax.plot([a[0]/get_max(KD6D1000AVG, 0) for a in KD6D1000AVG], [a[1]/get_max(KD6D1000AVG, 1) for a in KD6D1000AVG],
+            linestyle=doseLineDict['1000'], color=COLOR_DICT["CAR AFFINITY"]["1e-06"], linewidth=4)
+    ax.plot([a[0]/get_max(KD7D1000AVG, 0) for a in KD7D1000AVG], [a[1]/get_max(KD7D1000AVG, 1) for a in KD7D1000AVG],
+            linestyle=doseLineDict['1000'], color=COLOR_DICT["CAR AFFINITY"]["1e-07"], linewidth=4)
+    ax.plot([a[0]/get_max(KD8D1000AVG, 0) for a in KD8D1000AVG], [a[1]/get_max(KD8D1000AVG, 1) for a in KD8D1000AVG],
+            linestyle=doseLineDict['1000'], color=COLOR_DICT["CAR AFFINITY"]["1e-08"], linewidth=4)
+    ax.plot([a[0]/get_max(KD9D1000AVG, 0) for a in KD9D1000AVG], [a[1]/get_max(KD9D1000AVG, 1) for a in KD9D1000AVG],
+            linestyle=doseLineDict['1000'], color=COLOR_DICT["CAR AFFINITY"]["1e-09"], linewidth=4)
+
+    for color in affinityColorDict:
+        ax.plot([0],[0], color=affinityColorDict[color], label=color, linestyle='solid', linewidth=4)
+    for dose in doseLineDict:
+        ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose], linewidth=4)
+    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    ax.set_title("KILL CURVE (SIMULATED DATA)", fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("% LYSIS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylim([-2.5, 1])
+    ax.set_xlim([0, 1])
+    ax.legend(bbox_to_anchor=(1, 1), frameon=False)
+
+    plt.xticks([0.0, 0.5, 1.0], fontsize=TICKSIZE, rotation=45)
+    plt.yticks([0.0, 0.5, 1.0], fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + FILEID + '_KILLCURVESIMNORM_' + str(TIME) + '.svg', bbox_inches='tight')
 
     return
 
@@ -2160,18 +2881,77 @@ def plot_kill_curve_exp(SAVELOC):
     for color in affinityColorDict:
         ax.plot([0],[0], color=affinityColorDict[color], label=color, linestyle='solid')
 
-    ax.set_title("KILL CURVE (EXPERIMENTAL DATA)", fontname='Arial',
-                 fontweight='bold', fontsize=14, pad=5)
-    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_ylabel("% LYSIS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
+    ax.set_title("KILL CURVE\nEXPERIMENTAL DATA)", fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("% LYSIS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
     ax.set_ylim([0, 1])
     ax.set_xlim([0, 10000])
     ax.legend(bbox_to_anchor=(1, 0.40), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE, rotation=45)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
     else:
         plt.savefig(SAVELOC + 'KILLCURVEEXP.svg', bbox_inches='tight')
+
+    return
+
+def plot_kill_curve_exp_separated(SAVELOC):
+
+
+    # Plot literature values
+    for d in litDict:
+
+        figKC = plt.figure()
+        ax = figKC.add_subplot(1, 1, 1)
+
+        for CAR in d["CARS"]:
+            if 0 >= d["CARS"][CAR]["KD"] >= 1e-5:
+                d["CARS"][CAR].update({"Color": "grey"})
+            elif 1e-5 > d["CARS"][CAR]["KD"] >= 1e-6:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-06"]})
+            elif 1e-6 > d["CARS"][CAR]["KD"] >= 1e-7:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-07"]})
+            elif 1e-7 > d["CARS"][CAR]["KD"] >= 1e-8:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-08"]})
+            elif 1e-8 > d["CARS"][CAR]["KD"] >= 1e-9:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-09"]})
+            elif 1e-9 > d["CARS"][CAR]["KD"] >= 1e-10:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-10"]})
+            else:
+                d["CARS"][CAR].update({"Color": "black"})
+
+            ax.errorbar(d["CARS"][CAR]["Data"]["Antigens"], d["CARS"][CAR]["Data"]["Kill %"],
+                        xerr=d["CARS"][CAR]["Data"]["Ant Err"], fmt='None', yerr=d["CARS"][CAR]["Data"]["Kill % Err"],
+                        ecolor='lightgray', zorder=0)
+            # ax.scatter(d["CARS"][CAR]["Data"]["Antigens"], d["CARS"][CAR]["Data"]["Kill %"],
+            #            marker=d["MARKER"], color=d["CARS"][CAR]["Color"], zorder=1)
+            ax.plot(d["CARS"][CAR]["Data"]["Antigens"], d["CARS"][CAR]["Data"]["Kill %"],
+                        marker=d["MARKER"], color=d["CARS"][CAR]["Color"], zorder=1)
+
+        ax.scatter(None, None, marker=d["MARKER"], label=d["CITATION"], color='black')
+
+        for color in affinityColorDict:
+            ax.plot([0],[0], color=affinityColorDict[color], label=color, linestyle='solid')
+
+        ax.set_title("KILL CURVE\n(EXPERIMENTAL DATA)\n" + d["SAVE"], fontname='Arial',
+                     fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+        ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+        ax.set_ylabel("% LYSIS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+        ax.set_ylim([0, 1])
+        ax.set_xlim([0, 10000])
+        ax.legend(bbox_to_anchor=(1, 0.40), frameon=False)
+
+        plt.xticks(fontsize=TICKSIZE, rotation=45)
+        plt.yticks(fontsize=TICKSIZE)
+
+        if SAVELOC == '':
+            plt.show()
+        else:
+            plt.savefig(SAVELOC + 'KILLCURVEEXP' + d["SAVE"] + '.svg', bbox_inches='tight')
 
     return
 
@@ -2211,18 +2991,76 @@ def plot_kill_curve_normalized_exp(SAVELOC):
     for color in affinityColorDict:
         ax.plot([0],[0], color=affinityColorDict[color], label=color, linestyle='solid')
 
-    ax.set_title("NORMALIZED KILL CURVE (EXPERIMENTAL DATA)", fontname='Arial',
-                 fontweight='bold', fontsize=14, pad=5)
-    ax.set_xlabel("NORMALIZED ANTIGENS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_ylabel("NORMALIZED % LYSIS", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
+    ax.set_title("NORMALIZED KILL CURVE\n(EXPERIMENTAL DATA)", fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("NORMALIZED ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("NORMALIZED % LYSIS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
     ax.set_ylim([0, 1])
     ax.set_xlim([0, 1])
     ax.legend(bbox_to_anchor=(1, 0.40), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE, rotation=45)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
     else:
         plt.savefig(SAVELOC + 'KILLCURVENORMEXP.svg', bbox_inches='tight')
+
+    return
+
+def plot_kill_curve_normalized_exp_separated(SAVELOC):
+
+    # Plot literature values
+    for d in litDict:
+
+        figKC = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+        ax = figKC.add_subplot(1, 1, 1)
+
+        for CAR in d["CARS"]:
+            if 0 >= d["CARS"][CAR]["KD"] >= 1e-5:
+                d["CARS"][CAR].update({"Color": "grey"})
+            elif 1e-5 > d["CARS"][CAR]["KD"] >= 1e-6:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-06"]})
+            elif 1e-6 > d["CARS"][CAR]["KD"] >= 1e-7:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-07"]})
+            elif 1e-7 > d["CARS"][CAR]["KD"] >= 1e-8:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-08"]})
+            elif 1e-8 > d["CARS"][CAR]["KD"] >= 1e-9:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-09"]})
+            elif 1e-9 > d["CARS"][CAR]["KD"] >= 1e-10:
+                d["CARS"][CAR].update({"Color": COLOR_DICT["CAR AFFINITY"]["1e-10"]})
+            else:
+                d["CARS"][CAR].update({"Color": "black"})
+
+            ax.errorbar(d["CARS"][CAR]["Normalized Data"]["Antigens"], d["CARS"][CAR]["Normalized Data"]["Kill %"],
+                        xerr=d["CARS"][CAR]["Normalized Data"]["Ant Err"], fmt='None', yerr=d["CARS"][CAR]["Normalized Data"]["Kill % Err"],
+                        ecolor='lightgray', zorder=0, linewidth=4)
+            # ax.scatter(d["CARS"][CAR]["Data"]["Antigens"], d["CARS"][CAR]["Data"]["Kill %"],
+            #            marker=d["MARKER"], color=d["CARS"][CAR]["Color"], zorder=1)
+            ax.plot(d["CARS"][CAR]["Normalized Data"]["Antigens"], d["CARS"][CAR]["Normalized Data"]["Kill %"],
+                        marker=d["MARKER"], color=d["CARS"][CAR]["Color"], zorder=1, linewidth=4, markersize=15)
+
+        ax.scatter(None, None, marker=d["MARKER"], label=d["CITATION"], color='black', linewidth=4)
+
+        for color in affinityColorDict:
+            ax.plot([0],[0], color=affinityColorDict[color], label=color, linestyle='solid', linewidth=4)
+
+        ax.set_title("NORMALIZED KILL CURVE\n(EXPERIMENTAL DATA)\n" + d["SAVE"], fontname='Arial',
+                     fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+        ax.set_xlabel("NORMALIZED ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+        ax.set_ylabel("NORMALIZED % LYSIS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+        ax.set_ylim([0, 1])
+        ax.set_xlim([0, 1])
+        ax.legend(bbox_to_anchor=(1, 0.40), frameon=False)
+
+        plt.xticks([0.0, 0.5, 1.0], fontsize=TICKSIZE, rotation=45)
+        plt.yticks([0.0, 0.5, 1.0], fontsize=TICKSIZE)
+
+        if SAVELOC == '':
+            plt.show()
+        else:
+            plt.savefig(SAVELOC + 'KILLCURVENORMEXP' + d["SAVE"] + '.svg', bbox_inches='tight')
 
     return
 
@@ -2730,7 +3568,7 @@ def plot_CH_scatter(simsDF, COLOR, MARKER, FILEID, SAVELOC, TIME):
         else:
             marker = markerDict[MARKER]
 
-        ax.scatter(cancer, healthy, color=color, marker=marker)
+        ax.scatter(cancer, healthy, color=color, marker=marker, s=150) # facecolor='none', edgecolor=color, marker=marker, s=200, linewidth=2)
 
     for color in colorDict:
         ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
@@ -2739,9 +3577,12 @@ def plot_CH_scatter(simsDF, COLOR, MARKER, FILEID, SAVELOC, TIME):
             ax.plot([0],[0], color='black', label=marker, linestyle=markerDict[marker])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
     ax.set_title("LIVING CANCER VS HEALTHY CELLS", fontname='Arial',
-                 fontweight='bold', fontsize=14, pad=5)
-    ax.set_xlabel("LIVING CANCER CELL COUNT", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_ylabel("LIVING HEALTHY CELL COUNT", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("LIVING CANCER CELL COUNT", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("LIVING HEALTHY CELL COUNT", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -2763,6 +3604,19 @@ def plot_CH_scatter_normalized(simsDF, COLOR, MARKER, FILEID, SAVELOC, TIME):
     figCH = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
     ax = figCH.add_subplot(1, 1, 1)
 
+    if 'VITRO' in FILEID:
+        xmax = 6
+        if COLOR == 'CAR AFFINITY' and '_CH_' in FILEID:
+            ymax = 1.4
+        elif COLOR == 'ANTIGENS CANCER' and '_CH_' in FILEID:
+            ymax = 1.4
+        else:
+            ymax = 1.4
+    else:
+        xmax = 2.5
+        ymax = 1
+
+
     for i in range(0, len(simsDF)):
         if 'DISH' in FILEID:
             cancer = simsDF.iloc[i]['CANCER LIVE'][index]/simsDF.iloc[i]['CANCER LIVE'][0]
@@ -2779,7 +3633,10 @@ def plot_CH_scatter_normalized(simsDF, COLOR, MARKER, FILEID, SAVELOC, TIME):
         else:
             marker = markerDict[MARKER]
 
-        ax.scatter(cancer, healthy, color=color, marker=marker)
+        ax.scatter(cancer, healthy,  color=color, marker=marker, s=150) # facecolor='none', edgecolor=color, marker=marker, s=200, linewidth=2)
+
+    ax.plot([1, 1], [0, ymax], color='lightgray', zorder=-1, linewidth=5)
+    ax.plot([0, xmax], [1, 1], color='lightgray', zorder=-1, linewidth=5)
 
     for color in colorDict:
         ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
@@ -2787,10 +3644,16 @@ def plot_CH_scatter_normalized(simsDF, COLOR, MARKER, FILEID, SAVELOC, TIME):
         for marker in markerDict:
             ax.plot([0],[0], color='black', label=marker, linestyle=markerDict[marker])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
-    ax.set_title("LIVING CANCER VS HEALTHY CELLS NORMALIZED", fontname='Arial',
-                 fontweight='bold', fontsize=14, pad=5)
-    ax.set_xlabel("LIVING CANCER CELL COUNT NORMALIZED", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_ylabel("LIVING HEALTHY CELL COUNT NORMALIZED", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
+    ax.set_title("LIVING CANCER VS HEALTHY\nCELLS NORMALIZED", fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("LIVING CANCER CELL\nCOUNT NORMALIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("LIVING HEALTHY CELL\nCOUNT NORMALIZED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    ax.set_xlim([0,xmax])
+    ax.set_ylim([0,ymax])
+
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -2858,30 +3721,32 @@ def plot_env_conc_times_bar(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC, TIMES):
         if key in envDF['AXIS'].to_list():
             order.append(key)
 
-    figEnv = plt.figure()
-    ax = figEnv.add_subplot(1, 1, 1)
-
     if 'VITRO' in FILEID:
         times = TIMES
     else:
         times = [t - 1 for t in TIMES]
 
     if MOL_NAME == 'GLUCOSE':
-        ymax = 6e9
+        ymax = 5e9
     elif MOL_NAME == 'IL-2':
-        ymax = 4e7
+        if 'VITRO' in FILEID:
+            ymax = 4e7
+        else:
+            ymax = 1.4e7
     else:
         ymax = 160
 
-    ax = sns.barplot(x='TIME', y='CONC', hue='AXIS', palette=colorDict, data=envDF, order=times, hue_order=order, capsize=0.1, ci="sd")
-    ax = sns.swarmplot(x='TIME', y='CONC', hue='AXIS', color='black', dodge=True, order=times, hue_order=order, data=envDF)
-
-    ax.set_xlabel(COLOR, fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(YLABEL, fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(MOL_NAME + "  CONCENTRATION OVER TIME " + TITLE_TIMES, fontname='Arial',
-                 fontweight='bold', fontsize=12, pad=5)
+    sns.barplot(ax=ax, x='TIME', y='CONC', hue='AXIS', palette=colorDict, data=envDF, order=times, hue_order=order, capsize=0.1, ci="sd")
+    sns.swarmplot(ax=ax, x='TIME', y='CONC', hue='AXIS', color='black', dodge=True, order=times, hue_order=order, data=envDF)
+    ax.set_xlabel(COLOR, fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, labelpad=LABELPAD)
+    ax.set_ylabel(YLABEL, fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(MOL_NAME + "  CONCENTRATION\nOVER TIME " + TITLE_TIMES, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, pad=LABELPAD+7)
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
     ax.set_ylim(bottom=0, top=ymax)
+
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -2917,9 +3782,9 @@ def plot_evn_conc_times_line(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC):
             ax.plot(plot_time, conc,
                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(MOL_NAME + " CONCENTRATION (" + MOL_CONC_UNITS[MOL_NAME] + ")", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(MOL_NAME + " CONCENTRATION OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(MOL_NAME + " CONCENTRATION\n(" + MOL_CONC_UNITS[MOL_NAME] + ")", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(MOL_NAME + " CONCENTRATION\nOVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
 
     if 'VITRO' in FILEID:
@@ -2928,9 +3793,12 @@ def plot_evn_conc_times_line(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC):
         ax.set_xticks(plot_time[::10])
 
     if MOL_NAME == 'GLUCOSE':
-        ymax = 6e9
+        ymax = 5e9
     elif MOL_NAME == 'IL-2':
-        ymax = 4e7
+        if 'VITRO' in FILEID:
+            ymax = 4e7
+        else:
+            ymax = 1.4e7
     else:
         ymax = 160
 
@@ -2941,6 +3809,9 @@ def plot_evn_conc_times_line(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -3006,30 +3877,32 @@ def plot_env_conc_axis_bar(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC, TIMES):
         if key in envDF['AXIS'].to_list():
             order.append(key)
 
-    figEnv = plt.figure()
-    ax = figEnv.add_subplot(1, 1, 1)
-
     if 'VITRO' in FILEID:
         times = TIMES
     else:
         times = [t - 1 for t in TIMES]
 
     if MOL_NAME == 'GLUCOSE':
-        ymax = 6e9
+        ymax = 5e9
     elif MOL_NAME == 'IL-2':
-        ymax = 4e7
+        if 'VITRO' in FILEID:
+            ymax = 4e7
+        else:
+            ymax = 1.4e7
     else:
         ymax = 160
 
-    ax = sns.barplot(x='AXIS', y='CONC', hue='TIME', palette='Greys', data=envDF, order=order, hue_order=times, capsize=0.1, ci="sd")
-    ax = sns.swarmplot(x='AXIS', y='CONC', hue='TIME', color='black', dodge=True, order=order, hue_order=times, data=envDF)
-
-    ax.set_xlabel(COLOR, fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(YLABEL, fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(MOL_NAME + "  CONCENTRATION OVER TIME " + TITLE_TIMES, fontname='Arial',
-                 fontweight='bold', fontsize=12, pad=5)
+    sns.barplot(ax=ax, x='AXIS', y='CONC', hue='TIME', palette='Greys', data=envDF, order=order, hue_order=times, capsize=0.1, ci="sd")
+    sns.swarmplot(ax=ax, x='AXIS', y='CONC', hue='TIME', color='black', dodge=True, order=order, hue_order=times, data=envDF)
+    ax.set_xlabel(COLOR, fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(YLABEL, fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(MOL_NAME + "  CONCENTRATION\nOVER TIME " + TITLE_TIMES, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD+7)
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
     ax.set_ylim(bottom=0, top=ymax)
+
+    plt.xticks(fontsize=TICKSIZE,  rotation = 45)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -3038,64 +3911,70 @@ def plot_env_conc_axis_bar(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC, TIMES):
                     + '.svg', bbox_inches='tight')
     return
 
-def plot_evn_conc_times_trend(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC, TIMES):
-
-    colorDict = COLOR_DICT[COLOR]
-
-    figCounts = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
-    ax = figCounts.add_subplot(1, 1, 1)
-    for i in range(0, len(simsDF)):
-
-        if 'VITRO' in FILEID:
-            plot_time = simsDF.iloc[i]['TIME']
-            conc = simsDF.iloc[i][MOL_NAME + ' TOTAL CONC']
-        else:
-            plot_time = [t - 1 for t in simsDF.iloc[i]['TIME'][2:]]
-            conc = simsDF.iloc[i][MOL_NAME + ' TOTAL CONC'][2:]
-
-        if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
-            ax.plot(plot_time, conc,
-                    linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
-                    color=colorDict[str(0)])
-        elif int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS HEALTHY':
-            ax.plot(plot_time, conc,
-                    linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
-                    color=colorDict["CONTROL"])
-        else:
-            ax.plot(plot_time, conc,
-                    linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
-                    color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(MOL_NAME + " CONCENTRATION (" + MOL_CONC_UNITS[MOL_NAME] + ")", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(MOL_NAME + " CONCENTRATION OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
-    ax.set_xlim([min(plot_time), max(plot_time)])
-
-    if 'VITRO' in FILEID:
-        ax.set_xticks(plot_time)
-    else:
-        ax.set_xticks(plot_time[::10])
-
-    if MOL_NAME == 'GLUCOSE':
-        ymax = 6e9
-    elif MOL_NAME == 'IL-2':
-        ymax = 4e7
-    else:
-        ymax = 160
-
-    ax.set_ylim(bottom=0,top=ymax)
-
-    for color in colorDict:
-        ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
-    for dose in doseLineDict:
-        ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
-    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
-
-    if SAVELOC == '':
-        plt.show()
-    else:
-        plt.savefig(SAVELOC + FILEID + '_CONC_' + MOL_NAME + '.svg', bbox_inches='tight')
-
-    return
+# def plot_evn_conc_times_trend(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC, TIMES):
+#
+#     colorDict = COLOR_DICT[COLOR]
+#
+#     figCounts = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+#     ax = figCounts.add_subplot(1, 1, 1)
+#     for i in range(0, len(simsDF)):
+#
+#         if 'VITRO' in FILEID:
+#             plot_time = simsDF.iloc[i]['TIME']
+#             conc = simsDF.iloc[i][MOL_NAME + ' TOTAL CONC']
+#         else:
+#             plot_time = [t - 1 for t in simsDF.iloc[i]['TIME'][2:]]
+#             conc = simsDF.iloc[i][MOL_NAME + ' TOTAL CONC'][2:]
+#
+#         if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
+#             ax.plot(plot_time, conc,
+#                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
+#                     color=colorDict[str(0)])
+#         elif int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS HEALTHY':
+#             ax.plot(plot_time, conc,
+#                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
+#                     color=colorDict["CONTROL"])
+#         else:
+#             ax.plot(plot_time, conc,
+#                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
+#                     color=colorDict[str(simsDF.iloc[i][COLOR])])
+#     ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+#     ax.set_ylabel(MOL_NAME + " CONCENTRATION (" + MOL_CONC_UNITS[MOL_NAME] + ")", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+#     ax.set_title(MOL_NAME + " CONCENTRATION OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+#     ax.set_xlim([min(plot_time), max(plot_time)])
+#
+#     if 'VITRO' in FILEID:
+#         ax.set_xticks(plot_time)
+#     else:
+#         ax.set_xticks(plot_time[::10])
+#
+#     if MOL_NAME == 'GLUCOSE':
+#         ymax = 5e9
+#     elif MOL_NAME == 'IL-2':
+#         if 'VITRO' in FILEID:
+#             ymax = 4e7
+#         else:
+#             ymax = 1.4e7
+#     else:
+#         ymax = 160
+#
+#     ax.set_ylim(bottom=0,top=ymax)
+#
+#     for color in colorDict:
+#         ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
+#     for dose in doseLineDict:
+#         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
+#     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+#
+#     plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+#     plt.yticks(fontsize=TICKSIZE)
+#
+#     if SAVELOC == '':
+#         plt.show()
+#     else:
+#         plt.savefig(SAVELOC + FILEID + '_CONC_' + MOL_NAME + '.svg', bbox_inches='tight')
+#
+#     return
 
 # ------------- SPATIAL PLOTTING FUNCTIONS -----------------
 
@@ -3124,9 +4003,9 @@ def plot_counts_radius(POP_NAME, simsDF, COLOR, FILEID, SAVELOC, TIME):
             ax.plot(simsDF.iloc[i]['RADIUS'], simsDF.iloc[i][POP_NAME][index],
                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
                     color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("RADIUS", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT ACROSS RADIUS AT TIME " + str(TIME), fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("RADIUS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + "\nCELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nACROSS RADIUS AT TIME " + str(TIME), fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, pad=LABELPAD)
     ax.set_xlim([min(simsDF.iloc[0]['RADIUS']), max(simsDF.iloc[0]['RADIUS'])])
 
     if 'NORMALIZED' in POP_NAME:
@@ -3144,10 +4023,65 @@ def plot_counts_radius(POP_NAME, simsDF, COLOR, FILEID, SAVELOC, TIME):
         ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
 
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
     if SAVELOC == '':
         plt.show()
     else:
         plt.savefig(SAVELOC + FILEID + '_COUNTS_' + POP_NAME.replace(' ','').replace('NORMALIZED','_NORM') + '_DAY_' + str(TIME) +  '.svg', bbox_inches='tight')
+
+    return
+
+def plot_counts_radius_dose(POP_NAME, simsDF, COLOR, FILEID, SAVELOC, TIME):
+
+    colorDict = COLOR_DICT[COLOR]
+
+    TIMES = simsDF.iloc[0]['TIME']
+    index = -1
+    for t in range(0, len(TIMES)):
+        if float(TIMES[t]) == float(TIME):
+            index = t
+
+    figCountsRad = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
+    ax = figCountsRad.add_subplot(1, 1, 1)
+    for i in range(0, len(simsDF)):
+        if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
+            ax.plot(simsDF.iloc[i]['RADIUS'], simsDF.iloc[i][POP_NAME][index],
+                    color=colorDict[str(0)])
+        elif int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS HEALTHY':
+            ax.plot(simsDF.iloc[i]['RADIUS'], simsDF.iloc[i][POP_NAME][index],
+                    color=colorDict["CONTROL"])
+        else:
+            ax.plot(simsDF.iloc[i]['RADIUS'], simsDF.iloc[i][POP_NAME][index],
+                    color=colorDict[str(simsDF.iloc[i][COLOR])])
+    ax.set_xlabel("RADIUS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + "\nCELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nACROSS RADIUS AT TIME " + str(TIME), fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, pad=LABELPAD)
+    ax.set_xlim([min(simsDF.iloc[0]['RADIUS']), max(simsDF.iloc[0]['RADIUS'])])
+
+    if 'NORMALIZED' in POP_NAME:
+        if 'CANCER' in POP_NAME or 'HEALTHY' in POP_NAME:
+            ymax = 3
+        else:
+            ymax = 30
+        ax.set_ylim(bottom=0, top=ymax)
+    else:
+        ax.set_ylim(bottom=0)
+
+    for color in colorDict:
+        ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
+    for dose in doseLineDict:
+        ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
+    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + FILEID + '_COUNTS_' + POP_NAME.replace(' ','').replace('NORMALIZED','_NORM') + '_DAY_' + str(TIME) +  '_DOSE.svg', bbox_inches='tight')
 
     return
 
@@ -3203,9 +4137,9 @@ def plot_counts_radius_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC, TIME):
                 ax.plot(simsDF.iloc[i]['RADIUS'], simsDF.iloc[i][POP_NAME + ' LIVE'][index],
                         linestyle=liveLineDict['LIVE'],
                         color=colorDict[str(simsDF.iloc[i][COLOR])])
-    ax.set_xlabel("RADIUS", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT ACROSS RADIUS AT TIME " + str(TIME), fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("RADIUS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + "\nCELL COUNTS (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT\nACROSS RADIUS AT TIME " + str(TIME), fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(simsDF.iloc[0]['RADIUS']), max(simsDF.iloc[0]['RADIUS'])])
 
     if 'NORMALIZED' in POP_NAME:
@@ -3222,6 +4156,9 @@ def plot_counts_radius_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC, TIME):
     for type in liveLineDict:
         ax.plot([0],[0], color='black', label=type, linestyle=liveLineDict[type])
     ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -3262,22 +4199,23 @@ def plot_counts_lysed_time(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
         xInit = [simsDF.iloc[0]['TIME'][0], simsDF.iloc[0]['TIME'][-1]]
         yInit = [simsDF.iloc[i][POP_NAME + ' SEEDED'], simsDF.iloc[i][POP_NAME + ' SEEDED']]
         ax.plot(xInit, yInit, linestyle='solid', label='SEEDED', color='gray')
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
     ax.set_ylim(bottom=0)
-
-    if 'VITRO' in FILEID:
-        ax.set_xticks(plot_time)
-    else:
-        ax.set_xticks(plot_time[::10])
 
     for color in colorDict:
         ax.plot([0], [0], color=colorDict[color], label=color, linestyle='solid')
     for dose in doseLineDict:
         ax.plot([0], [0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
+
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -3316,9 +4254,9 @@ def plot_counts_lysed_time_merge(POP_NAMES, simsDF, COLOR, FILEID, SAVELOC):
         xInit = [plot_time[0], plot_time[-1]]
         yInit = [simsDF.iloc[i][POP_NAME + ' SEEDED'], simsDF.iloc[i][POP_NAME + ' SEEDED']]
         ax.plot(xInit, yInit, linestyle='solid', label='SEEDED', color='gray')
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel("TISSUE CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title("CELL COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("TISSUE CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title("CELL COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(plot_time), max(plot_time)])
     ax.set_ylim(bottom=0)
 
@@ -3333,6 +4271,12 @@ def plot_counts_lysed_time_merge(POP_NAMES, simsDF, COLOR, FILEID, SAVELOC):
         ax.plot([0], [0], color='black', label=type, linestyle=lysedLineDict[type])
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
 
+    if 'VITRO' in FILEID:
+        plt.xticks(plot_time[::2], [int(i) for i in plot_time[::2]], fontsize=TICKSIZE)
+    else:
+        plt.xticks(plot_time[::10], [int(i) for i in plot_time[::10]], fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
     if SAVELOC == '':
         plt.show()
     else:
@@ -3346,8 +4290,6 @@ def plot_counts_lysed_time_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     figCounts = plt.figure(figsize=(FIG_SIZE_X,FIG_SIZE_Y))
     ax = figCounts.add_subplot(1, 1, 1)
     for i in range(0, len(simsDF)):
-        # print(simsDF.iloc[i]['TIME EXACT'])
-        # print(simsDF.iloc[i][POP_NAME + ' LYSED CUMULATIVE EXACT'])
         if int(simsDF.iloc[i]['DOSE']) == 0 and COLOR == 'ANTIGENS CANCER':
             ax.plot(simsDF.iloc[i]['TIME EXACT'], simsDF.iloc[i][POP_NAME + ' LYSED CUMULATIVE EXACT'],
                     linestyle=doseLineDict[str(simsDF.iloc[i]['DOSE'])],
@@ -3363,9 +4305,9 @@ def plot_counts_lysed_time_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     xInit = [simsDF.iloc[0]['TIME'][0], simsDF.iloc[0]['TIME'][-1]*1440]
     yInit = [simsDF.iloc[i][POP_NAME + ' SEEDED'], simsDF.iloc[i][POP_NAME + ' SEEDED']]
     ax.plot(xInit, yInit, linestyle='solid', label='SEEDED', color='gray')
-    ax.set_xlabel("TIME (MINUTES)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (MINUTES)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(simsDF.iloc[0]['TIME']), max(simsDF.iloc[0]['TIME'])*1440])
     ax.set_ylim(bottom=0)
 
@@ -3374,6 +4316,9 @@ def plot_counts_lysed_time_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     for dose in doseLineDict:
         ax.plot([0], [0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE, rotation=90)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -3405,9 +4350,9 @@ def plot_counts_lysed_time_exact_merge(POP_NAMES, simsDF, COLOR, FILEID, SAVELOC
     xInit = [simsDF.iloc[0]['TIME'][0], simsDF.iloc[0]['TIME'][-1]*1440]
     yInit = [simsDF.iloc[i][POP_NAME + ' SEEDED'], simsDF.iloc[i][POP_NAME + ' SEEDED']]
     ax.plot(xInit, yInit, linestyle='solid', label='SEEDED', color='gray')
-    ax.set_xlabel("TIME (MINUTES)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel("TISSUE CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title("CELL COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (MINUTES)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("TISSUE CELL COUNTS LYSED (NUMBERS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title("CELL COUNT OVER TIME", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(simsDF.iloc[0]['TIME']), max(simsDF.iloc[0]['TIME'])*1440])
     ax.set_ylim(bottom=0)
 
@@ -3416,6 +4361,9 @@ def plot_counts_lysed_time_exact_merge(POP_NAMES, simsDF, COLOR, FILEID, SAVELOC
     for type in lysedLineDict:
         ax.plot([0], [0], color='black', label=type, linestyle=lysedLineDict[type])
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE, rotation=90)
+    plt.yticks(fontsize=TICKSIZE)
 
     if SAVELOC == '':
         plt.show()
@@ -3458,9 +4406,9 @@ def plot_counts_lysed_radius_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
     xInit = [simsDF.iloc[0]['TIME'][0], simsDF.iloc[0]['TIME'][-1]*1440]
     yInit = [simsDF.iloc[i][POP_NAME + ' SEEDED'], simsDF.iloc[i][POP_NAME + ' SEEDED']]
     ax.plot(xInit, yInit, linestyle='solid', label='SEEDED', color='gray')
-    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=14, labelpad=5)
-    ax.set_ylabel(POP_NAME + " RADIUS LYSED", fontname='Arial', fontweight='bold', fontsize=12, labelpad=5)
-    ax.set_title(POP_NAME + " KILLED OVER TIME AND RADIUS", fontname='Arial', fontweight='bold', fontsize=12, pad=5)
+    ax.set_xlabel("TIME (DAYS)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(POP_NAME + " RADIUS LYSED", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title(POP_NAME + " KILLED OVER TIME AND RADIUS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlim([min(simsDF.iloc[0]['TIME']), max(simsDF.iloc[0]['TIME'])*1440])
     ax.set_ylim(bottom=0, top=max(simsDF.iloc[0]['RADIUS']))
 
@@ -3470,6 +4418,9 @@ def plot_counts_lysed_radius_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
         ax.plot([0], [0], color='black', label=dose, linestyle=doseLineDict[dose])
     ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
 
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
     if SAVELOC == '':
         plt.show()
     else:
@@ -3477,9 +4428,144 @@ def plot_counts_lysed_radius_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
 
     return
 
+# ------------- RANK PLOTTING FUNCTION -----------------
+
+def plot_rank(XRANK, SAVELOC):
+
+    figRank = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figRank.add_subplot(1, 1, 1)
+
+    ranks_vitro_vivo = [[1, 1], [3, 2], [4, 3], [2, 4], [6, 5], [16, 6], [8, 7], [5, 8], [10, 9], [9, 10], [7, 11], [14, 12], [15, 13], [13, 14], [12, 15], [11, 16]]
+
+    if XRANK == 'VITRO':
+        YRANK = 'VIVO'
+        ranks = sorted(ranks_vitro_vivo, key=lambda x: x[0])
+        x = [ranks[a][0] for a in range(0, len(ranks))]
+        y = [ranks[a][1] for a in range(0, len(ranks))]
+    else:
+        YRANK = 'VITRO'
+        ranks = sorted(ranks_vitro_vivo, key=lambda x: x[1])
+        x = [ranks[a][1] for a in range(0,len(ranks))]
+        y = [ranks[a][0] for a in range(0,len(ranks))]
+
+    ax.plot([0,16], [0,16], color='lightgray', zorder=30)
+    ax.scatter(x, y, s=50, zorder=1)
+    ax.set_title("RANK IN " + XRANK + " vs RANK IN " + YRANK, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("RANK IN " + XRANK, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("RANK IN" + YRANK, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    ax.set_xlim([0,17])
+    ax.set_ylim([0,17])
+
+    plt.xticks([i for i in range(1,17)], fontsize=TICKSIZE-10, rotation=45)
+    plt.yticks([i for i in range(1,17)], fontsize=TICKSIZE-10)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'RANK_' + XRANK + '_' + YRANK + '.svg', bbox_inches='tight')
+
+    return
+
+# -------- BINDING HEURISTIC PLOTTING FUNCTION ---------
+
+def plot_binding_heuristic_CAR(SAVELOC):
+
+    Vloc = 6.7e-12
+    Na = 6.022e23
+    CARS = 50000
+    CARSavg = 50000
+
+    alpha = 3
+    beta = 0.01
+    gamma = 0.2
+
+    KDs = [1e-6, 1e-7, 1e-8, 1e-9]
+
+    figBinding = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figBinding.add_subplot(1, 1, 1)
+
+    ligands = [i for i in range(0,10000)]
+
+    for KD in KDs:
+        y = []
+        for L in ligands:
+            h = ((gamma*L)/((beta*KD*Vloc*Na) + (gamma*L)))*(CARS/CARSavg)*alpha
+            p = (2*(1/(1 + exp(-1*h)))) - 1
+            y.append(p)
+        ax.plot(ligands, y, color=affinityColorDict[str(KD)], linewidth=4, label=str(KD))
+
+    ax.set_xlabel("ANTIGENS", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("PROBABILITY OF\nBINDING AND KILLING", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title("BINDING HEURISTIC\nFOR CAR-ANTIGEN BINDING", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlim([min(ligands), max(ligands)])
+    ax.set_ylim([0,1])
+    ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
+    plt.xticks(fontsize=TICKSIZE, rotation=45)
+    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'BINDING_HEURISTIC_CAR' + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_binding_heuristic_self(SAVELOC):
+
+    Vloc = 6.7e-12
+    Na = 6.022e23
+    KDself = 7.8e-6
+    PD1_START = 150
+
+    alpha = 3
+    beta = 0.02
+    gamma = 0.2
+
+    PD1s = [150, 1000, 3000, 9000]
+    PD1_colors = { "150": 'lightgray',
+                     "1000": 'darkgray',
+                     "3000": 'gray',
+                     "9000": 'black'
+    }
+
+    figBinding = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figBinding.add_subplot(1, 1, 1)
+
+    ligands = [i for i in range(0, 50000)]
+
+    for PD1 in PD1s:
+        y = []
+        for L in ligands:
+            h = ((gamma * L) / ((beta * KDself * Vloc * Na) + (gamma * L))) * (PD1 / PD1_START) * alpha
+            p = (2 * (1 / (1 + exp(-1 * h)))) - 1
+            y.append(p)
+        ax.plot(ligands, y, color=PD1_colors[str(PD1)], linewidth=4, label='PD1 = ' + str(PD1))
+
+    ax.set_xlabel("SELF LIGANDS (PDL1s)", fontname='Arial', fontweight='bold', fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("PROBABILITY OF\nBINDING", fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_title("BINDING HEURISTIC\nFOR PD1-PDL1 BINDING", fontname='Arial', fontweight='bold',
+                 fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlim([min(ligands), max(ligands)])
+    ax.set_ylim([0, 1])
+    ax.legend(bbox_to_anchor=(1.0, 1.0), frameon=False)
+    plt.xticks(fontsize=TICKSIZE, rotation=45)
+    plt.yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'BINDING_HEURISTIC_SELF' + '.svg', bbox_inches='tight')
+
+    return
+
 # ------------- MAIN PLOTTING FUNCTION -----------------
 
-def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
+def plot_data(simsDF, ANALYSIS, COLOR, MARKER, PARTIAL, FILEID, SAVELOC):
 
     filesplit = FILEID.split('_')
 
@@ -3490,19 +4576,23 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
         for i in range(5, 10):
             if filesplit[i] == 'X': X += 1
 
-        if X == 1:
+        if X == 1 or PARTIAL:
             if COLOR == 'X':
-                if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
-                if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
-                if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
+                if X == 1:
+                    if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
+                    if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
+                    if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
+
+                if PARTIAL:
+                    COLOR = 'CAR AFFINITY'
 
             fileid = FILEID.replace('_STATES','')
 
             # Plot counts data
-
             if 'CYCLES' not in FILEID and 'VOLUMES' not in FILEID:
+                '''
                 print('\t\t' + 'Plotting count data over time')
                 for p in range(0, len(POP_NAMES)):
                     if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'NA' and 'HEALTHY' in POP_NAMES[p]:
@@ -3510,16 +4600,26 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                     else:
                         plot_counts(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
                         plot_counts_norm(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-                        if COLOR == 'DOSE':
+
+                        if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                            plot_counts_treat(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+
+                        if COLOR == 'DOSE' or PARTIAL:
                             plot_counts_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
                             plot_counts_norm_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
-                    if 'LIVE' not in POP_NAMES[p]:
-                        plot_counts_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-                        plot_counts_norm_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+                            if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
+                                plot_counts_treat_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
-                    plt.close("all")
+                        if 'LIVE' not in POP_NAMES[p]:
+                            plot_counts_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+                            plot_counts_norm_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
+                            if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD8', 'T-CELL']:
+                                plot_counts_treat_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+
+                        plt.close("all")
+                
                 # Plot count fracs data
                 for p in range(0, len(POP_FRAC_NAMES)):
                     if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'NA' and 'HEALTHY' in POP_FRAC_NAMES[p]:
@@ -3528,7 +4628,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                         print('\t\t' + 'Plotting count killed fraction data')
                         plot_counts_frac_remaining(POP_FRAC_NAMES[p].replace(' LIVE', ''), simsDF, COLOR, fileid, SAVELOC)
                         plot_counts_frac_remaining(POP_FRAC_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-                        if COLOR == 'DOSE':
+                        if COLOR == 'DOSE' or PARTIAL:
                             plot_counts_frac_remaining_dose(POP_FRAC_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
                             plot_counts_frac_remaining_dose(POP_FRAC_NAMES[p].replace(' LIVE', ''), simsDF, COLOR, fileid, SAVELOC)
                         plot_counts_frac_remaining_merge(POP_FRAC_NAMES[p].replace(' LIVE', ''), simsDF, COLOR, fileid, SAVELOC)
@@ -3537,7 +4637,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                         plot_count_fracs(POP_NAME, simsDF, COLOR, fileid, SAVELOC)
 
                 plt.close("all")
-
+                '''
                 # Plot scatter
                 print('\t\t' + 'Plotting scatter data')
                 if filesplit[FILEID_SPLIT_INDICES['POPS']] == 'CH':
@@ -3551,7 +4651,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                         plot_CH_scatter(simsDF, COLOR, MARKER, fileid, SAVELOC, 31)
                         plot_CH_scatter_normalized(simsDF, COLOR, MARKER, fileid, SAVELOC, 31)
                     plt.close("all")
-
+                '''
                 # Plot type fracs
                 print('\t\t' + 'Plotting type fraction data')
                 plot_state_fracs(simsDF, COLOR, fileid, SAVELOC)
@@ -3565,6 +4665,8 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 1)
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 4)
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 7)
+                    plot_volumes_split(simsDF, COLOR, FILEID, SAVELOC, [4,7])
+                    plt.close("all")
                 if filesplit[FILEID_SPLIT_INDICES['PLATE']] == 'TISSUE' and 'CYCLES' not in FILEID:
                     print('\t\t' + 'Plotting volume distribution data')
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 1)
@@ -3573,24 +4675,39 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 26)
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 29)
                     plot_volumes(simsDF, COLOR, FILEID, SAVELOC, 31)
-            plt.close("all")
-
+                    plt.close("all")
+                    
             # Plot cycle distributions
             if 'STATES' not in FILEID:
                 if filesplit[FILEID_SPLIT_INDICES['PLATE']] == 'DISH' and 'VOLUMES' not in FILEID:
                     print('\t\t' + 'Plotting cycle distribution data')
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 1)
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 4)
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 7)
+                    # Plot in units of minutes
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 1, False)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 4, False)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 7, False)
+                    plt.close("all")
+                    # Plot in units of hours
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 1, True)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 4, True)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 7, True)
+                    plot_cycles_split(simsDF, COLOR, FILEID, SAVELOC, [4,7], True)
+                    plt.close("all")
                 if filesplit[FILEID_SPLIT_INDICES['PLATE']] == 'TISSUE' and 'VOLUMES' not in FILEID:
                     print('\t\t' + 'Plotting cycle distribution data')
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 22)
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 26)
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 29)
-                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 31)
-            plt.close("all")
-
-        if 'VOLUMES' not in FILEID and 'CYCLES' not in FILEID:
+                    # Plot in units of minutes
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 22, False)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 26, False)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 29, False)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 31, False)
+                    plt.close("all")
+                    # Plot in units of hours
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 22, True)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 26, True)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 29, True)
+                    plot_cycles(simsDF, COLOR, FILEID, SAVELOC, 31, True)
+                    plt.close("all")
+        
+        if 'VOLUMES' not in FILEID and 'CYCLES' not in FILEID and not PARTIAL:
             fileid = FILEID.replace('_STATES', '')
             if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X' and filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X':
                 if COLOR == 'X': COLOR = 'CAR AFFINITY'
@@ -3602,6 +4719,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                     plot_kill_curve_sim(simsDF, fileid, SAVELOC, 7)
                     plot_kill_curve_relative_sim(simsDF, fileid, SAVELOC, 4)
                     plot_kill_curve_relative_sim(simsDF, fileid, SAVELOC, 7)
+                    plot_kill_curve_normalized_sim(simsDF, FILEID, SAVELOC, 7)
                 if filesplit[FILEID_SPLIT_INDICES['PLATE']] == 'TISSUE':
                     plot_kill_curve_sim(simsDF, fileid, SAVELOC, 26)
                     plot_kill_curve_sim(simsDF, fileid, SAVELOC, 29)
@@ -3611,8 +4729,10 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                     plot_kill_curve_relative_sim(simsDF, fileid, SAVELOC, 31)
                 plot_kill_curve_exp(SAVELOC)
                 plot_kill_curve_normalized_exp(SAVELOC)
+                plot_kill_curve_exp_separated(SAVELOC)
+                plot_kill_curve_normalized_exp_separated(SAVELOC)
                 plt.close("all")
-
+            
             if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X' and filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X':
 
                 # Plot ET Ratio
@@ -3634,7 +4754,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                         plot_CH_scatter(simsDF, COLOR, MARKER, fileid, SAVELOC, 29)
                         plot_CH_scatter(simsDF, COLOR, MARKER, fileid, SAVELOC, 31)
                     plt.close("all")
-
+    '''
     if ANALYSIS == 'ENVIRONMENT':
 
         # Count Xs in filesplit
@@ -3642,27 +4762,31 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
         for i in range(5, 10):
             if filesplit[i] == 'X': X += 1
 
-        if X == 1:
+        if X == 1 or PARTIAL:
             if COLOR == 'X':
-                if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
-                if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
-                if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
+                if X == 1:
+                    if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
+                    if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
+                    if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
+
+                if PARTIAL:
+                    COLOR = 'CAR AFFINITY'
+
+            if filesplit[FILEID_SPLIT_INDICES['EXP']] == 'VITRO':
+                TIMES = [i for i in DISH_TIMES if i != 0]
+            else:
+                TIMES = TISSUE_TIMES
 
             for m in range(0, len(MOL_NAMES)):
                 if MOL_NAMES[m] == 'OXYGEN':
                     continue
                 else:
-                    if filesplit[FILEID_SPLIT_INDICES['EXP']] == 'VITRO':
-                        plot_env_conc_times_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, DISH_TIMES)
-                        plot_evn_conc_times_line(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC)
-                        plot_env_conc_axis_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, DISH_TIMES)
-                    if filesplit[FILEID_SPLIT_INDICES['EXP']] == 'VIVO':
-                        plot_env_conc_times_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TISSUE_TIMES)
-                        plot_evn_conc_times_line(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC)
-                        plot_env_conc_axis_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TISSUE_TIMES)
-                plt.close("all")
+                    plot_env_conc_times_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TIMES)
+                    plot_evn_conc_times_line(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC)
+                    plot_env_conc_axis_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TIMES)
+                    plt.close("all")
 
     if ANALYSIS == 'SPATIAL':
 
@@ -3676,14 +4800,17 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
         for i in range(5, 10):
             if filesplit[i] == 'X': X += 1
 
-        if X == 1:
+        if X == 1 or PARTIAL:
             if COLOR == 'X':
-                if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
-                if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
-                if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
+                if X == 1:
+                    if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
+                    if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
+                    if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
 
+                if PARTIAL:
+                    COLOR = 'CAR AFFINITY'
 
             # Plot counts data
             print('\t\t' + 'Plotting count data across radius')
@@ -3694,12 +4821,17 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
                     else:
                         plot_counts_radius(POP_NAMES[p], simsDF, COLOR, FILEID, SAVELOC, TIME)
                         plot_counts_radius(POP_NAMES[p] + ' NORMALIZED', simsDF, COLOR, FILEID, SAVELOC, TIME)
+                        if COLOR == 'DOSE' or PARTIAL:
+                            plot_counts_radius_dose(POP_NAMES[p], simsDF, COLOR, FILEID, SAVELOC, TIME)
+                            plot_counts_radius_dose(POP_NAMES[p] + ' NORMALIZED', simsDF, COLOR, FILEID, SAVELOC, TIME)
+
+                        plt.close("all")
 
                     if 'LIVE' not in POP_NAMES[p]:
                         plot_counts_radius_merge(POP_NAMES[p], simsDF, COLOR, FILEID, SAVELOC, TIME)
                         plot_counts_radius_merge(POP_NAMES[p] + ' NORMALIZED', simsDF, COLOR, FILEID, SAVELOC, TIME)
 
-                plt.close("all")
+                        plt.close("all")
 
     if ANALYSIS == 'LYSED':
 
@@ -3708,34 +4840,58 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, FILEID, SAVELOC):
         for i in range(5, 10):
             if filesplit[i] == 'X': X += 1
 
-        if X == 1:
+        if X == 1 or PARTIAL:
             if COLOR == 'X':
-                if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
-                if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
-                if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
-                if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
+                if X == 1:
+                    if filesplit[FILEID_SPLIT_INDICES['DOSE']] == 'X': COLOR = 'DOSE'
+                    if filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] == 'X': COLOR = 'TREAT RATIO'
+                    if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X': COLOR = 'CAR AFFINITY'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X': COLOR = 'ANTIGENS CANCER'
+                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'X': COLOR = 'ANTIGENS HEALTHY'
 
-                # Plot counts data
-                print('\t\t' + 'Plotting lysis count data over time')
-                for p in range(0, len(POP_LYSIS_NAMES)):
-                    if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'NA' and 'HEALTHY' in POP_LYSIS_NAMES[p]:
-                        continue
-                    else:
-                        plot_counts_lysed_time(POP_LYSIS_NAMES[p], simsDF, COLOR, FILEID, SAVELOC)
-                        plot_counts_lysed_time_exact(POP_LYSIS_NAMES[p], simsDF, COLOR, FILEID, SAVELOC)
-                        plot_counts_lysed_radius_exact(POP_LYSIS_NAMES[p], simsDF, COLOR, FILEID, SAVELOC)
-                    plt.close("all")
+                if PARTIAL:
+                    COLOR = 'CAR AFFINITY'
 
-                if filesplit[FILEID_SPLIT_INDICES['POPS']] == 'CH':
-                    plot_counts_lysed_time_merge(POP_LYSIS_NAMES, simsDF, COLOR, FILEID, SAVELOC)
-                    plot_counts_lysed_time_exact_merge(POP_LYSIS_NAMES, simsDF, COLOR, FILEID, SAVELOC)
-                    plt.close("all")
+        # Plot counts data
+        print('\t\t' + 'Plotting lysis count data over time')
+        for p in range(0, len(POP_LYSIS_NAMES)):
+            if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'NA' and 'HEALTHY' in POP_LYSIS_NAMES[p]:
+                continue
+            else:
+                plot_counts_lysed_time(POP_LYSIS_NAMES[p], simsDF, COLOR, FILEID, SAVELOC)
+                plot_counts_lysed_time_exact(POP_LYSIS_NAMES[p], simsDF, COLOR, FILEID, SAVELOC)
+                # plot_counts_lysed_radius_exact(POP_LYSIS_NAMES[p], simsDF, COLOR, FILEID, SAVELOC)
+            plt.close("all")
 
-                if FILEID_SPLIT_INDICES['EXP'] == 'VIVO':
-                    plot_counts_lysed_radius_exact(POP_LYSIS_NAMES, simsDF, COLOR, FILEID, SAVELOC)
-                    plt.close("all")
+        if filesplit[FILEID_SPLIT_INDICES['POPS']] == 'CH':
+            plot_counts_lysed_time_merge(POP_LYSIS_NAMES, simsDF, COLOR, FILEID, SAVELOC)
+            plot_counts_lysed_time_exact_merge(POP_LYSIS_NAMES, simsDF, COLOR, FILEID, SAVELOC)
+            plt.close("all")
 
+    return
+
+def color_test():
+    x = [0, 10]
+    y1 = [0, 10]
+    y2 = [0, 9]
+    y3 = [0, 8]
+    y4 = [0, 7]
+    y5 = [0, 6]
+
+    y = [y1, y2, y3, y4, y5]
+
+    TESTCOLORS = []
+    cmap = mplcm.get_cmap('Purples')
+    values = [0.5, 1.0]
+    for v in values:
+        TESTCOLORS.append(cmap(v))
+
+    figTest = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figTest.add_subplot(1, 1, 1)
+    for i in range(0,2):
+        ax.plot(x, y[i], color=TESTCOLORS[i], label=i, linewidth=5)
+
+    plt.show()
     return
 
 # ---------------- MAIN FUNCTION ---------------------
@@ -3745,6 +4901,8 @@ if __name__ == "__main__":
     parser = get_parser()
     args = parser.parse_args()
     analysis = ''
+
+    # color_test()
 
     # Get files
     PKLFILES = get_pkl_files(args.files)
@@ -3786,6 +4944,13 @@ if __name__ == "__main__":
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
         pd.set_option('display.max_colwidth', -1)
-        #print(simsDF)
 
-        plot_data(simsDF, analysis, args.color, args.marker, FILEID, args.saveLoc)
+        #print(simsDF.iloc[0])
+
+        #plot_rank('VITRO', args.saveLoc)
+        #plot_rank('VIVO', args.saveLoc)
+
+        #plot_binding_heuristic_CAR(args.saveLoc)
+        #plot_binding_heuristic_self(args.saveLoc)
+        plot_data(simsDF, analysis, args.color, args.marker, args.partial, FILEID, args.saveLoc)
+

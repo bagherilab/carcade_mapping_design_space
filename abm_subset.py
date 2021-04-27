@@ -407,7 +407,9 @@ if __name__ == "__main__":
             if TYPE == 'ANALYZED' and not args.states:
                 print('Saving all non-list columns.')
                 with open(args.saveLoc + args.xmlName + '_' + name + 'STATES_ANALYZED.pkl', 'wb') as f:
-                    pickle.dump(simsDF[:, 0:-10], f)
+                    simsDFstates = simsDF.loc[:, 'TUMOR ID':'PAUSE CD8 %']
+                    pickle.dump(simsDFstates, f)
+                    #pickle.dump(simsDF[:, 0:-10], f)
                 print('Saving all list columns in separate files.')
                 simsDFcycle = simsDF[["TUMOR ID", "SEED", "PLATE", "NUTRIENTS", "DOSE", "TREAT RATIO", "CAR AFFINITY",
                      "ANTIGENS CANCER", "ANTIGENS HEALTHY", "TIME", "AVG CELL CYCLES CANCER", "AVG CELL CYCLES HEALTHY",
