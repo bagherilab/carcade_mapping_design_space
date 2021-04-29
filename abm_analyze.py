@@ -1205,7 +1205,6 @@ if __name__ == "__main__":
             if args.saveLoc != '':
                 with open(args.saveLoc + TUMORID + '_ANALYZED.pkl', 'wb') as f:
                     pickle.dump(simsDF, f)
-                # pickle.dump(simsDF, open(args.saveLoc + TUMORID + '_ANALYZED.pkl', "wb"))
 
         if args.environment:
             envsDF = env_sims(file)
@@ -1214,7 +1213,6 @@ if __name__ == "__main__":
             if args.saveLoc != '':
                 with open(args.saveLoc + TUMORID + '_ENVIRONMENT.pkl', 'wb') as f:
                     pickle.dump(envsDF, f)
-                #pickle.dump(envsDF, open(args.saveLoc + TUMORID + '_ENVIRONMENT.pkl', "wb"))
 
         if args.spatial:
             spatialsDF = spatial_sims(file)
@@ -1223,4 +1221,3 @@ if __name__ == "__main__":
             if args.saveLoc != '':
                 with open(args.saveLoc + TUMORID + '_SPATIAL.pkl', 'wb') as f:
                     pickle.dump(spatialsDF, f)
-                #pickle.dump(spatialsDF, open(args.saveLoc + TUMORID + '_SPATIAL.pkl', "wb"))
