@@ -11,6 +11,7 @@ from matplotlib import colors as mcolors
 from matplotlib.colors import to_rgba
 from argparse import ArgumentParser
 from math import exp
+import numpy as np
 
 '''
 ABM_PLOT takes a directory of (or a single) .pkl simulation files that result from ABM_ANALYZE and
@@ -45,6 +46,8 @@ def get_parser():
                         help="Feature by which to change marker of data by (default: TREAT RATIO)")
     parser.add_argument("--partial", default=False, dest="partial",
                         action='store_true', help="Flag indicating only partial dataset present instead of full combinatoral set.")
+    parser.add_argument("--rank", default=False, dest="rank", action='store_true',
+                        help="Flag indicating to make rank parody plot using rank file.")
     parser.add_argument("--saveLoc", default="", dest="saveLoc",
                         help="Location of where to save file, default will save here")
 
@@ -104,7 +107,8 @@ for v in avalues:
 # Set TREAT RATIO color scale
 TRCOLORS = []
 trcmap = mplcm.get_cmap('Reds')
-trvalues = [0.2, 0.4, 0.6, 0.8, 1.0]
+trvalues = [0.2, 0.3, 0.4, 0.6, 0.8, 0.9, 1.0] # CD4%: 0, 10, 25, 50, 75, 90, 100
+#trvalues = np.linspace(0.2, 1.0, num=7)
 for v in trvalues:
     TRCOLORS.append(trcmap(v))
 
@@ -129,13 +133,24 @@ doseColorDict = {
     "1000": DCOLORS[2]
 }
 
+# trColorDict = {
+#     "NA": 'black',
+#     "0:100": TRCOLORS[0],
+#     "25:75": TRCOLORS[1],
+#     "50:50": TRCOLORS[2],
+#     "75:25": TRCOLORS[3],
+#     "100:0": TRCOLORS[4],
+# }
+
 trColorDict = {
     "NA": 'black',
     "0:100": TRCOLORS[0],
-    "25:75": TRCOLORS[1],
-    "50:50": TRCOLORS[2],
-    "75:25": TRCOLORS[3],
-    "100:0": TRCOLORS[4],
+    "10:90": TRCOLORS[1],
+    "25:75": TRCOLORS[2],
+    "50:50": TRCOLORS[3],
+    "75:25": TRCOLORS[4],
+    "90:10": TRCOLORS[5],
+    "100:0": TRCOLORS[6],
 }
 
 affinityColorDict = {
@@ -241,8 +256,8 @@ MARKER_DICT = {
     "ANTIGENS HEALTHY": ahMarkerDict
 }
 
-TREAT_RATIO_DICT = {'0:100': 0.0, '25:75': 0.25, '50:50': 0.5, '75:25': 0.75, '100:0': 1.0}
-
+TREAT_RATIO_DICT = {'0:100': 0.0, '10:90': 0.1, '25:75': 0.25, '50:50': 0.5, '75:25': 0.75, '90:10': 0.9, '100:0': 1.0}
+TREAT_RATIO_DICT_REVERSE = {'0.0': '0:100', '0.1': '10:90', '0.25': '25:75', '0.5': '50:50', '0.75': '75:25', '0.9': '90:10', '1.0': '100:0'}
 # ---------------- LITERATURE DATA ------------------------
 
 # NOTE: This data (Arcangeli 2017) came from co-cultures with a low antigen expresser.
@@ -855,7 +870,7 @@ def plot_counts_merge(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
         if POP_NAME in ['T-CELL', 'T-CELL LIVE']:
             ymax = 100000
         elif POP_NAME in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE']:
-            ymax = 80000
+            ymax = 100000
         else:
             if '_CH_' in FILEID:
                 if 'HEALTHY' in POP_NAME:
@@ -3820,6 +3835,92 @@ def plot_evn_conc_times_line(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC):
 
     return
 
+def plot_evn_concs_ideal_realistic_parity(MOL_NAME, simsDF, XAXIS, COLOR, TIMES, FILEID, SAVELOC):
+
+    simsDFtreated = simsDF[simsDF['DOSE'] != 0]
+    simsDFideal = simsDFtreated[simsDFtreated['ANTIGENS HEALTHY'] == 0]
+    simsDFrealistic = simsDFtreated[simsDFtreated['ANTIGENS HEALTHY'] == 100]
+
+    colorDict = COLOR_DICT[COLOR]
+
+    figParity = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figParity.add_subplot(1, 1, 1)
+
+    if MOL_NAME == 'GLUCOSE':
+        ymax = 5e9
+    elif MOL_NAME == 'IL-2':
+        if 'VITRO' in FILEID:
+            ymax = 7e7
+        else:
+            ymax = 1.4e7
+    else:
+        ymax = 160
+
+    timeIndicies = []
+    SIM_TIMES = simsDF.iloc[0]['TIME']
+    for t in TIMES:
+        for s in range(0,len(SIM_TIMES)):
+            if float(t) == float(SIM_TIMES[s]):
+                timeIndicies.append(s)
+
+    timeMarkers = {'1': 's',
+                   '4': 'd',
+                   '7': 'o'}
+
+    for time in timeIndicies:
+        ideal = []
+        realistic = []
+        color = []
+        marker = []
+        for i in range(0,len(simsDFideal)):
+            ideal.append(simsDFideal.iloc[i][MOL_NAME + ' TOTAL CONC'][time])
+            simRealisticMatch = simsDFrealistic[simsDFrealistic['DOSE'] == simsDFideal.iloc[i]['DOSE']]
+            simRealisticMatch = simRealisticMatch[simRealisticMatch['TREAT RATIO'] == simsDFideal.iloc[i]['TREAT RATIO']]
+            simRealisticMatch = simRealisticMatch[simRealisticMatch['CAR AFFINITY'] == simsDFideal.iloc[i]['CAR AFFINITY']]
+            simRealisticMatch = simRealisticMatch[simRealisticMatch['ANTIGENS CANCER'] == simsDFideal.iloc[i]['ANTIGENS CANCER']]
+            simRealisticMatch = simRealisticMatch[simRealisticMatch['SEED'] == simsDFideal.iloc[i]['SEED']]
+            realistic.append(simRealisticMatch.iloc[0][MOL_NAME + ' TOTAL CONC'][time])
+            color.append(colorDict[str(simsDFideal.iloc[i][COLOR])])
+            marker.append(timeMarkers[str(int(time/2))])
+
+        if XAXIS == 'REALISTIC':
+            YAXIS = 'IDEAL'
+            ax.plot([0, ymax], [0, ymax], color='lightgray', zorder=0)
+            ax.set_xlim([0, ymax])
+            ax.set_ylim([0, ymax])
+            for i in range(0, len(ideal)):
+                ax.scatter(realistic[i], ideal[i], s=100, zorder=1, color=color[i], marker=marker[i])
+        else:
+            YAXIS = 'REALISTIC'
+            ax.plot([0, ymax], [0, ymax], color='lightgray', zorder=0)
+            ax.set_xlim([0, ymax])
+            ax.set_ylim([0, ymax])
+            for i in range(0, len(ideal)):
+                ax.scatter(ideal[i], realistic[i], s=100, zorder=1, color=color[i], marker=marker[i])
+
+    ax.set_title(MOL_NAME + " CONCENTRATION (" + MOL_CONC_UNITS[MOL_NAME] + ")\n" + "IN " + XAXIS + " vs " + YAXIS + " CO-CULTURE", fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel(MOL_NAME + " CONCENTRATION IN " + XAXIS, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel(MOL_NAME + " CONCENTRATION IN " + YAXIS, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    for color in colorDict:
+        ax.plot([0],[0], color=colorDict[color], label=color, linestyle='solid')
+    for dose in doseLineDict:
+        ax.plot([0],[0], color='black', label=dose, linestyle=doseLineDict[dose])
+    ax.legend(bbox_to_anchor=(1.0,1.0), frameon=False)
+
+    plt.xticks(fontsize=TICKSIZE)
+    plt.yticks(fontsize=TICKSIZE)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + FILEID + '_CONC_' + MOL_NAME + '_COCULTURE_PARITY_' + XAXIS + '_' + YAXIS + '_' + COLOR.replace(' ', '') + '.svg', bbox_inches='tight')
+
+    return
+
 def plot_env_conc_axis_bar(MOL_NAME, simsDF, COLOR, FILEID, SAVELOC, TIMES):
 
     colorDict = COLOR_DICT[COLOR]
@@ -4430,26 +4531,30 @@ def plot_counts_lysed_radius_exact(POP_NAME, simsDF, COLOR, FILEID, SAVELOC):
 
 # ------------- RANK PLOTTING FUNCTION -----------------
 
-def plot_rank(XRANK, SAVELOC):
+def plot_rank_parity(rankDF, COLOR, XRANK, SAVELOC):
 
     figRank = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
     ax = figRank.add_subplot(1, 1, 1)
+    ax.plot([0, len(rankDF)+1], [0, len(rankDF)+1], color='lightgray', zorder=0)
 
-    ranks_vitro_vivo = [[1, 1], [3, 2], [4, 3], [2, 4], [6, 5], [16, 6], [8, 7], [5, 8], [10, 9], [9, 10], [7, 11], [14, 12], [15, 13], [13, 14], [12, 15], [11, 16]]
+    colorDict = COLOR_DICT[COLOR]
 
     if XRANK == 'VITRO':
         YRANK = 'VIVO'
-        ranks = sorted(ranks_vitro_vivo, key=lambda x: x[0])
-        x = [ranks[a][0] for a in range(0, len(ranks))]
-        y = [ranks[a][1] for a in range(0, len(ranks))]
+        rankDFsorted = rankDF.sort_values(by='RANK DISH', ascending=True)
+        x = rankDFsorted['RANK DISH']
+        y = rankDFsorted['RANK TISSUE']
+        for i in range(0,len(rankDFsorted)):
+            ax.scatter(x.iloc[i], y.iloc[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
     else:
         YRANK = 'VITRO'
-        ranks = sorted(ranks_vitro_vivo, key=lambda x: x[1])
-        x = [ranks[a][1] for a in range(0,len(ranks))]
-        y = [ranks[a][0] for a in range(0,len(ranks))]
+        rankDFsorted = rankDF.sort_values(by='RANK TISSUE', ascending=True)
+        x = rankDFsorted['RANK TISSUE']
+        y = rankDFsorted['RANK DISH']
+        for i in range(0, len(rankDFsorted)):
+            ax.scatter(x.iloc[i], y.iloc[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
 
-    ax.plot([0,16], [0,16], color='lightgray', zorder=30)
-    ax.scatter(x, y, s=50, zorder=1)
+
     ax.set_title("RANK IN " + XRANK + " vs RANK IN " + YRANK, fontname='Arial',
                  fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
     ax.set_xlabel("RANK IN " + XRANK, fontname='Arial', fontweight='bold',
@@ -4457,16 +4562,202 @@ def plot_rank(XRANK, SAVELOC):
     ax.set_ylabel("RANK IN" + YRANK, fontname='Arial', fontweight='bold',
                   fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
 
-    ax.set_xlim([0,17])
-    ax.set_ylim([0,17])
+    ax.set_xlim([0,len(rankDF)+1])
+    ax.set_ylim([0,len(rankDF)+1])
 
-    plt.xticks([i for i in range(1,17)], fontsize=TICKSIZE-10, rotation=45)
-    plt.yticks([i for i in range(1,17)], fontsize=TICKSIZE-10)
+    plt.xticks([i for i in range(1,15)], fontsize=TICKSIZE-10, rotation=45)
+    plt.yticks([i for i in range(1,15)], fontsize=TICKSIZE-10)
 
     if SAVELOC == '':
         plt.show()
     else:
-        plt.savefig(SAVELOC + 'RANK_' + XRANK + '_' + YRANK + '.svg', bbox_inches='tight')
+        plt.savefig(SAVELOC + 'RANK_' + XRANK + '_' + YRANK + '_' + COLOR.replace(' ','') + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_rank_ladder(rankDF, COLOR, XRANK, SAVELOC):
+
+    figRank = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figRank.add_subplot(1, 1, 1)
+
+    colorDict = COLOR_DICT[COLOR]
+
+    if XRANK == 'VITRO':
+        YRANK = 'VIVO'
+        rankDFsorted = rankDF.sort_values(by='RANK DISH', ascending=False)
+        x = rankDFsorted['RANK DISH']
+        y = rankDFsorted['RANK TISSUE']
+        for i in range(0,len(rankDFsorted)):
+            ax.plot([1, 2], [x.iloc[i], y.iloc[i]], marker='o', zorder=1, markerfacecolor=colorDict[str(rankDFsorted.iloc[i][COLOR])], markeredgecolor=colorDict[str(rankDFsorted.iloc[i][COLOR])], color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+    else:
+        YRANK = 'VITRO'
+        rankDFsorted = rankDF.sort_values(by='RANK TISSUE', ascending=False)
+        x = rankDFsorted['RANK TISSUE']
+        y = rankDFsorted['RANK DISH']
+        for i in range(0, len(rankDFsorted)):
+            ax.plot([1, 2], [x.iloc[i], y.iloc[i]], marker='o', zorder=1, markerfacecolor=colorDict[str(rankDFsorted.iloc[i][COLOR])], markeredgecolor=colorDict[str(rankDFsorted.iloc[i][COLOR])], color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+
+
+    ax.set_title("RANK IN " + XRANK + " vs RANK IN " + YRANK, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("CONTEXT", fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("RANK", fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    ax.set_xlim([0.7,2.3])
+    ax.set_ylim([0,len(rankDF)+1])
+
+    plt.xticks([1, 2], labels=[XRANK, YRANK], fontsize=TICKSIZE-10)
+    #plt.xlabel([XRANK, YRANK], fontsize=TICKSIZE-10, rotation=45)
+    plt.yticks([i for i in range(1,15)], fontsize=TICKSIZE-10)
+    plt.gca().invert_yaxis()
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'RANK_LADDER_' + XRANK + '_' + YRANK + '_' + COLOR.replace(' ','') + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_score_parity(rankDF, COLOR, XRANK, SAVELOC):
+
+    figRank = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figRank.add_subplot(1, 1, 1)
+
+    colorDict = COLOR_DICT[COLOR]
+
+    if XRANK == 'VITRO':
+        YRANK = 'VIVO'
+        rankDFsorted = rankDF.sort_values(by='SCORE DISH', ascending=True)
+        x = rankDFsorted['SCORE DISH']
+        y = rankDFsorted['SCORE TISSUE']
+        ax.plot([-0.3, 0.8], [-0.3, 0.8], color='lightgray', zorder=0)
+        ax.set_xlim([-0.3, 0.8])
+        ax.set_ylim([-0.3, 0.8])
+        for i in range(0,len(rankDFsorted)):
+            ax.scatter(x.iloc[i], y.iloc[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+    else:
+        YRANK = 'VITRO'
+        rankDFsorted = rankDF.sort_values(by='SCORE TISSUE', ascending=True)
+        x = rankDFsorted['SCORE TISSUE']
+        y = rankDFsorted['SCORE DISH']
+        ax.plot([-0.3, 0.8], [-0.3, 0.8], color='lightgray', zorder=0)
+        ax.set_xlim([-0.3, 0.8])
+        ax.set_ylim([-0.3, 0.8])
+        for i in range(0, len(rankDFsorted)):
+            ax.scatter(x.iloc[i], y.iloc[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+
+
+    ax.set_title("SCORE IN " + XRANK + " vs SCORE IN " + YRANK, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("SCORE IN " + XRANK, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("SCORE IN" + YRANK, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    plt.xticks(fontsize=TICKSIZE-10)
+    plt.yticks(fontsize=TICKSIZE-10)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'SCORE_' + XRANK + '_' + YRANK + '_' + COLOR.replace(' ','') + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_score_norm_parity(rankDF, COLOR, XRANK, SAVELOC):
+
+    figRank = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figRank.add_subplot(1, 1, 1)
+    ax.plot([0, 1], [0, 1], color='lightgray', zorder=0)
+    ax.set_xlim([0, 1])
+    ax.set_ylim([0, 1])
+
+    colorDict = COLOR_DICT[COLOR]
+
+    if XRANK == 'VITRO':
+        YRANK = 'VIVO'
+        rankDFsorted = rankDF.sort_values(by='SCORE DISH', ascending=True)
+        a = rankDFsorted['SCORE DISH']
+        b = rankDFsorted['SCORE TISSUE']
+        x = [(i - min(a)) / (max(a) - min(a)) for i in a]
+        y = [(i - min(b)) / (max(b) - min(b)) for i in b]
+        for i in range(0,len(x)):
+            ax.scatter(x[i], y[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+    else:
+        YRANK = 'VITRO'
+        rankDFsorted = rankDF.sort_values(by='SCORE TISSUE', ascending=True)
+        a = rankDFsorted['SCORE TISSUE']
+        b = rankDFsorted['SCORE DISH']
+
+        x = [(i - min(a)) / (max(a) - min(a)) for i in a]
+        y = [(i - min(b)) / (max(b) - min(b)) for i in b]
+        for i in range(0, len(x)):
+            ax.scatter(x[i], y[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+
+
+    ax.set_title("SCORE IN " + XRANK + " vs SCORE IN " + YRANK, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("SCORE IN " + XRANK, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("SCORE IN" + YRANK, fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    plt.xticks(fontsize=TICKSIZE-10, rotation=45)
+    plt.yticks(fontsize=TICKSIZE-10)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'SCORENORM_' + XRANK + '_' + YRANK + '_' + COLOR.replace(' ','') + '.svg', bbox_inches='tight')
+
+    return
+
+def plot_score_ladder(rankDF, COLOR, XRANK, SAVELOC):
+
+    figRank = plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    ax = figRank.add_subplot(1, 1, 1)
+
+    colorDict = COLOR_DICT[COLOR]
+
+    if XRANK == 'VITRO':
+        YRANK = 'VIVO'
+        rankDFsorted = rankDF.sort_values(by='SCORE DISH', ascending=True)
+        x = rankDFsorted['SCORE DISH']
+        y = rankDFsorted['SCORE TISSUE']
+        for i in range(0,len(rankDFsorted)):
+            ax.plot([1, 2], [x.iloc[i], y.iloc[i]], marker='o', zorder=1,
+                    markerfacecolor=colorDict[str(rankDFsorted.iloc[i][COLOR])],
+                    markeredgecolor=colorDict[str(rankDFsorted.iloc[i][COLOR])],
+                    color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+    else:
+        YRANK = 'VITRO'
+        rankDFsorted = rankDF.sort_values(by='SCORE TISSUE', ascending=True)
+        x = rankDFsorted['SCORE TISSUE']
+        y = rankDFsorted['SCORE DISH']
+        for i in range(0, len(rankDFsorted)):
+            ax.scatter(x.iloc[i], y.iloc[i], s=100, zorder=1, color=colorDict[str(rankDFsorted.iloc[i][COLOR])])
+
+
+    ax.set_title("SCORE IN " + XRANK + " vs SCORE IN " + YRANK, fontname='Arial',
+                 fontweight='bold', fontsize=FONTSIZE_AXES_TITLES, pad=LABELPAD)
+    ax.set_xlabel("CONTEXT", fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+    ax.set_ylabel("SCORE", fontname='Arial', fontweight='bold',
+                  fontsize=FONTSIZE_AXES_VALUES, labelpad=LABELPAD)
+
+    ax.set_xlim([0.7, 2.3])
+    ax.set_ylim([-0.3, 0.8])
+    plt.yticks([-0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8])
+    plt.xticks([1, 2], labels=[XRANK, YRANK], fontsize=TICKSIZE - 10)
+    plt.xticks(fontsize=TICKSIZE-10)
+    plt.yticks(fontsize=TICKSIZE-10)
+
+    if SAVELOC == '':
+        plt.show()
+    else:
+        plt.savefig(SAVELOC + 'SCORE_LADDER_' + XRANK + '_' + YRANK + '_' + COLOR.replace(' ','') + '.svg', bbox_inches='tight')
 
     return
 
@@ -4592,7 +4883,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, PARTIAL, FILEID, SAVELOC):
 
             # Plot counts data
             if 'CYCLES' not in FILEID and 'VOLUMES' not in FILEID:
-                '''
+
                 print('\t\t' + 'Plotting count data over time')
                 for p in range(0, len(POP_NAMES)):
                     if filesplit[FILEID_SPLIT_INDICES['ANTIGENS HEALTHY']] == 'NA' and 'HEALTHY' in POP_NAMES[p]:
@@ -4637,7 +4928,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, PARTIAL, FILEID, SAVELOC):
                         plot_count_fracs(POP_NAME, simsDF, COLOR, fileid, SAVELOC)
 
                 plt.close("all")
-                '''
+
                 # Plot scatter
                 print('\t\t' + 'Plotting scatter data')
                 if filesplit[FILEID_SPLIT_INDICES['POPS']] == 'CH':
@@ -4651,7 +4942,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, PARTIAL, FILEID, SAVELOC):
                         plot_CH_scatter(simsDF, COLOR, MARKER, fileid, SAVELOC, 31)
                         plot_CH_scatter_normalized(simsDF, COLOR, MARKER, fileid, SAVELOC, 31)
                     plt.close("all")
-                '''
+
                 # Plot type fracs
                 print('\t\t' + 'Plotting type fraction data')
                 plot_state_fracs(simsDF, COLOR, fileid, SAVELOC)
@@ -4754,7 +5045,7 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, PARTIAL, FILEID, SAVELOC):
                         plot_CH_scatter(simsDF, COLOR, MARKER, fileid, SAVELOC, 29)
                         plot_CH_scatter(simsDF, COLOR, MARKER, fileid, SAVELOC, 31)
                     plt.close("all")
-    '''
+
     if ANALYSIS == 'ENVIRONMENT':
 
         # Count Xs in filesplit
@@ -4787,6 +5078,20 @@ def plot_data(simsDF, ANALYSIS, COLOR, MARKER, PARTIAL, FILEID, SAVELOC):
                     plot_evn_conc_times_line(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC)
                     plot_env_conc_axis_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TIMES)
                     plt.close("all")
+
+        if X == 5 and 'VITRO' in FILEID:
+            for m in range(0, len(MOL_NAMES)):
+                if MOL_NAMES[m] == 'OXYGEN':
+                    continue
+                else:
+                    for XAXIS in ['IDEAL', 'REALISTIC']:
+                        if COLOR == 'X':
+                            for color in ['DOSE', 'TREAT RATIO', 'CAR AFFINITY', 'ANTIGENS CANCER']:
+                                plot_evn_concs_ideal_realistic_parity(MOL_NAMES[m], simsDF, XAXIS, color, [7], FILEID, SAVELOC)
+                                plt.close("all")
+                        else:
+                            plot_evn_concs_ideal_realistic_parity(MOL_NAMES[m], simsDF, XAXIS, COLOR, [7], FILEID, SAVELOC)
+                            plt.close("all")
 
     if ANALYSIS == 'SPATIAL':
 
@@ -4902,55 +5207,88 @@ if __name__ == "__main__":
     args = parser.parse_args()
     analysis = ''
 
-    # color_test()
-
-    # Get files
-    PKLFILES = get_pkl_files(args.files)
-
     print("Making figures for the following files:")
 
-    for file in PKLFILES:
+    if args.rank:
 
-        if 'VITRO' in file:
-            fileName = re.sub('.*VITRO', 'VITRO', file)
-
-        else:
-            fileName = re.sub('.*VIVO', 'VIVO', file)
-
+        fileName = re.sub('.*RANK', 'RANK', args.files)
         print('\t' + fileName)
 
-        FILEID = ''
-
-        if 'ANALYZED' in fileName:
-            FILEID = fileName.replace('_ANALYZED.pkl', '')
-            analysis = 'ANALYZED'
-
-        if 'ENVIRONMENT' in fileName:
-            FILEID = fileName.replace('_ENVIRONMENT.pkl', '')
-            analysis = 'ENVIRONMENT'
-
-        if 'SPATIAL' in fileName:
-            FILEID = fileName.replace('_SPATIAL.pkl', '')
-            analysis = 'SPATIAL'
-
-        if 'LYSED' in fileName:
-            FILEID = fileName.replace('_LYSED.pkl', '')
-            analysis = 'LYSED'
-
-        with open(file, 'rb') as f:
-            simsDF = pickle.load(f)
+        with open(args.files, 'rb') as f:
+            rankDF = pd.read_excel(f, header=0)
 
         pd.set_option('display.max_rows', None)
         pd.set_option('display.max_columns', None)
         pd.set_option('display.width', None)
         pd.set_option('display.max_colwidth', -1)
 
-        #print(simsDF.iloc[0])
+        rankDF['TREAT RATIO'] = rankDF['TREAT RATIO'].astype(str)
+        rankDF['CAR AFFINITY'] = rankDF['CAR AFFINITY'].astype(str)
+        for i in range(0,len(rankDF)):
+            rankDF['TREAT RATIO'].iloc[i] = TREAT_RATIO_DICT_REVERSE[rankDF['TREAT RATIO'].iloc[i]]
+        #
+        # print(rankDF)
+        # print(rankDF.dtypes)
 
-        #plot_rank('VITRO', args.saveLoc)
-        #plot_rank('VIVO', args.saveLoc)
+        if args.color == 'X':
+            for COLOR in ['DOSE', 'TREAT RATIO', 'CAR AFFINITY', 'ANTIGENS CANCER']:
+                plot_rank_parity(rankDF, COLOR, 'VITRO', args.saveLoc)
+                plot_rank_parity(rankDF, COLOR, 'VIVO', args.saveLoc)
+                plot_rank_ladder(rankDF, COLOR, 'VITRO', args.saveLoc)
+                plot_rank_ladder(rankDF, COLOR, 'VIVO', args.saveLoc)
+                plot_score_parity(rankDF, COLOR, 'VITRO', args.saveLoc)
+                plot_score_parity(rankDF, COLOR, 'VIVO', args.saveLoc)
+                plot_score_norm_parity(rankDF, COLOR, 'VITRO', args.saveLoc)
+                plot_score_norm_parity(rankDF, COLOR, 'VIVO', args.saveLoc)
+                plot_score_ladder(rankDF, COLOR, 'VITRO', args.saveLoc)
+                plot_score_ladder(rankDF, COLOR, 'VIVO', args.saveLoc)
+                plt.close("all")
 
-        #plot_binding_heuristic_CAR(args.saveLoc)
-        #plot_binding_heuristic_self(args.saveLoc)
-        plot_data(simsDF, analysis, args.color, args.marker, args.partial, FILEID, args.saveLoc)
+    else:
+
+        # Get files
+        PKLFILES = get_pkl_files(args.files)
+
+        for file in PKLFILES:
+
+            if 'VITRO' in file:
+                fileName = re.sub('.*VITRO', 'VITRO', file)
+
+            else:
+                fileName = re.sub('.*VIVO', 'VIVO', file)
+
+            print('\t' + fileName)
+
+            FILEID = ''
+
+            if 'ANALYZED' in fileName:
+                FILEID = fileName.replace('_ANALYZED.pkl', '')
+                analysis = 'ANALYZED'
+
+            if 'ENVIRONMENT' in fileName:
+                FILEID = fileName.replace('_ENVIRONMENT.pkl', '')
+                analysis = 'ENVIRONMENT'
+
+            if 'SPATIAL' in fileName:
+                FILEID = fileName.replace('_SPATIAL.pkl', '')
+                analysis = 'SPATIAL'
+
+            if 'LYSED' in fileName:
+                FILEID = fileName.replace('_LYSED.pkl', '')
+                analysis = 'LYSED'
+
+            with open(file, 'rb') as f:
+                simsDF = pickle.load(f)
+
+            pd.set_option('display.max_rows', None)
+            pd.set_option('display.max_columns', None)
+            pd.set_option('display.width', None)
+            pd.set_option('display.max_colwidth', -1)
+
+            #print(simsDF.iloc[0])
+
+            #plot_binding_heuristic_CAR(args.saveLoc)
+            #plot_binding_heuristic_self(args.saveLoc)
+
+            plot_data(simsDF, analysis, args.color, args.marker, args.partial, FILEID, args.saveLoc)
 

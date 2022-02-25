@@ -672,7 +672,9 @@ def save_sorted_df_xlsx(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
         simsDF = simsDF[simsDF[RANK] < 1]
 
     elif RANK == 'SCORE':
-        simsDF = simsDF[simsDF[RANK] > 0]
+        # simsDF = simsDF[simsDF[RANK] > 0]
+        simsDF = simsDF[simsDF['Y_NORM_HEALTHY_LIVE'] >= SCORE_MIN_HEALTHY_THRESHOLD]
+        simsDF = simsDF[simsDF['Y_NORM_CANCER_LIVE'] < 1]
 
     elif RANK == 'Y_NORM_HEALTHY_LIVE':
 
@@ -1707,11 +1709,13 @@ def plot_output_heatmap_with_subplots_line_multiple_outputs(simsDF, OUTPUTS, SOR
             sns.heatmap(x, ax=a, xticklabels=[], annot=False, cmap=c, cbar=False, vmin=0.0, vmax=1.0)
         elif 'SCORE' in columns[i]:
             x = [index for index in range(0, len(simsDF))]
+            y = [0 for j in x]
             sns.lineplot(x, simsDF[columns[i]].values, ax=ax[i-1], color='black')
+            sns.lineplot(x, y, ax=ax[i-1], color='black')
             ax[i-1].set_xlim([0,len(simsDF)-1])
-            ax[i-1].set_ylim([0,max(simsDF['SCORE'])])
-            ax[i-1].set_yticks([0,max(simsDF[columns[i]])])
-            ax[i-1].set_yticklabels([0,max(simsDF[columns[i]])])
+            ax[i-1].set_ylim([min(simsDF[columns[i]]),max(simsDF['SCORE'])])
+            ax[i-1].set_yticks([min(simsDF[columns[i]]),max(simsDF[columns[i]])])
+            ax[i-1].set_yticklabels([min(simsDF[columns[i]]),max(simsDF[columns[i]])])
             a.set_visible(False)
             ax[i-1].set_ylabel('SCORE', rotation='horizontal', labelpad=15)
         elif 'CANCER' in columns[i]:
@@ -2158,7 +2162,8 @@ def stats_data(simsDF, NORM, SCORE, AVG, PARTIAL, FILEID, SAVELOC):
                 if cancer > 1 or healthy < SCORE_MIN_HEALTHY_THRESHOLD:
                     delta = 0
 
-                score = (1 - cancer + (healthy*norm)) * delta
+                score = (healthy*norm) - cancer
+
             else:
                 if cancer == 0:
                     print(simsDF.iloc[i]['TUMOR ID'] + str(simsDF.iloc[i]['SEED']) + ' CANCER 0')
