@@ -10,6 +10,8 @@ scripts/stats/__pycache__/*
 scripts/subset/__pycache__/*
 *.svg
 *.pkl
-examples/*
+examples/files/*
+examples/figures/coculture/*
+examples/figures/tissue/*
 .gitattributes
 pipeline_data_processing_and_plotting.ipynb
