@@ -408,7 +408,7 @@ def _image(jsn, saveLoc, T, S, R, view, filename, nosave, ignore, bgcol, spec, p
             h = S*(4*R - 2)
 
             if not nosave:
-                save_svg(g, w, h, filename, view, t, bgcol, padding)
+                save_svg(g, w, h, saveLoc + filename.split("/")[-1], view, t, bgcol, padding)
 
             continue
 

@@ -12,6 +12,7 @@ import pickle
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
+from argparse import ArgumentParser
 
 '''
 ABM_PLOT takes a directory of (or a single) .pkl simulation files that result from ABM_ANALYZE and
@@ -32,6 +33,23 @@ Usage:
     [--saveLoc SAVELOC]
         Location of where to save file, default will save here
 '''
+def get_parser():
+
+    # Setup argument parser.
+    parser = ArgumentParser(description="Plot ABM data from dataframe")
+    parser.add_argument(dest="files", help="Path to .pkl file or directory")
+    parser.add_argument("--color", default="CAR AFFINITY", dest="color",
+                        help="Feature by which to color data by (default: CAR AFFINITY)")
+    parser.add_argument("--marker", default="TREAT RATIO", dest="marker",
+                        help="Feature by which to change marker of data by (default: TREAT RATIO)")
+    parser.add_argument("--partial", default=False, dest="partial",
+                        action='store_true', help="Flag indicating only partial dataset present instead of full combinatoral set.")
+    parser.add_argument("--rank", default=False, dest="rank", action='store_true',
+                        help="Flag indicating to make rank parody plot using rank file.")
+    parser.add_argument("--saveLoc", default="", dest="saveLoc",
+                        help="Location of where to save file, default will save here")
+
+    return parser
 
 def plot_dish_tissue_compare_data(files, color, saveLoc):
     """Call plotters that compare rank and score from dish and tissue simulations."""
@@ -115,6 +133,9 @@ def plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID
             if ANALYSIS == 'ANALYZE':
                 scripts.plot.plot_cell_counts.plot_counts_norm(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
+            if 'VIVO' in FILEID and POP_NAMES[p] in ['CANCER', 'CANCER LIVE', 'HEALTHY', 'HEALTHY LIVE']:
+                scripts.plot.plot_cell_counts.plot_counts_frac_remaining(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+
             if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
                 scripts.plot.plot_cell_counts.plot_counts_treat(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
@@ -123,6 +144,8 @@ def plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID
                 if ANALYSIS == 'ANALYZE':
                     scripts.plot.plot_cell_counts.plot_counts_norm_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
+                if 'VIVO' in FILEID and POP_NAMES[p] in ['CANCER', 'CANCER LIVE', 'HEALTHY', 'HEALTHY LIVE']:
+                    scripts.plot.plot_cell_counts.plot_counts_frac_remaining_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
                 if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
                     scripts.plot.plot_cell_counts.plot_counts_treat_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
@@ -131,6 +154,8 @@ def plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID
                 if ANALYSIS == 'ANALYZE':
                     scripts.plot.plot_cell_counts.plot_counts_norm_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
+                if 'VIVO' in FILEID and POP_NAMES[p] in ['CANCER', 'CANCER LIVE', 'HEALTHY', 'HEALTHY LIVE']:
+                    scripts.plot.plot_cell_counts.plot_counts_frac_remaining_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
                 if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD8', 'T-CELL']:
                     scripts.plot.plot_cell_counts.plot_counts_treat_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
@@ -167,8 +192,12 @@ def plot_analyze_state_frac_data(simsDF, COLOR, fileid, SAVELOC):
     # Plot type fracs
     print('\t\t' + 'Plotting state fraction data')
     scripts.plot.plot_subcell_data.plot_state_fracs(simsDF, COLOR, fileid, SAVELOC)
-    scripts.plot.plot_subcell_data.plot_state_fracs_treat(simsDF, COLOR, fileid, SAVELOC)
+    scripts.plot.plot_subcell_data.plot_state_fracs(simsDF, COLOR, fileid, SAVELOC, True)
     scripts.plot.plot_subcell_data.plot_state_fracs_neutral(simsDF, COLOR, fileid, SAVELOC)
+    if 'VIVO' in fileid:
+        scripts.plot.plot_subcell_data.plot_state_fracs_treat(simsDF, COLOR, fileid, SAVELOC)
+        scripts.plot.plot_subcell_data.plot_state_fracs_treat(simsDF, COLOR, fileid, SAVELOC, True)
+
     plt.close("all")
 
     return
@@ -363,11 +392,12 @@ def plot_analyze_data(simsDF, COLOR, PARTIAL, ANALYSIS, FILEID, SAVELOC):
 
     if 'VOLUMES' not in FILEID and 'CYCLES' not in FILEID and not PARTIAL:
         fileid = FILEID.replace('_STATES', '')
-        if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X' and filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X':
-            if COLOR == 'X': COLOR = 'CAR AFFINITY'
+        if filesplit[FILEID_SPLIT_INDICES['DOSE']] != 'X' or filesplit[FILEID_SPLIT_INDICES['TREAT RATIO']] != 'X':
+            if filesplit[FILEID_SPLIT_INDICES['CAR AFFINITY']] == 'X' and filesplit[FILEID_SPLIT_INDICES['ANTIGENS CANCER']] == 'X':
+                if COLOR == 'X': COLOR = 'CAR AFFINITY'
 
-            # Plot kill curve
-            plot_kill_curve_sim_data(simsDF, filesplit, FILEID, fileid, SAVELOC)
+                # Plot kill curve
+                plot_kill_curve_sim_data(simsDF, filesplit, FILEID, fileid, SAVELOC)
 
     return
 
@@ -510,10 +540,7 @@ def plot_data(files, color, saveLoc='', partial=False):
 
     return
 
-def plot_constants(files, color, saveLoc=''):
-
-    # Call once in notebook when done
-
-    plot_dish_tissue_compare_data(files, color, saveLoc)
-    return
-
+if __name__ == "__main__":
+    parser = get_parser()
+    args = parser.parse_args()
+    plot_data(args.files, args.color, args.saveLoc, args.partial)

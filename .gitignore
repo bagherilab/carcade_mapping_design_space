@@ -1,5 +1,6 @@
 .idea/*
 __pycache__/*
+.ipynb_checkpoints/
 scripts/__pycache__/*
 scripts/analyze/__pycache__/*
 scripts/image/__pycache__/*
@@ -11,3 +12,4 @@ scripts/subset/__pycache__/*
 *.pkl
 examples/*
 .gitattributes
+pipeline_data_processing_and_plotting.ipynb

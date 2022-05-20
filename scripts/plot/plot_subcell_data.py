@@ -4,7 +4,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def plot_state_fracs(simsDF, COLOR, FILEID, SAVELOC):
+def plot_state_fracs(simsDF, COLOR, FILEID, SAVELOC, ALT_AXES=False):
     """Plot fractions of cells in each state over time for all cell populations and color based on selected feature."""
 
     POP_NAMES = scripts.analyze.analyze_utilities.define_pop_names_list()
@@ -142,7 +142,13 @@ def plot_state_fracs(simsDF, COLOR, FILEID, SAVELOC):
     for a in range(0, 12):
         for b in range(0, 7):
             axs[a, b].set_xlim([0, max(plot_time)])
-            axs[a, b].set_ylim([0, 1])
+            if ALT_AXES:
+                if a == 8 or a == 9:
+                    axs[a, b].set_ylim([0, 0.02])
+                else:
+                    axs[a, b].set_ylim([0, 1])
+            else:
+                axs[a, b].set_ylim([0, 1])
 
     YLABELS = ['MIGRAGORY', 'PROLIFERATIVE', 'QUIESCENT', 'SENESCENT', 'APOPTOTIC',
                'NECROTIC', 'CYTOTOXIC', 'STIMULATORY', 'EXHAUSTED', 'ANERGIC', 'STARVED', 'PAUSED']
@@ -184,11 +190,14 @@ def plot_state_fracs(simsDF, COLOR, FILEID, SAVELOC):
     if SAVELOC == '':
         plt.show()
     else:
-        plt.savefig(SAVELOC + FILEID + '_STATESFRAC.svg', bbox_inches='tight')
+        if ALT_AXES:
+            plt.savefig(SAVELOC + FILEID + '_STATESFRAC_ALTAXES.svg', bbox_inches='tight')
+        else:
+            plt.savefig(SAVELOC + FILEID + '_STATESFRAC.svg', bbox_inches='tight')
 
     return
 
-def plot_state_fracs_treat(simsDF, COLOR, FILEID, SAVELOC):
+def plot_state_fracs_treat(simsDF, COLOR, FILEID, SAVELOC, ALT_AXES=False):
     """Plot fractions of cells in each state over treatment time for all cell populations and color based on selected feature."""
 
     POP_NAMES = scripts.analyze.analyze_utilities.define_pop_names_list()
@@ -326,7 +335,13 @@ def plot_state_fracs_treat(simsDF, COLOR, FILEID, SAVELOC):
     for a in range(0, 12):
         for b in range(0, 7):
             axs[a, b].set_xlim([21, max(plot_time)])
-            axs[a, b].set_ylim([0, 1])
+            if ALT_AXES:
+                if a == 8 or a == 9:
+                    axs[a, b].set_ylim([0, 0.02])
+                else:
+                    axs[a, b].set_ylim([0, 1])
+            else:
+                axs[a, b].set_ylim([0, 1])
 
     YLABELS = ['MIGRAGORY', 'PROLIFERATIVE', 'QUIESCENT', 'SENESCENT', 'APOPTOTIC',
                'NECROTIC', 'CYTOTOXIC', 'STIMULATORY', 'EXHAUSTED', 'ANERGIC', 'STARVED', 'PAUSED']
@@ -368,7 +383,10 @@ def plot_state_fracs_treat(simsDF, COLOR, FILEID, SAVELOC):
     if SAVELOC == '':
         plt.show()
     else:
-        plt.savefig(SAVELOC + FILEID + '_STATESFRAC_TREAT.svg', bbox_inches='tight')
+        if ALT_AXES:
+            plt.savefig(SAVELOC + FILEID + '_STATESFRAC_TREAT_ALTAXES.svg', bbox_inches='tight')
+        else:
+            plt.savefig(SAVELOC + FILEID + '_STATESFRAC_TREAT.svg', bbox_inches='tight')
 
     return
 

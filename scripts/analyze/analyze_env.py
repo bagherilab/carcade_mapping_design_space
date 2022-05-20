@@ -185,7 +185,7 @@ def analyze_env_simulation(envDF, environments, T, R, TUMORID, SEEDS):
     HEIGHT = 0
 
     for SEED in range(0, SEEDS):
-        print("\t\t  >" + TUMORID + "_0" + str(SEED) + "_ENVIRONMENT")
+        print("\t  >" + TUMORID + "_0" + str(SEED) + "_ENVIRONMENT")
 
         # Make simulation dict
         envDict = make_env_dict()
