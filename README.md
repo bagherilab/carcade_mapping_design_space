@@ -5,7 +5,7 @@ Supporting code for the article:
 # Analysis scripts overview
 
 - **[Repository overview](#repository-overview)**
-- **[Pipeline notebooks](#pipeline-notebooks)**
+- **[Pipeline walkthroughs](#pipeline-walkthroughs)**
   - [Full data processing and plotting pipeline](#full-data-processing-and-plotting-pipeline)
   - [Example data processing and plotting pipeline](#full-data-processing-and-plotting-pipeline)
 
@@ -19,7 +19,7 @@ The `examples/` directory contains example data files, sorted by type of data, u
 
 The `requirements.txt` file lists the package requirements for running this code. Additionally, code was run using Python version 3.6.8.
 
-## Pipeline notebooks
+## Pipeline walkthroughs
 
 ### Full data processing and plotting pipeline
 
