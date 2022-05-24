@@ -1,6 +1,6 @@
 Supporting code for the article:
 
-> AN Prybutok, JS Yu, J Leonard, and N Bagheri. (2022). Mapping CAR T-cell design space using agent-based models. *Frontiers in Molecular Biosciences.*
+> AN Prybutok, JS Yu, J Leonard\*, and N Bagheri\*. (2022). Mapping CAR T-cell design space using agent-based models. *Frontiers in Molecular Biosciences.* \*co-corresponding authorship.
 
 # Analysis scripts overview
 
@@ -16,6 +16,8 @@ The `scripts/` directory contains all the scripts used for analyzing the output 
 The `pipeline_data_processing_and_plotting.html` and  `pipeline_data_processing_and_plotting_example.ipynb` files walk through the full data processing and plotting pipelines used to analyze the data from the paper.
 
 The `examples/` directory contains example data files, sorted by type of data, used in the pipeline and figure outputs of the analysis scripts.
+
+The `requirements.txt` file lists the package requirements for running this code. Additionally, code was run using Python version 3.6.8.
 
 ## Pipeline notebooks
 
