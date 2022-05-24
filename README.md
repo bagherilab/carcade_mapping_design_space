@@ -1,6 +1,6 @@
 Supporting code for the article:
 
-> AN Prybutok, JS Yu, J Leonard\*, and N Bagheri\*. (2022). Mapping CAR T-cell design space using agent-based models. *Frontiers in Molecular Biosciences.* \*co-corresponding authorship.
+> AN Prybutok, JS Yu, JN Leonard\*, and N Bagheri\*. (2022). Mapping CAR T-cell design space using agent-based models. *Frontiers in Molecular Biosciences.* \*co-corresponding authorship.
 
 # Analysis scripts overview
 
