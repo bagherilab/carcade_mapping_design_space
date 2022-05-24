@@ -4,12 +4,12 @@ Supporting code for the article:
 
 # Analysis scripts overview
 
-- **[Scripts files](#scripts-files)**
-- **[Pipeline Notebooks](#pipeline-notebooks)**
+- **[Repository overview](#repository-overview)**
+- **[Pipeline notebooks](#pipeline-notebooks)**
   - [Full data processing and plotting pipeline](#full-data-processing-and-plotting-pipeline)
   - [Example data processing and plotting pipeline](#full-data-processing-and-plotting-pipeline)
 
-## Scripts files
+## Repository overview
 
 The `scripts/` directory contains all the scripts used for analyzing the output of the simulations using [CARCADE v1.0](#https://github.com/bagherilab/CARCADE)
 
