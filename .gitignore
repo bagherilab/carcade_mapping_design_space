@@ -9,4 +9,4 @@ scripts/plot/__pycache__/*
 scripts/stats/__pycache__/*
 scripts/subset/__pycache__/*
 .gitattributes
-pipeline_data_processing_and_plotting.ipynb
+docs/pipeline_data_processing_and_plotting.ipynb
