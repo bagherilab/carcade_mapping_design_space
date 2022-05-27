@@ -2,7 +2,7 @@
 	"seed": 1,
 	"config": {
 		"class": "arcade.sim.GrowthSimulation$Hexagonal",
-		"days": 7,
+		"days": 2,
 		"size": { "radius": 34, "height": 1, "margin": 6 },
 		"init": 2000,
 		"pops": [
@@ -150,56 +150,6 @@
 		},
 		{
 			"time": 2.0,
-			"cells": [
-			]
-		},
-		{
-			"time": 2.5,
-			"cells": [
-			]
-		},
-		{
-			"time": 3.0,
-			"cells": [
-			]
-		},
-		{
-			"time": 3.5,
-			"cells": [
-			]
-		},
-		{
-			"time": 4.0,
-			"cells": [
-			]
-		},
-		{
-			"time": 4.5,
-			"cells": [
-			]
-		},
-		{
-			"time": 5.0,
-			"cells": [
-			]
-		},
-		{
-			"time": 5.5,
-			"cells": [
-			]
-		},
-		{
-			"time": 6.0,
-			"cells": [
-			]
-		},
-		{
-			"time": 6.5,
-			"cells": [
-			]
-		},
-		{
-			"time": 7.0,
 			"cells": [
 			]
 		}
