@@ -4,7 +4,7 @@ Supporting code for the article:
 
 ## Repository overview
 
-The `scripts/` directory contains all the scripts used for analyzing the output of the simulations using [CARCADE v1.0](#https://github.com/bagherilab/CARCADE).
+The `scripts/` directory contains all the scripts used for analyzing the output of the simulations using [CARCADE v1.0](https://github.com/bagherilab/CARCADE).
 
 The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file is not runable, but is meant to show the process in full and python commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
 
