@@ -11778,7 +11778,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="PROCESSING-&amp;-PLOTTING-DATA">PROCESSING &amp; PLOTTING DATA<a class="anchor-link" href="#PROCESSING-&amp;-PLOTTING-DATA">&#182;</a></h1>
+<h1 id="Processing-&amp;-plotting-data">Processing &amp; plotting data pipeline<a class="anchor-link" href="#PROCESSING-&amp;-PLOTTING-DATA">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -11787,7 +11787,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This notebook provides the functions and scripts for parsing simulation files (<code>.json</code>) into pickled numpy arrays (<code>.pkl</code>) and subsequentially selecting, plotting, and analyzing various subsets or all of the data. This notebook shows the logical order in which data is processed to obtain the results in the paper.</p>
+<p>This dpcument shows the logical order in which data is processed to obtain the results in the paper. We walk through the full pipeline, starting with parsing simulation files (<code>.json</code>) into pickled numpy arrays (<code>.pkl</code>) and subsequentially selecting, plotting, and analyzing various subsets or all of the data. All necessary function calls to achieve the figures used in the paper are shown, and example figures for each section and type of plot are shown within this document.</p>
 
 </div>
 </div>
@@ -11808,32 +11808,32 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ol>
-<li>HEURISTIC DATA PLOTTING</li>
-<li>MONOCULTURE AND CO-CULTURE DISH DATA PROCESSING &amp; PLOTTING<ul>
-<li>2.1 PARSE MONOCULTURE AND CO-CULTURE DISH DATA</li>
-<li>2.2 ANALYZE PARSED MONOCULTURE AND CO-CULTURE DISH DATA</li>
-<li>2.3 SUBSET ANALYZED MONOCULTURE AND CO-CULTURE DISH DATA</li>
-<li>2.4 PLOT SUBSETTED MONOCULTURE AND CO-CULTURE DISH DATA</li>
-<li>2.5 MULTI-FEATURE &amp; OUTCOME ANALYSIS MONOCULTURE AND CO-CULTURE DISH DATA</li>
+<li><a href="#1.-Heuristic-data-plotting">Heuristic data plotting</a></li>
+<li><a href="#2.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">Monoculture and co-culture <code>dish</code> data processing &amp; plotting</a><ul>
+<li><a href="#2.1-Parse-monoculture-and-co-culture-dish-data">2.1 Parse monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#2.2-Analyze-parsed-monoculture-and-co-culture-dish-data">2.2 Analayze parsed monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#2.3-Subset-analyzed-monoculture-and-co-culture-dish-data">2.3 Subset analyzed monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#2.4-Plot-subsetted-monoculture-and-co-culture-dish-data">2.4 Plot subsetted monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#2.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">2.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data</li>
 </ul>
 </li>
-<li>EXPERIMENTAL LITERATURE DATA PLOTTING</li>
-<li>TISSUE DATA PROCESSING &amp; PLOTTING<ul>
-<li>4.1 PARSE TISSUE DATA</li>
-<li>4.2 ANALYZE PARSED TISSUE DATA</li>
-<li>4.3 SUBSET ANALYZED TISSUE DATA</li>
-<li>4.4 PLOT SUBSETTED TISSUE DATA</li>
-<li>4.5 MULTI-FEATURE &amp; OUTCOME ANALYSIS TISSUE</li>
+<li><a href="#3.-Experimental-literature-data-plotting">Experimental literature data plotting</a></li>
+<li><a href="#4.-Tissue-data-processing-&amp;-plotting"><code>Tissue</code> data processing &amp; plotting</a><ul>
+<li><a href="#4.1-Parse-tissue-data">4.1 Parse <code>tissue</code> data</a></li>
+<li><a href="#4.2-Analyze-parsed-tissue-data">4.2 Analyze parsed <code>tissue</code> data</a></li>
+<li><a href="#4.3-Subset-analyzed-tissue-data">4.3 Subset analyzed <code>tissue</code> data</a></li>
+<li><a href="#4.4-Plot-subsetted-tissue-data">4.4 Plot subsetted <code>tissue</code> data</a></li>
+<li><a href="#4.5-Multi-feature-&amp;-outocme-analysis-of-tissue-data">4.5 Multi-feature &amp; outcome analysis for <code>tissue</code> data</a></li>
 </ul>
 </li>
-<li>RANKED DATA PLOTTING</li>
-<li>CO-CULTURE DISH AND TISSUE SHARED LOCS DATA PROCESSING &amp; PLOTTING<ul>
-<li>6.1 ANALYZE PARSED CO-CULTURE DISH AND TISSUE SHARED LOCS DATA</li>
-<li>6.2 SUBSET ANALYZED CO-CULTURE DISH AND TISSUE SHARED LOCS DATA</li>
-<li>6.3 PLOT CO-CULTURE DISH AND TISSUE SHARED LOCS DATA</li>
+<li><a href="#5.-Ranked-data-plotting">Ranked data plotting</a></li>
+<li><a href="#6.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs datta processing &amp; plotting</a><ul>
+<li><a href="#6.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
+<li><a href="#6.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
+<li><a href="#6.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
 </ul>
 </li>
-<li>CO-CULTURE, TISSUE, AND GRAPH IMAGING</li>
+<li><a href="#7.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">Co-culture <code>dish</code>, <code>tissue</code>, and vasculature graph imaging</a></li>
 </ol>
 
 </div>
@@ -11854,7 +11854,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="1.-HEURISTIC-DATA-PLOTTING">1. HEURISTIC DATA PLOTTING<a class="anchor-link" href="#1.-HEURISTIC-DATA-PLOTTING">&#182;</a></h2>
+<h2 id="1.-Heuristic-data-plotting">1. Heuristic data plotting<a class="anchor-link" href="#1.-HEURISTIC-DATA-PLOTTING">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -11873,7 +11873,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><ul>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
 <li><code>RESULTS_PATH_HEURISTICS</code> variable indicates where to save the heuristic plots (<code>.svg</code> files as a result of plotting)</li>
 </ul>
 
@@ -11898,7 +11898,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PLOT-HEURISTIC-DATA">PLOT HEURISTIC DATA<a class="anchor-link" href="#PLOT-HEURISTIC-DATA">&#182;</a></h4>
+<h4 id="Plot-heuristic-data">Plot heuristic data<a class="anchor-link" href="#Plot-heuristic-data">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -11933,7 +11933,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 <br>
 <img src=examples/figures/heuristics/BINDING_HEURISTIC_CAR.svg height=300 width=300>
 </div>
@@ -11954,7 +11954,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="2.-MONOCULTURE-AND-CO-CULTURE-DISH-DATA-PROCESSING-&amp;-PLOTTING">2. MONOCULTURE AND CO-CULTURE DISH DATA PROCESSING &amp; PLOTTING<a class="anchor-link" href="#2.-MONOCULTURE-AND-CO-CULTURE-DISH-DATA-PROCESSING-&amp;-PLOTTING">&#182;</a></h2>
+<h2 id="2.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">2. Monoculture and co-culture <code>dish</code> data processing &amp; plotting<a class="anchor-link" href="#2.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -11963,18 +11963,18 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>A full combinatorial set of <code>monoculture dish</code> and <code>co-culture dish</code> data were generated where all of the following features were tested in the main set of data:</p>
+<p>A full combinatorial set of monoculture <code>dish</code> and co-culture <code>dish</code> data were generated where all of the following features were tested in the main set of data:</p>
 <ul>
 <li><code>DOSE</code> : [250, 500, 1000]</li>
 <li><code>TREAT RATIO</code> : [0:100, 25:75, 50:50, 75:25, 100:0]</li>
 <li><code>CAR AFFINITY</code> : [1e-6, 1e-7, 1e-8, 1e-9]</li>
 <li><code>ANTIGENS CANCER</code> : [100, 500, 1000, 5000, 10000]</li>
 </ul>
-<p>In the <code>co-culture dish</code> dataset, an additional feature was varied:</p>
+<p>In the co-culture<code>dish</code> dataset, an additional feature was varied:</p>
 <ul>
 <li><code>ANTIGENS HEALTHY</code> : [0, 100]</li>
 </ul>
-<p>which produced the <code>ideal</code> (<code>ANTIGENS HEALTHY</code> = 0) and <code>realistic</code> (<code>ANTIGENS HEALTHY</code> = 100) <code>co-culture dish</code> data.</p>
+<p>which produced the ideal (<code>ANTIGENS HEALTHY</code> = 0) and realistic (<code>ANTIGENS HEALTHY</code> = 100) co-culture <code>dish</code> data.</p>
 <p>In extended datasets, <code>DOSE</code> or <code>TREAT RATIO</code> were extended to the following:</p>
 <ul>
 <li><code>DOSE</code> : [250, 500, 1000, 5000, 10000]</li>
@@ -11999,7 +11999,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.1-PARSE-MONOCULTURE-AND-CO-CULTURE-DISH-DATA">2.1 PARSE MONOCULTURE AND CO-CULTURE DISH DATA<a class="anchor-link" href="#2.1-PARSE-MONOCULTURE-AND-CO-CULTURE-DISH-DATA">&#182;</a></h3>
+<h3 id="2.1-Parse-monoculture-and-co-culture-dish-data">2.1 Parse monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.1-Parse-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12043,7 +12043,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for parsing simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for parsing simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to simulaiton output data files (<code>.tar.xz</code> files of compressed simulation outputs)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by parsing)</li>
@@ -12076,7 +12076,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PARSE-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">PARSE <code>MONOCULTURE DISH</code> AND <code>CO-CULTURE DISH</code> SIMULATIONS<a class="anchor-link" href="#PARSE-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">&#182;</a></h4>
+<h4 id="Parse-monoculture-and-culture-dish-simulations">Parse monoculture and co-culture <code>dish</code> simulations<a class="anchor-link" href="#Parse-monoculture-and-culture-dish-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12122,7 +12122,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.2-ANALYZE-PARSED--MONOCULTURE-AND-CO-CULTURE-DISH-DATA">2.2 ANALYZE PARSED  MONOCULTURE AND CO-CULTURE DISH DATA<a class="anchor-link" href="#2.2-ANALYZE-PARSED--MONOCULTURE-AND-CO-CULTURE-DISH-DATA">&#182;</a></h3>
+<h3 id="2.2-Analyze-parsed-monoculture-and-co-culture-dish-data">2.2 Analyze parsed monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.2-Analyze-parsed-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12145,7 +12145,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
 <ul>
 <li><code>DATA_PATH...PARSED</code> variables are the path to parsed data files (<code>.pkl</code> files generated by parsing)</li>
 <li><code>DATA_PATH...LYSIS</code> variables are the path to <code>LYSIS</code> data files (<code>.LYSIS.json</code> files generated direclty from the simulation outputs)</li>
@@ -12187,7 +12187,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="ANALYZE-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">ANALYZE <code>MONOCULTURE DISH</code> AND <code>CO-CULTURE DISH</code> SIMULATIONS<a class="anchor-link" href="#ANALYZE-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">&#182;</a></h4>
+<h4 id="Analyze-monoculture-and-co-culture-dish-simulations">Analyze monoculture and co-culture <code>dish</code> simulations<a class="anchor-link" href="#Analyze-monoculture-and-co-culture-dish-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12245,7 +12245,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.3-SUBSET-ANALYZED-MONOCULTURE-AND-CO-CULTURE-DISH-DATA">2.3 SUBSET ANALYZED MONOCULTURE AND CO-CULTURE DISH DATA<a class="anchor-link" href="#2.3-SUBSET-ANALYZED-MONOCULTURE-AND-CO-CULTURE-DISH-DATA">&#182;</a></h3>
+<h3 id="2.3-Subset-analyzed-monoculture-and-co-culture-dish-data">2.3 Subset analyzed monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.3-Subset-analyzed-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12264,19 +12264,19 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <p>This means all data within this subset will have the specific values of the features listed above, but all features values of <code>DOSE</code>, and if applicable <code>ANTIGENS HEALTHY</code>, will be included. All subsets will be saved in the following format:</p>
 <p><code>XML_NAME</code> + <code>DOSE</code> + <code>TREAT RATIO</code> + <code>CAR AFFINITY</code> + <code>ANTIGENS CANCER</code> + <code>ANTIGENS HEALTHY</code></p>
 <p>where the gap between values is separed by a <code>_</code>, values specified in the subset are replaced with the desired value, and values not specified in the subset are replaced by an <code>X</code> to indicate that all values of that feature are present.</p>
-<p>Thus, the above example would produce the following name for the <code>monoculture dish</code> data:</p>
+<p>Thus, the above example would produce the following name for the monoculture <code>dish</code> data:</p>
 
 <pre><code>VITRO_DISH_TREAT_C_2D_X_50-50_1e-07_1000_NA_DATATYPE.pkl
 
 </code></pre>
 <p>Where <code>DATATYPE</code> is either <code>ANALYZED</code> for cells, <code>ENVIRONMENT</code> for enviornment, <code>SPATIAL</code> for spatial, or <code>LYSED</code> for lysed analyses.</p>
-<p>And would produce the following name for the <code>co-culture dish</code> data:</p>
+<p>And would produce the following name for the co-culture <code>dish</code> data:</p>
 
 <pre><code>VITRO_DISH_TREAT_CH_2D_X_50-50_1e-07_1000_X_DATATYPE.pkl
 
 </code></pre>
 <p>where the <code>X</code> in place of the <code>ANTIGENS HEALTHY</code> would be replaced by a value if a value were instead specified.</p>
-<p>We can also collect all the data together into one file by not specifying a subset. We only need to do this for the cell (<code>ANALYZED</code>) data for the <code>monoculture dish</code> and <code>co-culture dish</code> data. Additionally, we can collect this with or without specifying the <code>states</code> flag, which if <code>True</code> will collect only the cell population and state counts data over time, but will exclude the volume and cell cycle distribution data. This is used particularlly because files including the distribution data are very large. The <code>states</code> flag is only relevant to the <code>analyze_cells</code> function.</p>
+<p>We can also collect all the data together into one file by not specifying a subset. We only need to do this for the cell (<code>ANALYZED</code>) data for the monoculture <code>dish</code> and co-culture <code>dish</code> data. Additionally, we can collect this with or without specifying the <code>states</code> flag, which if <code>True</code> will collect only the cell population and state counts data over time, but will exclude the volume and cell cycle distribution data. This is used particularlly because files including the distribution data are very large. The <code>states</code> flag is only relevant to the <code>analyze_cells</code> function.</p>
 
 </div>
 </div>
@@ -12286,7 +12286,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for subsetting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for subsetting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to analyzed data files (<code>.pkl</code> files generated by analyzing data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by subsetting)</li>
@@ -12360,7 +12360,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="SUBEST-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">SUBEST <code>MONOCULTURE DISH</code> AND <code>CO-CULTURE DISH</code> SIMULATIONS<a class="anchor-link" href="#SUBEST-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">&#182;</a></h4>
+<h4 id="Subset-monoculture-and-co-culture-dish-simulations">Subset monoculture and co-culture <code>dish</code> simulatons<a class="anchor-link" href="#Subset-monoculture-and-co-culture-dish-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12421,7 +12421,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.4-PLOT-SUBSETTED--MONOCULTURE-AND-CO-CULTURE-DISH-DATA">2.4 PLOT SUBSETTED  MONOCULTURE AND CO-CULTURE DISH DATA<a class="anchor-link" href="#2.4-PLOT-SUBSETTED--MONOCULTURE-AND-CO-CULTURE-DISH-DATA">&#182;</a></h3>
+<h3 id="2.4-Plot-subsetted-monoculture-and-co-culture-dish-data">2.4 Plot subsetted monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.4-Plot-subsetted-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12431,7 +12431,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The main plotting function (<code>plot_data</code>) iterates through each subsetted file (<code>.pkl</code>) in the data path and plots relevant data for each subset instance.</p>
-<p>The function enables choosing which feature to color the data by. Choosing the color to be <code>X</code> will enable the function to automatically color the data based on whichever features are not held constant in the subset (ex, in the example <code>VITRO_DISH_TREAT_C_2D_X_50-50_1e-07_1000_NA.pkl</code> for the <code>monoculture dish</code> subset from the example above, plots would be colored by <code>DOSE</code> value automatically if <code>X</code> were selected in place of a specific feature).</p>
+<p>The function enables choosing which feature to color the data by. Choosing the color to be <code>X</code> will enable the function to automatically color the data based on whichever features are not held constant in the subset (ex, in the example <code>VITRO_DISH_TREAT_C_2D_X_50-50_1e-07_1000_NA.pkl</code> for the monoculture <code>dish</code> subset from the example above, plots would be colored by <code>DOSE</code> value automatically if <code>X</code> were selected in place of a specific feature).</p>
 
 </div>
 </div>
@@ -12441,7 +12441,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.pkl</code> files generated by subsetting data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> files generated by plotting)</li>
@@ -12493,7 +12493,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PLOT--MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">PLOT  <code>MONOCULTURE DISH</code> AND <code>CO-CULTURE DISH</code> SIMULATIONS<a class="anchor-link" href="#PLOT--MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">&#182;</a></h4>
+<h4 id="Plot-monoculture-and-co-culture-dish-simulations">Plot monoculture and co-culture <code>dish</code> simulations<a class="anchor-link" href="#Plot-monoculture-and-co-culture-dish-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12538,7 +12538,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURES">EXAMPLE FIGURES<a class="anchor-link" href="#EXAMPLE-FIGURES">&#182;</a></h4>
+<h4 id="Example-figures">Example figures<a class="anchor-link" href="#Example-figures">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12547,7 +12547,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> cell counts figure.</p>
+<p>Example co-culture <code>dish</code> cell counts figure.</p>
 <br>
 <img src=examples/figures/coculture/cells/VITRO_DISH_TREAT_CH_2D_500_50-50_1e-07_X_100_COUNTS_CANCER.svg height=300 width=300>
 </div>
@@ -12558,7 +12558,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> scatter plot figure.</p>
+<p>Example co-culture <code>dish</code> scatter plot figure.</p>
 <br>
 <img src=examples/figures/coculture/\cells/VITRO_DISH_TREAT_CH_2D_500_50-50_1e-07_X_100_SCATTERNORM_CH_ANTIGENSCANCER_o_7.svg height=300 width=300>
 </div>
@@ -12569,7 +12569,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> cell state fractions figure.</p>
+<p>Example co-culture <code>dish</code> cell state fractions figure.</p>
 <br>
 <img src=examples/figures/coculture/cells/VITRO_DISH_TREAT_CH_2D_500_50-50_1e-07_X_100_STATESFRAC.svg height=600 width=400>
 </div>
@@ -12580,7 +12580,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> environment figure.</p>
+<p>Example co-culture <code>dish</code> environment figure.</p>
 <br>
 <img src=examples/figures/coculture/environment/VITRO_DISH_TREAT_CH_2D_500_50-50_1e-07_X_0_CONC_IL-2_XTIME_DAYS_147.svg height=300 width=300>
 </div>
@@ -12591,7 +12591,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> spatial figure.</p>
+<p>Example co-culture <code>dish</code> spatial figure.</p>
 <br>
 <img src=examples/figures/coculture/spatial/VITRO_DISH_TREAT_CH_2D_500_50-50_1e-07_X_100_COUNTS_CANCERLIVE_NORM_DAY_4.svg height=300 width=300>
 </div>
@@ -12602,7 +12602,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> lysis figure.</p>
+<p>Example co-culture <code>dish</code> lysis figure.</p>
 <br>
 <img src=examples/figures/coculture/lysed/VITRO_DISH_TREAT_CH_2D_500_50-50_1e-07_X_100_COUNTSLYSED_CANCER.svg height=300 width=300>
 </div>
@@ -12623,7 +12623,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-MONOCULTURE-AND-CO-CULTURE-DISH-DATA">2.5 MULTI-FEATURE &amp; OUTCOME ANALYSIS MONOCULTURE AND CO-CULTURE DISH DATA<a class="anchor-link" href="#2.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-MONOCULTURE-AND-CO-CULTURE-DISH-DATA">&#182;</a></h3>
+<h3 id="2.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">2.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12648,7 +12648,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.pkl</code> files generated by subsetting data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> or <code>.pdf</code> or <code>.xlsx</code> files generated by analyzing the data)</li>
@@ -12691,7 +12691,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="ANALYZE-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">ANALYZE <code>MONOCULTURE DISH</code> AND <code>CO-CULTURE DISH</code> SIMULATIONS<a class="anchor-link" href="#ANALYZE-MONOCULTURE-DISH-AND-CO-CULTURE-DISH-SIMULATIONS">&#182;</a></h4>
+<h4 id="Analyze-monoculture-and-co-culture-dish-simulations">Analyze monoculture and co-culture <code>dish</code> simulations<a class="anchor-link" href="#Analyze-monoculture-and-co-culture-dish-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12731,7 +12731,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12740,7 +12740,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>COCULTURE DISH</code> HEATMAP</p>
+<p>Example coculture <code>dish</code> heatmap</p>
 <br>
 <embed src=examples/figures/coculture/stats/VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_INIT_SUM_HEATMAP_ALLOUTPUTS_SUBPLOTS_SORTED_SCORES.pdf height=300 width=300>
 </div>
@@ -12761,7 +12761,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.-EXPERIMENTAL-LITERATURE-DATA-PLOTTING">3. EXPERIMENTAL LITERATURE DATA PLOTTING<a class="anchor-link" href="#3.-EXPERIMENTAL-LITERATURE-DATA-PLOTTING">&#182;</a></h2>
+<h2 id="3.-Experimental-literature-data-plotting">3. Experimental literature data plotting<a class="anchor-link" href="#3.-Experimental-literature-data-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12780,7 +12780,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><ul>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
 <li><code>RESULTS_PATH_EXPERIMENTAL_LITERATURE_KILL_CURVES</code> variable indicates where to save plots based on extracted data from literature (<code>.svg</code> files as a result of plotting)</li>
 </ul>
 
@@ -12805,7 +12805,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PLOT-EXPERIMENTAL-LITERATURE-DATA">PLOT EXPERIMENTAL LITERATURE DATA<a class="anchor-link" href="#PLOT-EXPERIMENTAL-LITERATURE-DATA">&#182;</a></h4>
+<h4 id="Plot-experimental-literature-data">Plot experimental literature data<a class="anchor-link" href="#Plot-experimental-literature-data">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -12840,7 +12840,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 <br>
 <img src=examples/figures/kill_curves/KILLCURVENORMEXPArcangeli2017.svg height=300 width=400>
 </div>
@@ -12861,7 +12861,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="4.-TISSUE-DATA-PROCESSING-&amp;-PLOTTING">4. TISSUE DATA PROCESSING &amp; PLOTTING<a class="anchor-link" href="#4.-TISSUE-DATA-PROCESSING-&amp;-PLOTTING">&#182;</a></h2>
+<h2 id="4.-Tissue-data-processing-&amp;-plotting">4. <code>Tissue</code> data processing &amp; plotting<a class="anchor-link" href="#4.-Tissue-data-processing-&amp;-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12870,7 +12870,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Only a subset of <code>tissue</code> simulations were generated. This set are those that showed effective treatment in the <code>realistic co-culture dish</code> context.</p>
+<p>Only a subset of <code>tissue</code> simulations were generated. This set are those that showed effective treatment in the realistic co-culture <code>dish</code> context.</p>
 
 </div>
 </div>
@@ -12890,7 +12890,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.1-PARSE-TISSUE-DATA">4.1 PARSE TISSUE DATA<a class="anchor-link" href="#4.1-PARSE-TISSUE-DATA">&#182;</a></h3>
+<h3 id="4.1-Parse-tissue-data">4.1 Parse <code>tissue</code> data<a class="anchor-link" href="#4.1-Parse-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12934,7 +12934,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for parsing simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for parsing simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to simulaiton output data files (<code>.tar.xz</code> files of compressed simulation outputs)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by parsing)</li>
@@ -12962,7 +12962,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PARSE-TISSUE-SIMULATIONS">PARSE <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#PARSE-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Parse-tissue-simulations">Parse <code>tissue</code> simulations<a class="anchor-link" href="#Parse-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13007,7 +13007,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.2-ANALYZE-PARSED-TISSUE-DATA">4.2 ANALYZE PARSED TISSUE DATA<a class="anchor-link" href="#4.2-ANALYZE-PARSED-TISSUE-DATA">&#182;</a></h3>
+<h3 id="4.2-Analyze-parsed-tissue-data">4.2 Analyze parsed <code>tissue</code> data<a class="anchor-link" href="#4.2-Analyze-parsed-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13030,7 +13030,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
 <ul>
 <li><code>DATA_PATH...PARSED</code> variables are the path to parsed data files (<code>.pkl</code> files generated by parsing)</li>
 <li><code>DATA_PATH...LYSIS</code> variables are the path to <code>LYSIS</code> data files (<code>.LYSIS.json</code> files generated direclty from the simulation outputs)</li>
@@ -13064,7 +13064,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="ANALYZE-TISSUE-SIMULATIONS">ANALYZE <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#ANALYZE-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Analyze-tissue-simulations">Analyze <code>tissue</code> simulations<a class="anchor-link" href="#Analyze-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13116,7 +13116,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.3-SUBSET-ANALYZED-TISSUE-DATA">4.3 SUBSET ANALYZED TISSUE DATA<a class="anchor-link" href="#4.3-SUBSET-ANALYZED-TISSUE-DATA">&#182;</a></h3>
+<h3 id="4.3-Subset-analyzed-tissue-data">4.3 Subset analyzed <code>tissue</code> data<a class="anchor-link" href="#4.3-Subset-analyzed-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13135,7 +13135,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for subsetting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for subsetting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to analyzed data files (<code>.pkl</code> files generated by analyzing data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by subsetting)</li>
@@ -13187,7 +13187,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="SUBSET-TISSUE-SIMULATIONS">SUBSET <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#SUBSET-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Subset-tissue-simulations">Subset <code>tissue</code> simulations<a class="anchor-link" href="#Subset-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13236,7 +13236,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.4-PLOT-SUBSETTED-TISSUE-DATA">4.4 PLOT SUBSETTED TISSUE DATA<a class="anchor-link" href="#4.4-PLOT-SUBSETTED-TISSUE-DATA">&#182;</a></h3>
+<h3 id="4.4-Plot-subsetted-tissue-data">4.4 Plot subsetted <code>tissue</code> data<a class="anchor-link" href="#4.4-Plot-subsetted-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13256,7 +13256,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.pkl</code> files generated by subsetting data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> files generated by plotting) and one for each feature colored by is listed per each type of data plotted</li>
@@ -13316,7 +13316,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PLOT-TISSUE-SIMULATIONS">PLOT <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#PLOT-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Plot-tissue-simulations">Plot <code>tissue</code> simulations<a class="anchor-link" href="#Plot-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13370,7 +13370,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURES">EXAMPLE FIGURES<a class="anchor-link" href="#EXAMPLE-FIGURES">&#182;</a></h4>
+<h4 id="Example-figures">Example figures<a class="anchor-link" href="#Example-figures">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13379,7 +13379,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> cell counts figure.</p>
+<p>Example <code>tissue</code> cell counts figure.</p>
 <br>
 <img src=examples/figures/tissue/cells/antigens_cancer/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_COUNTSREMAININGNORM_CANCER_DOSE.svg height=300 width=300>
 </div>
@@ -13390,7 +13390,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> scatter plot figure.</p>
+<p>Example <code>tissue</code> scatter plot figure.</p>
 <br>
 <img src=examples/figures/tissue/cells/antigens_cancer/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_SCATTERNORM_CH_ANTIGENSCANCER_o_31.svg height=300 width=300>
 </div>
@@ -13401,7 +13401,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> cell states fractions figure.</p>
+<p>Example <code>tissue</code> cell states fractions figure.</p>
 <br>
 <img src=examples/figures/tissue/cells/antigens_cancer/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_STATESFRAC.svg height=600 width=400>
 </div>
@@ -13412,7 +13412,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> environment figure.</p>
+<p>Example <code>tissue</code> environment figure.</p>
 <br>
 <img src=examples/figures/tissue/environment/antigens_cancer/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_CONC_IL-2_XTIME_DAYS_21252830.svg height=300 width=300>
 </div>
@@ -13423,7 +13423,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> spatial figure.</p>
+<p>Example <code>tissue</code> spatial figure.</p>
 <br>
 <img src=examples/figures/tissue/spatial/antigens_cancer/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_COUNTS_CANCERLIVE_NORM_DAY_26_DOSE.svg height=300 width=300>
 </div>
@@ -13434,7 +13434,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> lysis figure.</p>
+<p>Example <code>tissue</code> lysis figure.</p>
 <br>
 <img src=examples/figures/tissue/lysed/antigens_cancer/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_COUNTSLYSED_CANCER.svg height=300 width=300>
 </div>
@@ -13455,7 +13455,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-TISSUE-DATA">4.5 MULTI-FEATURE &amp; OUTCOME ANALYSIS TISSUE DATA<a class="anchor-link" href="#4.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-TISSUE-DATA">&#182;</a></h3>
+<h3 id="4.5-Multi-feature-&amp;-outocme-analysis-of-tissue-data">4.5 Multi-feature &amp; outcome analysis of <code>tissue</code> data<a class="anchor-link" href="#4.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-TISSUE-DATA">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13477,7 +13477,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.pkl</code> files generated by subsetting data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> or <code>.pdf</code> or <code>.xlsx</code> files generated by analyzing the data)</li>
@@ -13516,7 +13516,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="ANALYZE-TISSUE-SIMULATIONS">ANALYZE <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#ANALYZE-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Analyze-tissue-simulations">Analyze <code>tissue</code> simulations<a class="anchor-link" href="#Analyze-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13552,7 +13552,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13561,7 +13561,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> heatmap.</p>
+<p>Example <code>tissue</code> heatmap.</p>
 <br>
 <embed src=examples/figures/tissue/stats/average/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_STATES_AVG_INIT_SUM_HEATMAP_ALLOUTPUTS_SUBPLOTS_SORTED_SCORES.pdf height=300 width=300>
 </div>
@@ -13582,7 +13582,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="5.-RANKED-DATA-PLOTTING">5. RANKED DATA PLOTTING<a class="anchor-link" href="#5.-RANKED-DATA-PLOTTING">&#182;</a></h2>
+<h2 id="5.-Ranked-data-plotting">5. Ranked data plotting<a class="anchor-link" href="#5.-Ranked-data-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13591,7 +13591,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After finding the effective treatments from the <code>realistic co-culture dish</code> context and analyzing them in <code>tissue</code>, a score and rank for each simulation (averaged across replicates) were provided in both contexts and combined into a single <code>.xlsx</code> file for analysis.</p>
+<p>After finding the effective treatments from the realistic co-culture <code>dish</code> context and analyzing them in <code>tissue</code>, a score and rank for each simulation (averaged across replicates) were provided in both contexts and combined into a single <code>.xlsx</code> file for analysis.</p>
 <p>The main function <code>plot_dish_tissue_compare_data</code> takes this <code>.xlsx</code> file as an input and generates parity and ladder plots for the rank and score of these simulations in the <code>dish</code> compared to the the <code>tissue</code> context.</p>
 
 </div>
@@ -13602,7 +13602,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIALBLES">WORKSPACE VARIALBLES<a class="anchor-link" href="#WORKSPACE-VARIALBLES">&#182;</a></h4><ul>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
 <li><code>DATA_PATH</code> variables are the path to excel data file (<code>.xlsx</code> file generated for this analysis)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> files generated by plotting the data)</li>
 <li><code>COMPARE_COLOR</code> variables indicate which feature to color the variables by (choosing the color to be <code>X</code> will enable the function to automatically color the data based on each feature)</li>
@@ -13632,7 +13632,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="COMPARE-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-DATA">COMPARE <code>REALISTIC CO-CULTURE DISH</code> AND <code>TISSUE</code> DATA<a class="anchor-link" href="#COMPARE-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-DATA">&#182;</a></h4>
+<h4 id="Compare-effective-treatment-realistic-co-culture-dish-and-tissue-data">Compare effetive treatment realistic co-culture<code>dish</code> and <code>tissue</code> data<a class="anchor-link" href="#Compare-effective-treatment-realistic-co-culture-dish-and-tissue-data">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13667,7 +13667,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13697,7 +13697,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="6.-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA-PROCESSING-&amp;-PLOTTING">6. CO-CULTURE DISH AND TISSUE SHARED LOCS DATA PROCESSING &amp; PLOTTING<a class="anchor-link" href="#6.-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA-PROCESSING-&amp;-PLOTTING">&#182;</a></h2>
+<h2 id="6.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">6. Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data processing &amp; plotting<a class="anchor-link" href="#6.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13726,7 +13726,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.1-ANALYZE-PARSED-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA">6.1 ANALYZE PARSED CO-CULTURE DISH AND TISSUE SHARED LOCS DATA<a class="anchor-link" href="#6.1-ANALYZE-PARSED-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA">&#182;</a></h3>
+<h3 id="6.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#6.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13747,7 +13747,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
 <ul>
 <li><code>DATA_PATH...PARSED</code> variables are the path to parsed data files (<code>.pkl</code> files generated by parsing), where for the <code>co-culture dish</code> data, one may need to manually put the effective treatment files into a folder separate from the rest of the data.</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by analyzing)</li>
@@ -13762,7 +13762,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Co-culture dish effective treatment workspace variables</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Realistic co-culture dish effective treatment workspace variables</span>
 <span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/files/effective/treatments/parsed/&#39;</span>
 <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/files/effective/treatments/sharedlocs/&#39;</span>
 
@@ -13784,7 +13784,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="ANALYZE-EFFECTIVE-TREATMENT-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-SIMULATIONS">ANALYZE EFFECTIVE TREATMENT <code>REALISTIC CO-CULTURE DISH</code> AND <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#ANALYZE-EFFECTIVE-TREATMENT-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Analyze-effective-treatment-realistic-co-culture-dish-and-tissue-simulations">Analyze effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> simulations<a class="anchor-link" href="#Analyze-effective-treatment-realistic-co-culture-dish-and-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13830,7 +13830,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.2-SUBSET-ANALYZED-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA">6.2 SUBSET ANALYZED CO-CULTURE DISH AND TISSUE SHARED LOCS DATA<a class="anchor-link" href="#6.2-SUBSET-ANALYZED-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA">&#182;</a></h3>
+<h3 id="6.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#6.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13839,7 +13839,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset reqiresments to a single data file. Since not all possible combinations of the <code>tissue</code> data was collected and only the effective treatment <code>realistic co-culture dish</code> are desired, only the subset of all data is required.</p>
+<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset reqiresments to a single data file. Since not all possible combinations of the <code>tissue</code> data was collected and only the effective treatment realistic co-culture <code>dish</code> are desired, only the subset of all data is required.</p>
 
 </div>
 </div>
@@ -13849,7 +13849,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for subsetting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for subsetting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to analyzed data files (<code>.pkl</code> files generated by analyzing data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by subsetting)</li>
@@ -13867,7 +13867,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Co-culture dish effective treatment workspace variables</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Realistic co-culture dish effective treatment workspace variables</span>
 <span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/files/effective/treatments/sharedlocs/&#39;</span>
 
 <span class="n">DISH_COCULTURE_XML_NAME</span> <span class="o">=</span> <span class="s1">&#39;VITRO_DISH_TREAT_CH_2D&#39;</span>
@@ -13897,7 +13897,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="SUBSET-EFFECTIVE-TREATMENT-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-SIMULATIONS">SUBSET EFFECTIVE TREATMENT <code>REALISTIC CO-CULTURE DISH</code> AND <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#SUBSET-EFFECTIVE-TREATMENT-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Subset-effective-treatment-realistic-co-culture-dish-and-tissue-simulations">Subset effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> simulations<a class="anchor-link" href="#Subset-effective-treatment-realistic-co-culture-dish-and-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13943,7 +13943,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.3-PLOT-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA">6.3 PLOT CO-CULTURE DISH AND TISSUE SHARED LOCS DATA<a class="anchor-link" href="#6.3-PLOT-CO-CULTURE-DISH-AND-TISSUE-SHARED-LOCS-DATA">&#182;</a></h3>
+<h3 id="6.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#6.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13953,7 +13953,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The main plotting function (<code>plot_data</code>) iterates through each subsetted file (<code>.pkl</code>) in the data path and plots relevant data for each subset instance.</p>
-<p>The function enables choosing which feature to color the data by. Choosing the color to be <code>X</code> will enable the function to automatically color the data based on whichever features are not held constant in the subset. Since not all possible combinations of the <code>tissue</code> data was collected and only the effective treatment <code>realistic co-culture dish</code> are desired, each desired feature to color by will need to be specified (and stored in different locations as the feature color is not stored in the file name). In this analysis, only <code>ANTIGENS CANCER</code> was used.</p>
+<p>The function enables choosing which feature to color the data by. Choosing the color to be <code>X</code> will enable the function to automatically color the data based on whichever features are not held constant in the subset. Since not all possible combinations of the <code>tissue</code> data was collected and only the effective treatment realistic co-culture <code>dish</code> are desired, each desired feature to color by will need to be specified (and stored in different locations as the feature color is not stored in the file name). In this analysis, only <code>ANTIGENS CANCER</code> was used.</p>
 
 </div>
 </div>
@@ -13963,7 +13963,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for plotting simulations.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.pkl</code> files generated by subsetting data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> files generated by plotting) and one for each feature colored by is listed per each type of data plotted</li>
@@ -13979,7 +13979,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Co-culture dish effective treatment workspace variables</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Realistic co-culture dish effective treatment workspace variables</span>
 <span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/subset/effective/treatments/sharedlocs/&#39;</span>
 <span class="n">RESULTS_PATH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/effective/treatments/sharedlocs/&#39;</span>
 
@@ -14002,7 +14002,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="PLOT-EFFECTIVE-TREATMENT-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-SIMULATIONS">PLOT EFFECTIVE TREATMENT <code>REALISTIC CO-CULTURE DISH</code> AND <code>TISSUE</code> SIMULATIONS<a class="anchor-link" href="#PLOT-EFFECTIVE-TREATMENT-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-SIMULATIONS">&#182;</a></h4>
+<h4 id="Plot-effective-treatment-realistic-co-culture-dish-and-tissue-simulations">Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> simulations<a class="anchor-link" href="#Plot-effective-treatment-realistic-co-culture-dish-and-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -14038,7 +14038,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -14047,7 +14047,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example <code>TISSUE</code> shared locations states data.</p>
+<p>Example <code>tissue</code> shared locations states data.</p>
 <br>
 <img src=examples/figures/tissue/sharedlocs/VIVO_TISSUE_TREAT_CH_2D_X_X_X_X_X_STATESFRAC_TREAT_ALTAXES.svg height=600 width=400>
 </div>
@@ -14068,7 +14068,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="7.-CO-CULTURE,-TISSUE,-AND-GRAPH-IMAGING">7. CO-CULTURE, TISSUE, AND GRAPH IMAGING<a class="anchor-link" href="#7.-CO-CULTURE,-TISSUE,-AND-GRAPH-IMAGING">&#182;</a></h2>
+<h2 id="7.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">7. Realistic co-culture <code>dish</code>, <code>tissue</code>, and vasculature graph imaging<a class="anchor-link" href="#7.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -14078,19 +14078,19 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Images of the simulations in each context are generated to highlight the differences in cancer and healthy cell spatial distributions over time.</p>
-<p>The main function <code>image</code> takes in a <code>.json</code> file output from the simulation and produces an image of either the populations, cell states, volume density, or graphs. For this analysis, only the population and graph figures were used.</p>
+<p>The main function <code>image</code> takes in a <code>.json</code> file output from the simulation and produces an image of either the populations, cell states, volume density, or vasculature graphs. For this analysis, only the population and vasculature graph figures were used.</p>
 <p>The population images were generated for the following files:</p>
 
 <pre><code>VITRO_DISH_TREAT_CH_0_NA_NA_1000_100_00.json
 VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 
 </code></pre>
-<p>The graph images were generated for the following file:</p>
+<p>The vasculature graph images were generated for the following file:</p>
 
 <pre><code>VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.GRAPH.json
 
 </code></pre>
-<p>These represent the untreated <code>realistic co-culture dish</code> and <code>tissue</code> simulations.</p>
+<p>These represent the untreated realistic co-culture <code>dish</code> and <code>tissue</code> simulations.</p>
 
 </div>
 </div>
@@ -14100,7 +14100,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><ul>
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.json</code> files generated from simulation output)</li>
 <li><code>...TIMES</code> variables indicate which time points to make images at</li>
 <li><code>SIZE</code> variable indicates the size to make the image</li>
@@ -14133,7 +14133,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 <span class="n">BGCOL</span> <span class="o">=</span> <span class="s1">&#39;#FFFFFF&#39;</span>
 <span class="n">RADIUS</span> <span class="o">=</span> <span class="s1">&#39;40&#39;</span>
 
-<span class="c1"># Tissue graph image specifications</span>
+<span class="c1"># Tissue vasculature graph image specifications</span>
 <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/graph/json/to/image/&#39;</span>
 <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/svg/to/save/&#39;</span>
 </pre></div>
@@ -14148,7 +14148,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="IMAGE-UNTREATED-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-DATA">IMAGE UNTREATED <code>REALISTIC CO-CULTURE DISH</code> AND <code>TISSUE</code> DATA<a class="anchor-link" href="#IMAGE-UNTREATED-REALISTIC-CO-CULTURE-DISH-AND-TISSUE-DATA">&#182;</a></h4>
+<h4 id="Image-untreated-realistic-co-culture-dish-and-tissue-data">Image untreated realistic co-culture dish <code>dish</code> and <code>tissue</code> data<a class="anchor-link" href="#Image-untreated-realistic-co-culture-dish-and-tissue-data">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -14185,7 +14185,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="EXAMPLE-FIGURE">EXAMPLE FIGURE<a class="anchor-link" href="#EXAMPLE-FIGURE">&#182;</a></h4>
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -14194,7 +14194,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example untreated <code>REALISTIC COCULTURE DISH</code> image.</p>
+<p>Example untreated realistic co-culture <code>dish</code> image.</p>
 <br>
 <img src=examples/figures/coculture/images/VITRO_DISH_TREAT_CH_0_NA_NA_1000_100_00_pops_0000.svg height=300 width=300>
 </div>
@@ -14205,7 +14205,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example untreated <code>TISSUE</code> image.</p>
+<p>Example untreated <code>tissue</code> image.</p>
 <br>
 <img src=examples/figures/tissue/images/VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00_pops_0310.svg height=300 width=300>
 </div>
@@ -14216,7 +14216,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example untreated <code>TISSUE</code> vasculature image.</p>
+<p>Example untreated <code>tissue</code> vasculature graph image.</p>
 <br>
 <img src=examples/figures/tissue/images/VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.GRAPH_graph_0310.svg height=300 width=300>
 </div>

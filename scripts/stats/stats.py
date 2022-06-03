@@ -3,7 +3,6 @@ import scripts.plot.plot_utilities
 import scripts.stats.stats_utilities
 import scripts.stats.stats_heatmaps
 import scripts.stats.stats_features
-import scripts.stats.stats_elbow
 import pickle
 import pandas as pd
 from itertools import combinations
@@ -207,68 +206,6 @@ def calculate_score(simsDF, simsDFanova, SCORE, FILEID):
 
     return simsDFanova
 
-def plot_two_axis_heatmaps(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
-    """Call plotters for two-feature heatmaps."""
-
-    comb, response_list = create_feature_and_response_combo_lists(FILEID)
-
-    print('\t\tPlotting output two-axis heatmaps.')
-    for response in response_list:
-        for combo in comb:
-            for annotate in [True, False]:
-                # Make diverging scale plots
-                scripts.stats.stats_heatmaps.plot_two_axis_heatmaps_diverging_all(simsDFanova, combo[0], combo[1], response, annotate, FILEID, NORM, SCORE, SAVELOC)
-                scripts.stats.stats_heatmaps.plot_two_axis_heatmaps_diverging_constant(simsDFanova, combo[0], combo[1], response, annotate, FILEID, NORM, SCORE, SAVELOC)
-                # Make grayscale plots
-                scripts.stats.stats_heatmaps.plot_two_axis_heatmaps_grayscale_all(simsDFanova, combo[0], combo[1], response, annotate, FILEID, NORM, SCORE, SAVELOC)
-                scripts.stats.stats_heatmaps.plot_two_axis_heatmaps_grayscale_constant(simsDFanova, combo[0], combo[1], response, annotate, FILEID, NORM, SCORE, SAVELOC)
-                plt.close('all')
-
-    return
-
-def plot_single_output_heatmaps_unsorted(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
-    """Call plotters for heatmaps with single unsorted output showing for each possible output."""
-
-    comb, response_list = create_feature_and_response_combo_lists(FILEID)
-
-    print('\t\tPlotting output all-axis heatmaps.')
-    for response in response_list:
-        scripts.stats.stats_heatmaps.plot_output_heatmap_diverging(simsDFanova, response, FILEID, NORM, SCORE, SAVELOC)
-        scripts.stats.stats_heatmaps.plot_output_heatmap_grayscale(simsDFanova, response, FILEID, NORM, SCORE, SAVELOC)
-    plt.close('all')
-
-    return
-
-def plot_all_output_heatmaps_unsortead_and_sorted_by_score(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
-    """Call plotters for heatmaps with all outputs showing and sorted or unsorted by score."""
-
-    comb, response_list = create_feature_and_response_combo_lists(FILEID)
-
-    print('\t\tPlotting output all-axis heatmaps by score.')
-    if '_CH_' in FILEID:
-        for sort in [True, False]:
-            scripts.stats.stats_heatmaps.plot_output_heatmap_diverging_multiple_outputs(simsDFanova, response_list, sort, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_heatmaps.plot_output_heatmap_grayscale_multiple_outputs(simsDFanova, response_list, sort, FILEID, NORM, SCORE, SAVELOC)
-    plt.close('all')
-
-    return
-
-def plot_all_output_heatmaps_sorted_by_norm(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
-    """Call plotters for heatmaps with all outputs showing and sorted or unsorted by each possible output."""
-
-    comb, response_list = create_feature_and_response_combo_lists(FILEID)
-
-    # Plot output heatmaps (sorted)
-    print('\t\tPlotting output all-axis heatmaps with chosen sort.')
-    scripts.stats.stats_heatmaps.plot_output_heatmap_diverging_multiple_outputs_choose_sort(simsDFanova, response_list, 'Y_NORM_CANCER_LIVE', FILEID, NORM, SCORE, SAVELOC)
-    scripts.stats.stats_heatmaps.plot_output_heatmap_grayscale_multiple_outputs_choose_sort(simsDFanova, response_list, 'Y_NORM_CANCER_LIVE', FILEID, NORM, SCORE, SAVELOC)
-    if '_CH_' in FILEID:
-        scripts.stats.stats_heatmaps.plot_output_heatmap_diverging_multiple_outputs_choose_sort(simsDFanova, response_list, 'Y_NORM_HEALTHY_LIVE', FILEID, NORM, SCORE, SAVELOC)
-        scripts.stats.stats_heatmaps.plot_output_heatmap_grayscale_multiple_outputs_choose_sort(simsDFanova, response_list, 'Y_NORM_HEALTHY_LIVE', FILEID, NORM, SCORE, SAVELOC)
-    plt.close('all')
-
-    return
-
 def plot_all_output_heatmaps_lineplot(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
     """Call plotters for heatmaps with all outputs showing as line plots and sorted by score."""
 
@@ -277,25 +214,6 @@ def plot_all_output_heatmaps_lineplot(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
     scripts.stats.stats_heatmaps.plot_output_heatmap_with_subplots_line_multiple_outputs(simsDFanova, response_list, True, FILEID, NORM, SCORE, SAVELOC)
 
     plt.close('all')
-
-    return
-
-def plot_elbow_plots(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
-    """Call plotters for elbow plots."""
-
-    comb, response_list = create_feature_and_response_combo_lists(FILEID)
-    colorlist = scripts.stats.stats_utilities.define_color_reference_list(FILEID)
-
-    # Make elbow plots
-    print('\t\tPlotting output elbow plots.')
-    for response in response_list:
-        for color in colorlist:
-            scripts.stats.stats_elbow.plot_output_elbow_sort_output_and_color(simsDFanova, response, color, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_elbow.plot_output_elbow_sort_all(simsDFanova, response, color, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_elbow.plot_output_elbow_CH_sort_cancer_and_color(simsDFanova, color, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_elbow.plot_output_elbow_CH_sort_healthy_and_color(simsDFanova, color, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_elbow.plot_output_elbow_CH_sort_all(simsDFanova, color, FILEID, NORM, SCORE, SAVELOC)
-            plt.close('all')
 
     return
 
@@ -314,13 +232,10 @@ def create_excel_files_with_simulations_sorted_by_response(simsDFanova, NORM, SC
 
     return
 
-def plot_heatmaps_elbows_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
+def plot_heatmaps_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
     """Call functions that will make heatmaps, elbow plots, and make excel files."""
 
     # Plot output heatmaps
-    plot_single_output_heatmaps_unsorted(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
-    plot_all_output_heatmaps_unsortead_and_sorted_by_score(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
-    plot_all_output_heatmaps_sorted_by_norm(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
     plot_all_output_heatmaps_lineplot(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     # Create excel files sorted by output
@@ -475,11 +390,7 @@ def conduct_stats_analyses_all_data(simsDFanova, NORM, SCORE, PARTIAL, filesplit
         print('\t\t' + 'Running ANOVA.')
         scripts.stats.stats_features.anova(simsDFanova, FILEID, NORM, SCORE, SAVELOC)
 
-    # Do two axis heatmaps only if full combinatoral dataset present
-    if (('_CH_' in FILEID and X == 5) or ('_C_' in FILEID and X == 4)) and not PARTIAL:
-        plot_two_axis_heatmaps(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
-
-    plot_heatmaps_elbows_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
+    plot_heatmaps_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     return
 
@@ -491,7 +402,7 @@ def conduct_stats_analysis_averaged_data(simsDFanova, NORM, SCORE, FILEID, SAVEL
     simsDFavg = average_conditions(simsDFanova, FILEID)
     FILEIDAVG = FILEID + '_AVG'
 
-    plot_heatmaps_elbows_and_make_excel_files(simsDFavg, NORM, SCORE, FILEIDAVG, SAVELOC)
+    plot_heatmaps_and_make_excel_files(simsDFavg, NORM, SCORE, FILEIDAVG, SAVELOC)
 
     return
 

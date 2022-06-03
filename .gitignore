@@ -8,4 +8,4 @@ scripts/parse/__pycache__/*
 scripts/plot/__pycache__/*
 scripts/stats/__pycache__/*
 scripts/subset/__pycache__/*
-pipeline_data_processing_and_plotting.ipynb
+pipeline.ipynb
