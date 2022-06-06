@@ -69,16 +69,7 @@ def plot_dish_tissue_compare_data(files, color, saveLoc):
 
     if color == 'X':
         for COLOR in ['DOSE', 'TREAT RATIO', 'CAR AFFINITY', 'ANTIGENS CANCER']:
-            scripts.plot.plot_dish_tissue_compare.plot_rank_parity(rankDF, COLOR, 'VITRO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_rank_parity(rankDF, COLOR, 'VIVO', saveLoc)
             scripts.plot.plot_dish_tissue_compare.plot_rank_ladder(rankDF, COLOR, 'VITRO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_rank_ladder(rankDF, COLOR, 'VIVO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_score_parity(rankDF, COLOR, 'VITRO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_score_parity(rankDF, COLOR, 'VIVO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_score_norm_parity(rankDF, COLOR, 'VITRO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_score_norm_parity(rankDF, COLOR, 'VIVO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_score_ladder(rankDF, COLOR, 'VITRO', saveLoc)
-            scripts.plot.plot_dish_tissue_compare.plot_score_ladder(rankDF, COLOR, 'VIVO', saveLoc)
             plt.close("all")
 
     return
@@ -118,7 +109,7 @@ def define_color_based_on_x_location(filesplit, X, COLOR, PARTIAL):
 
     return COLOR
 
-def plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID, fileid, SAVELOC):
+def plot_analyze_counts_data(simsDF, COLOR, ANALYSIS, filesplit, FILEID, fileid, SAVELOC):
     """Call plotters for plotting cell count dynamics for each cell population."""
 
     FILEID_SPLIT_INDICES = scripts.plot.plot_utilities.define_fileid_split_indices_dict()
@@ -134,20 +125,10 @@ def plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID
                 scripts.plot.plot_cell_counts.plot_counts_norm(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
             if 'VIVO' in FILEID and POP_NAMES[p] in ['CANCER', 'CANCER LIVE', 'HEALTHY', 'HEALTHY LIVE']:
-                scripts.plot.plot_cell_counts.plot_counts_frac_remaining(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+                scripts.plot.plot_cell_counts.plot_counts_treat_norm(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
             if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
                 scripts.plot.plot_cell_counts.plot_counts_treat(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-
-            if COLOR == 'DOSE' or PARTIAL:
-                scripts.plot.plot_cell_counts.plot_counts_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-                if ANALYSIS == 'ANALYZE':
-                    scripts.plot.plot_cell_counts.plot_counts_norm_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-
-                if 'VIVO' in FILEID and POP_NAMES[p] in ['CANCER', 'CANCER LIVE', 'HEALTHY', 'HEALTHY LIVE']:
-                    scripts.plot.plot_cell_counts.plot_counts_frac_remaining_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
-                if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD4 LIVE', 'CD8', 'CD8 LIVE', 'T-CELL', 'T-CELL LIVE']:
-                    scripts.plot.plot_cell_counts.plot_counts_treat_dose(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
             if 'LIVE' not in POP_NAMES[p]:
                 scripts.plot.plot_cell_counts.plot_counts_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
@@ -155,7 +136,7 @@ def plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID
                     scripts.plot.plot_cell_counts.plot_counts_norm_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
                 if 'VIVO' in FILEID and POP_NAMES[p] in ['CANCER', 'CANCER LIVE', 'HEALTHY', 'HEALTHY LIVE']:
-                    scripts.plot.plot_cell_counts.plot_counts_frac_remaining_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
+                    scripts.plot.plot_cell_counts.plot_counts_treat_norm_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
                 if 'VIVO' in FILEID and POP_NAMES[p] in ['CD4', 'CD8', 'T-CELL']:
                     scripts.plot.plot_cell_counts.plot_counts_treat_merge(POP_NAMES[p], simsDF, COLOR, fileid, SAVELOC)
 
@@ -260,13 +241,7 @@ def plot_kill_curve_sim_data(simsDF, filesplit, FILEID, fileid, SAVELOC):
     print('\t\t' + 'Plotting kill curve data')
     if filesplit[FILEID_SPLIT_INDICES['PLATE']] == 'DISH':
         for time in range(2, len(DISH_TIMES)):
-            scripts.plot.plot_kill_curves.plot_kill_curve_sim(simsDF, fileid, SAVELOC, DISH_TIMES[time])
-            scripts.plot.plot_kill_curves.plot_kill_curve_relative_sim(simsDF, fileid, SAVELOC,  DISH_TIMES[time])
             scripts.plot.plot_kill_curves.plot_kill_curve_normalized_sim(simsDF, FILEID, SAVELOC, 7)
-    if filesplit[FILEID_SPLIT_INDICES['PLATE']] == 'TISSUE':
-        for time in range(1, len(TISSUE_TIMES)):
-            scripts.plot.plot_kill_curves.plot_kill_curve_sim(simsDF, fileid, SAVELOC, TISSUE_TIMES[time])
-            scripts.plot.plot_kill_curves.plot_kill_curve_relative_sim(simsDF, fileid, SAVELOC, TISSUE_TIMES[time])
     plt.close("all")
 
     return
@@ -282,8 +257,6 @@ def plot_env_conc_data(simsDF, COLOR, TIMES, FILEID, SAVELOC):
             continue
         else:
             scripts.plot.plot_env.plot_env_conc_times_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TIMES)
-            scripts.plot.plot_env.plot_evn_conc_times_line(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC)
-            scripts.plot.plot_env.plot_env_conc_axis_bar(MOL_NAMES[m], simsDF, COLOR, FILEID, SAVELOC, TIMES)
             plt.close("all")
 
     return
@@ -323,9 +296,6 @@ def plot_spatial_counts_data(simsDF, COLOR, TIMES, PARTIAL, filesplit, FILEID, S
             else:
                 scripts.plot.plot_spatial.plot_counts_radius(POP_NAMES[p], simsDF, COLOR, FILEID, SAVELOC, TIME)
                 scripts.plot.plot_spatial.plot_counts_radius(POP_NAMES[p] + ' NORMALIZED', simsDF, COLOR, FILEID, SAVELOC, TIME)
-                if COLOR == 'DOSE' or PARTIAL:
-                    scripts.plot.plot_spatial.plot_counts_radius_dose(POP_NAMES[p], simsDF, COLOR, FILEID, SAVELOC, TIME)
-                    scripts.plot.plot_spatial.plot_counts_radius_dose(POP_NAMES[p] + ' NORMALIZED', simsDF, COLOR, FILEID, SAVELOC, TIME)
                 plt.close("all")
 
             if 'LIVE' not in POP_NAMES[p]:
@@ -376,7 +346,7 @@ def plot_analyze_data(simsDF, COLOR, PARTIAL, ANALYSIS, FILEID, SAVELOC):
 
         # Plot counts data
         if 'CYCLES' not in FILEID and 'VOLUMES' not in FILEID:
-            plot_analyze_counts_data(simsDF, COLOR, PARTIAL, ANALYSIS, filesplit, FILEID, fileid, SAVELOC)
+            plot_analyze_counts_data(simsDF, COLOR, ANALYSIS, filesplit, FILEID, fileid, SAVELOC)
             plot_analyze_scatter_data(simsDF, COLOR, ANALYSIS, filesplit, fileid, SAVELOC)
             plot_analyze_state_frac_data(simsDF, COLOR, fileid, SAVELOC)
 

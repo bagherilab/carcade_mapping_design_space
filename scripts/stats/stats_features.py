@@ -1,8 +1,6 @@
 import scripts.stats.stats_utilities
 import json
 import pandas as pd
-import statsmodels.api as sm
-from statsmodels.formula.api import ols
 
 def make_empty_features_dict():
     """Initialize empty dictionary of feature counts."""
@@ -93,93 +91,6 @@ def populate_anova_df(simsDF, simsDFanova, FILEID):
 
     return simsDFanova
 
-def anova(simsDF, FILEID, NORM, SCORE, SAVELOC):
-    """Conduct ANOVA statistical analysis."""
-
-    if '_CH_' not in FILEID:
-        add = ''
-
-        #print('ANOVA FOR CANCER CELLS.')
-        # model_CANCER = ols('Y_NORM_CANCER_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER)', data=simsDF).fit()
-        model_CANCER = ols('Y_NORM_CANCER_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER) + '
-                           'C(DOSE):C(TREAT_RATIO) + C(DOSE):C(CAR_AFFINITY) + C(DOSE):C(ANTIGENS_CANCER) +'
-                           'C(TREAT_RATIO):C(CAR_AFFINITY) + C(TREAT_RATIO):C(ANTIGENS_CANCER) +'
-                           'C(CAR_AFFINITY):C(ANTIGENS_CANCER)', data=simsDF).fit()
-        anova_CANCER = sm.stats.anova_lm(model_CANCER, typ=2)
-        #print(anova_CANCER)
-
-        f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'ANOVA_CANCER.xlsx'
-        anova_CANCER.to_excel(f, header=True)
-
-        #print('ANOVA FOR T-CELLS.')
-        # model_TCELL = ols('Y_NORM_TCELL_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER)', data=simsDF).fit()
-        model_TCELL = ols('Y_NORM_TCELL_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER) + '
-                          'C(DOSE):C(TREAT_RATIO) + C(DOSE):C(CAR_AFFINITY) + C(DOSE):C(ANTIGENS_CANCER) +'
-                          'C(TREAT_RATIO):C(CAR_AFFINITY) + C(TREAT_RATIO):C(ANTIGENS_CANCER) +'
-                          'C(CAR_AFFINITY):C(ANTIGENS_CANCER)', data=simsDF).fit()
-        anova_TCELL = sm.stats.anova_lm(model_TCELL, typ=2)
-        #print(anova_TCELL)
-
-        f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'ANOVA_TCELL.xlsx'
-        anova_TCELL.to_excel(f, header=True)
-
-    else:
-        add = SCORE + '_'
-
-        #print('ANOVA FOR CANCER CELLS.')
-        #model_CANCER = ols('Y_NORM_CANCER_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER)', data=simsDF).fit()
-        model_CANCER = ols('Y_NORM_CANCER_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER) + C(ANTIGENS_HEALTHY) + '
-                           'C(DOSE):C(TREAT_RATIO) + C(DOSE):C(CAR_AFFINITY) + C(DOSE):C(ANTIGENS_CANCER) + C(DOSE):C(ANTIGENS_HEALTHY) +'
-                           'C(TREAT_RATIO):C(CAR_AFFINITY) + C(TREAT_RATIO):C(ANTIGENS_CANCER) + C(TREAT_RATIO):C(ANTIGENS_HEALTHY) +'
-                           'C(CAR_AFFINITY):C(ANTIGENS_CANCER) + C(CAR_AFFINITY):C(ANTIGENS_HEALTHY) + '
-                           'C(ANTIGENS_CANCER):C(ANTIGENS_HEALTHY)', data=simsDF).fit()
-        anova_CANCER = sm.stats.anova_lm(model_CANCER, typ=2)
-        #print(anova_CANCER)
-
-        f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'ANOVA_CANCER.xlsx'
-        anova_CANCER.to_excel(f, header=True)
-
-        #print('ANOVA FOR HEALTHY CELLS.')
-        # model_CANCER = ols('Y_NORM_CANCER_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER)', data=simsDF).fit()
-        model_HEALTHY = ols('Y_NORM_HEALTHY_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER) + C(ANTIGENS_HEALTHY) + '
-                            'C(DOSE):C(TREAT_RATIO) + C(DOSE):C(CAR_AFFINITY) + C(DOSE):C(ANTIGENS_CANCER) + C(DOSE):C(ANTIGENS_HEALTHY) +'
-                            'C(TREAT_RATIO):C(CAR_AFFINITY) + C(TREAT_RATIO):C(ANTIGENS_CANCER) + C(TREAT_RATIO):C(ANTIGENS_HEALTHY) +'
-                            'C(CAR_AFFINITY):C(ANTIGENS_CANCER) + C(CAR_AFFINITY):C(ANTIGENS_HEALTHY) +'
-                            'C(ANTIGENS_CANCER):C(ANTIGENS_HEALTHY)', data=simsDF).fit()
-        anova_HEALTHY = sm.stats.anova_lm(model_HEALTHY, typ=2)
-        #print(anova_HEALTHY)
-
-        f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'ANOVA_HEALTHY.xlsx'
-        anova_HEALTHY.to_excel(f, header=True)
-
-        #print('ANOVA FOR T-CELLS.')
-        # model_TCELL = ols('Y_NORM_TCELL_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER)', data=simsDF).fit()
-        model_TCELL = ols('Y_NORM_TCELL_LIVE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER) + C(ANTIGENS_HEALTHY) + '
-                          'C(DOSE):C(TREAT_RATIO) + C(DOSE):C(CAR_AFFINITY) + C(DOSE):C(ANTIGENS_CANCER) + C(DOSE):C(ANTIGENS_HEALTHY) +'
-                          'C(TREAT_RATIO):C(CAR_AFFINITY) + C(TREAT_RATIO):C(ANTIGENS_CANCER) + C(TREAT_RATIO):C(ANTIGENS_HEALTHY) +'
-                          'C(CAR_AFFINITY):C(ANTIGENS_CANCER) + C(CAR_AFFINITY):C(ANTIGENS_HEALTHY) +'
-                          'C(ANTIGENS_CANCER):C(ANTIGENS_HEALTHY)', data=simsDF).fit()
-        anova_TCELL = sm.stats.anova_lm(model_TCELL, typ=2)
-        #print(anova_TCELL)
-
-        f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'ANOVA_TCELL.xlsx'
-        anova_TCELL.to_excel(f, header=True)
-
-        #print('ANOVA FOR SCORE.')
-        # model_CANCER = ols('SCORE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER)', data=simsDF).fit()
-        model_SCORE = ols('SCORE ~ C(DOSE) + C(TREAT_RATIO) + C(CAR_AFFINITY) + C(ANTIGENS_CANCER) + C(ANTIGENS_HEALTHY) + '
-                          'C(DOSE):C(TREAT_RATIO) + C(DOSE):C(CAR_AFFINITY) + C(DOSE):C(ANTIGENS_CANCER) + C(DOSE):C(ANTIGENS_HEALTHY) +'
-                          'C(TREAT_RATIO):C(CAR_AFFINITY) + C(TREAT_RATIO):C(ANTIGENS_CANCER) + C(TREAT_RATIO):C(ANTIGENS_HEALTHY) +'
-                          'C(CAR_AFFINITY):C(ANTIGENS_CANCER) + C(CAR_AFFINITY):C(ANTIGENS_HEALTHY) +'
-                          'C(ANTIGENS_CANCER):C(ANTIGENS_HEALTHY)', data=simsDF).fit()
-        anova_SCORE = sm.stats.anova_lm(model_SCORE, typ=2)
-        #print(anova_SCORE)
-
-        f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'ANOVA_SCORE.xlsx'
-        anova_SCORE.to_excel(f, header=True)
-
-    return
-
 def feature_analysis(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
     """Conduct analysis to count number of each features value across simulations that meet a specified threshold."""
 
@@ -231,8 +142,8 @@ def feature_analysis(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
 
     return
 
-def save_sorted_df_xlsx(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
-    """Save sorted dataframe with analyzed simulations that meet a desired threshold sorted by desired output as excel file."""
+def save_sorted_df_csv(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
+    """Save sorted dataframe with analyzed simulations as csv file and sorted dataframe with analyzed simulations that meet a desired threshold sorted by desired output as csv file."""
 
     SCORE_MIN_HEALTHY_THRESHOLD = scripts.stats.stats_utilities.define_score_min_healthy_threshold()
 
@@ -264,7 +175,7 @@ def save_sorted_df_xlsx(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
         add = SCORE + '_'
     else:
         add = ''
-    f = SAVELOC + FILEID + '_BEFORERANK_' + NORM + '_' + add + 'SORTED' + '_' + RANK.replace('_', '') + '.xlsx'
+    f = SAVELOC + FILEID  + NORM + '_' + add + 'SORTED_NOTHRESHOLD' + '_' + RANK.replace('_', '') + '.csv'
     simsDF.to_excel(f, header=True)
 
     if RANK == 'Y_NORM_CANCER_LIVE':
@@ -283,44 +194,7 @@ def save_sorted_df_xlsx(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
     else:
         add = ''
 
-    f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'SORTED' + '_' + RANK.replace('_','') + '.xlsx'
-    simsDF.to_excel(f, header=True)
-
-    return
-
-def save_sorted_df_xlsx_all(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
-    """Save sorted dataframe with all analyzed simulations sorted by desired output regardless of desired threshold as excel file."""
-
-    columns = ['DOSE', 'TREAT_RATIO', 'CAR_AFFINITY', 'ANTIGENS_CANCER']
-
-    if '_CH_' in FILEID:
-        outputs = ['SCORE', 'Y_NORM_CANCER_LIVE']
-    else:
-        outputs = ['Y_NORM_CANCER_LIVE']
-
-    if '_CH_' in FILEID:
-        columns.append('ANTIGENS_HEALTHY')
-        outputs.append('Y_NORM_HEALTHY_LIVE')
-
-    outputs.remove(RANK)
-
-    sortby = [RANK] + outputs + columns
-
-    ascending = []
-    for c in sortby:
-        if c == 'CAR_AFFINITY' or c == 'SCORE' or c == 'Y_NORM_HEALTHY_LIVE':
-            ascending.append(False)
-        else:
-            ascending.append(True)
-
-    simsDF = simsDF.sort_values(by=sortby, ascending=ascending)
-
-    if '_CH_' in FILEID:
-        add = SCORE + '_'
-    else:
-        add = ''
-
-    f = SAVELOC + FILEID + '_' + NORM + '_' + add + 'SORTED_ALL' + '_' + RANK.replace('_','') + '.xlsx'
-    simsDF.to_excel(f, header=True)
+    f = SAVELOC + FILEID + NORM + '_' + add + 'SORTED_THRESHOLD' + '_' + RANK.replace('_','') + '.csv'
+    simsDF.to_csv(f, header=True)
 
     return

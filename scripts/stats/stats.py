@@ -217,7 +217,7 @@ def plot_all_output_heatmaps_lineplot(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     return
 
-def create_excel_files_with_simulations_sorted_by_response(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
+def create_csv_files_with_simulations_sorted_by_response(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
     """Call printers to make excel files with data analyzed by feature and score values."""
 
     comb, response_list = create_feature_and_response_combo_lists(FILEID)
@@ -227,8 +227,7 @@ def create_excel_files_with_simulations_sorted_by_response(simsDFanova, NORM, SC
     for response in response_list:
         if response != 'Y_NORM_TCELL_LIVE':
             scripts.stats.stats_features.feature_analysis(simsDFanova, response, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_features.save_sorted_df_xlsx(simsDFanova, response, FILEID, NORM, SCORE, SAVELOC)
-            scripts.stats.stats_features.save_sorted_df_xlsx_all(simsDFanova, response, FILEID, NORM, SCORE, SAVELOC)
+            scripts.stats.stats_features.save_sorted_df_csv(simsDFanova, response, FILEID, NORM, SCORE, SAVELOC)
 
     return
 
@@ -239,7 +238,7 @@ def plot_heatmaps_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC
     plot_all_output_heatmaps_lineplot(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     # Create excel files sorted by output
-    create_excel_files_with_simulations_sorted_by_response(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
+    create_csv_files_with_simulations_sorted_by_response(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     return
 
@@ -384,11 +383,6 @@ def conduct_stats_analyses_all_data(simsDFanova, NORM, SCORE, PARTIAL, filesplit
 
     # Count Xs in filesplit
     X = scripts.plot.plot_utilities.count_x_in_file_name(filesplit)
-
-    # Do ANOVA only if full combinatoral dataset present
-    if (('_CH_' in FILEID and X == 5) or ('_C_' in FILEID and X == 4)) and not PARTIAL:
-        print('\t\t' + 'Running ANOVA.')
-        scripts.stats.stats_features.anova(simsDFanova, FILEID, NORM, SCORE, SAVELOC)
 
     plot_heatmaps_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
