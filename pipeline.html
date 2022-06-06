@@ -11787,7 +11787,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This dpcument shows the logical order in which data is processed to obtain the results in the paper. We walk through the full pipeline, starting with parsing simulation files (<code>.json</code>) into pickled numpy arrays (<code>.pkl</code>) and subsequentially selecting, plotting, and analyzing various subsets or all of the data. All necessary function calls to achieve the figures used in the paper are shown, and example figures for each section and type of plot are shown within this document.</p>
+<p>This document shows the logical order in which data is processed to obtain the results in the paper, and the section order corresponds to the order in which the resulting data appeared in the paper. We walk through the full pipeline, starting with parsing simulation files (<code>.json</code>) into pickled numpy arrays (<code>.pkl</code>) and subsequentially selecting, plotting, and analyzing various subsets or all of the data. All necessary function calls to achieve the figures used in the paper are shown, and example figures for each section and type of plot are shown within this document.</p>
 
 </div>
 </div>
@@ -11808,32 +11808,32 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ol>
-<li><a href="#1.-Heuristic-data-plotting">Heuristic data plotting</a></li>
-<li><a href="#2.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">Monoculture and co-culture <code>dish</code> data processing &amp; plotting</a><ul>
-<li><a href="#2.1-Parse-monoculture-and-co-culture-dish-data">2.1 Parse monoculture and co-culture <code>dish</code> data</a></li>
-<li><a href="#2.2-Analyze-parsed-monoculture-and-co-culture-dish-data">2.2 Analayze parsed monoculture and co-culture <code>dish</code> data</a></li>
-<li><a href="#2.3-Subset-analyzed-monoculture-and-co-culture-dish-data">2.3 Subset analyzed monoculture and co-culture <code>dish</code> data</a></li>
-<li><a href="#2.4-Plot-subsetted-monoculture-and-co-culture-dish-data">2.4 Plot subsetted monoculture and co-culture <code>dish</code> data</a></li>
-<li><a href="#2.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">2.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data</li>
+  <li><a href="#1.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">Realistic co-culture <code>dish</code>, <code>tissue</code>, and vasculature graph imaging</a></li>
+<li><a href="#2.-Heuristic-data-plotting">Heuristic data plotting</a></li>
+<li><a href="#3.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">Monoculture and co-culture <code>dish</code> data processing &amp; plotting</a><ul>
+<li><a href="#3.1-Parse-monoculture-and-co-culture-dish-data">3.1 Parse monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#3.2-Analyze-parsed-monoculture-and-co-culture-dish-data">3.2 Analayze parsed monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#3.3-Subset-analyzed-monoculture-and-co-culture-dish-data">3.3 Subset analyzed monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#3.4-Plot-subsetted-monoculture-and-co-culture-dish-data">3.4 Plot subsetted monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#3.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">2.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data</li>
 </ul>
 </li>
-<li><a href="#3.-Experimental-literature-data-plotting">Experimental literature data plotting</a></li>
-<li><a href="#4.-Tissue-data-processing-&amp;-plotting"><code>Tissue</code> data processing &amp; plotting</a><ul>
-<li><a href="#4.1-Parse-tissue-data">4.1 Parse <code>tissue</code> data</a></li>
-<li><a href="#4.2-Analyze-parsed-tissue-data">4.2 Analyze parsed <code>tissue</code> data</a></li>
-<li><a href="#4.3-Subset-analyzed-tissue-data">4.3 Subset analyzed <code>tissue</code> data</a></li>
-<li><a href="#4.4-Plot-subsetted-tissue-data">4.4 Plot subsetted <code>tissue</code> data</a></li>
-<li><a href="#4.5-Multi-feature-&amp;-outocme-analysis-of-tissue-data">4.5 Multi-feature &amp; outcome analysis for <code>tissue</code> data</a></li>
+<li><a href="#4.-Experimental-literature-data-plotting">Experimental literature data plotting</a></li>
+<li><a href="#5.-Tissue-data-processing-&amp;-plotting"><code>Tissue</code> data processing &amp; plotting</a><ul>
+<li><a href="#5.1-Parse-tissue-data">5.1 Parse <code>tissue</code> data</a></li>
+<li><a href="#5.2-Analyze-parsed-tissue-data">5.2 Analyze parsed <code>tissue</code> data</a></li>
+<li><a href="#5.3-Subset-analyzed-tissue-data">5.3 Subset analyzed <code>tissue</code> data</a></li>
+<li><a href="#5.4-Plot-subsetted-tissue-data">5.4 Plot subsetted <code>tissue</code> data</a></li>
+<li><a href="#5.5-Multi-feature-&amp;-outocme-analysis-of-tissue-data">4.5 Multi-feature &amp; outcome analysis for <code>tissue</code> data</a></li>
 </ul>
 </li>
-<li><a href="#5.-Ranked-data-plotting">Ranked data plotting</a></li>
-<li><a href="#6.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs datta processing &amp; plotting</a><ul>
-<li><a href="#6.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
-<li><a href="#6.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
-<li><a href="#6.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
+<li><a href="#6.-Ranked-data-plotting">Ranked data plotting</a></li>
+<li><a href="#7.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs datta processing &amp; plotting</a><ul>
+<li><a href="#7.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
+<li><a href="#7.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
+<li><a href="#7.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
 </ul>
 </li>
-<li><a href="#7.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">Co-culture <code>dish</code>, <code>tissue</code>, and vasculature graph imaging</a></li>
 </ol>
 
 </div>
@@ -11854,7 +11854,170 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="1.-Heuristic-data-plotting">1. Heuristic data plotting<a class="anchor-link" href="#1.-HEURISTIC-DATA-PLOTTING">&#182;</a></h2>
+<h2 id="1.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">1. Realistic co-culture <code>dish</code>, <code>tissue</code>, and vasculature graph imaging<a class="anchor-link" href="#1.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Images of the simulations in each context are generated to highlight the differences in cancer and healthy cell spatial distributions over time.</p>
+<p>The main function <code>image</code> takes in a <code>.json</code> file output from the simulation and produces an image of either the populations, cell states, volume density, or vasculature graphs. For this analysis, only the population and vasculature graph figures were used.</p>
+<p>The population images were generated for the following files:</p>
+
+<pre><code>VITRO_DISH_TREAT_CH_0_NA_NA_1000_100_00.json
+VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
+
+</code></pre>
+<p>The vasculature graph images were generated for the following file:</p>
+
+<pre><code>VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.GRAPH.json
+
+</code></pre>
+<p>These represent the untreated realistic co-culture <code>dish</code> and <code>tissue</code> simulations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
+<li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.json</code> files generated from simulation output)</li>
+<li><code>...TIMES</code> variables indicate which time points to make images at</li>
+<li><code>SIZE</code> variable indicates the size to make the image</li>
+<li><code>POPS_TO_IGNORE</code> indicate which cell population nubmers to ignore (where CAR T-cell populations are listed, but are not present in these untreated simulations)</li>
+<li><code>BGCOL</code> indicates what color to make the background of the image</li>
+<li><code>RADIUS</code> indicates the simulation radius out which to draw to (cells stop at radius 36, but the grpah exists within the margins and out to the full radius of 40)</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Untreated co-culture dish images</span>
+<span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_CELLS</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/coculture/cells/json/to/image/&#39;</span>
+<span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/coculture/svg/to/save/&#39;</span>
+<span class="n">DISH_TIMES</span> <span class="o">=</span> <span class="s1">&#39;0,4,7&#39;</span>
+
+<span class="c1"># Untreated tissue images</span>
+<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_CELLS</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/cells/json/to/image/&#39;</span>
+<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/svg/to/save/&#39;</span>
+<span class="n">TISSUE_TIMES</span> <span class="o">=</span> <span class="s1">&#39;1,16,31&#39;</span>
+
+<span class="c1"># Population image specifications</span>
+<span class="n">SIZE</span> <span class="o">=</span> <span class="s1">&#39;5&#39;</span>
+<span class="n">POPS_TO_IGNORE</span> <span class="o">=</span> <span class="s1">&#39;2,3&#39;</span>
+<span class="n">BGCOL</span> <span class="o">=</span> <span class="s1">&#39;#FFFFFF&#39;</span>
+<span class="n">RADIUS</span> <span class="o">=</span> <span class="s1">&#39;40&#39;</span>
+
+<span class="c1"># Tissue vasculature graph image specifications</span>
+<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/graph/json/to/image/&#39;</span>
+<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/svg/to/save/&#39;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Image-untreated-realistic-co-culture-dish-and-tissue-data">Image untreated realistic co-culture dish <code>dish</code> and <code>tissue</code> data<a class="anchor-link" href="#Image-untreated-realistic-co-culture-dish-and-tissue-data">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.image.image</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">DISH_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Example untreated realistic co-culture <code>dish</code> image.</p>
+<br>
+<img src=examples/figures/coculture/images/VITRO_DISH_TREAT_CH_0_NA_NA_1000_100_00_pops_0000.svg height=300 width=300>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Example untreated <code>tissue</code> image.</p>
+<br>
+<img src=examples/figures/tissue/images/VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00_pops_0310.svg height=300 width=300>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Example untreated <code>tissue</code> vasculature graph image.</p>
+<br>
+<img src=examples/figures/tissue/images/VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.GRAPH_graph_0310.svg height=300 width=300>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Heuristic-data-plotting">2. Heuristic data plotting<a class="anchor-link" href="#2.-HEURISTIC-DATA-PLOTTING">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -11954,7 +12117,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="2.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">2. Monoculture and co-culture <code>dish</code> data processing &amp; plotting<a class="anchor-link" href="#2.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">&#182;</a></h2>
+<h2 id="3.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">3. Monoculture and co-culture <code>dish</code> data processing &amp; plotting<a class="anchor-link" href="#3.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -11999,7 +12162,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.1-Parse-monoculture-and-co-culture-dish-data">2.1 Parse monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.1-Parse-monoculture-and-co-culture-dish-data">&#182;</a></h3>
+<h3 id="3.1-Parse-monoculture-and-co-culture-dish-data">3.1 Parse monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#3.1-Parse-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12122,7 +12285,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.2-Analyze-parsed-monoculture-and-co-culture-dish-data">2.2 Analyze parsed monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.2-Analyze-parsed-monoculture-and-co-culture-dish-data">&#182;</a></h3>
+<h3 id="3.2-Analyze-parsed-monoculture-and-co-culture-dish-data">3.2 Analyze parsed monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#3.2-Analyze-parsed-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12245,7 +12408,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.3-Subset-analyzed-monoculture-and-co-culture-dish-data">2.3 Subset analyzed monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.3-Subset-analyzed-monoculture-and-co-culture-dish-data">&#182;</a></h3>
+<h3 id="3.3-Subset-analyzed-monoculture-and-co-culture-dish-data">3.3 Subset analyzed monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#3.3-Subset-analyzed-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12421,7 +12584,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.4-Plot-subsetted-monoculture-and-co-culture-dish-data">2.4 Plot subsetted monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.4-Plot-subsetted-monoculture-and-co-culture-dish-data">&#182;</a></h3>
+<h3 id="3.4-Plot-subsetted-monoculture-and-co-culture-dish-data">3.4 Plot subsetted monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#3.4-Plot-subsetted-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12623,7 +12786,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="2.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">2.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#2.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">&#182;</a></h3>
+<h3 id="3.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">3.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data<a class="anchor-link" href="#3.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -12761,7 +12924,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="3.-Experimental-literature-data-plotting">3. Experimental literature data plotting<a class="anchor-link" href="#3.-Experimental-literature-data-plotting">&#182;</a></h2>
+<h2 id="4.-Experimental-literature-data-plotting">4. Experimental literature data plotting<a class="anchor-link" href="#4.-Experimental-literature-data-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12861,7 +13024,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="4.-Tissue-data-processing-&amp;-plotting">4. <code>Tissue</code> data processing &amp; plotting<a class="anchor-link" href="#4.-Tissue-data-processing-&amp;-plotting">&#182;</a></h2>
+<h2 id="5.-Tissue-data-processing-&amp;-plotting">5. <code>Tissue</code> data processing &amp; plotting<a class="anchor-link" href="#5.-Tissue-data-processing-&amp;-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -12890,7 +13053,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.1-Parse-tissue-data">4.1 Parse <code>tissue</code> data<a class="anchor-link" href="#4.1-Parse-tissue-data">&#182;</a></h3>
+<h3 id="5.1-Parse-tissue-data">5.1 Parse <code>tissue</code> data<a class="anchor-link" href="#5.1-Parse-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13007,7 +13170,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.2-Analyze-parsed-tissue-data">4.2 Analyze parsed <code>tissue</code> data<a class="anchor-link" href="#4.2-Analyze-parsed-tissue-data">&#182;</a></h3>
+<h3 id="5.2-Analyze-parsed-tissue-data">5.2 Analyze parsed <code>tissue</code> data<a class="anchor-link" href="#5.2-Analyze-parsed-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13116,7 +13279,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.3-Subset-analyzed-tissue-data">4.3 Subset analyzed <code>tissue</code> data<a class="anchor-link" href="#4.3-Subset-analyzed-tissue-data">&#182;</a></h3>
+<h3 id="5.3-Subset-analyzed-tissue-data">5.3 Subset analyzed <code>tissue</code> data<a class="anchor-link" href="#5.3-Subset-analyzed-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13236,7 +13399,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.4-Plot-subsetted-tissue-data">4.4 Plot subsetted <code>tissue</code> data<a class="anchor-link" href="#4.4-Plot-subsetted-tissue-data">&#182;</a></h3>
+<h3 id="5.4-Plot-subsetted-tissue-data">5.4 Plot subsetted <code>tissue</code> data<a class="anchor-link" href="#5.4-Plot-subsetted-tissue-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13455,7 +13618,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.5-Multi-feature-&amp;-outocme-analysis-of-tissue-data">4.5 Multi-feature &amp; outcome analysis of <code>tissue</code> data<a class="anchor-link" href="#4.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-TISSUE-DATA">&#182;</a></h3>
+<h3 id="5.5-Multi-feature-&amp;-outocme-analysis-of-tissue-data">5.5 Multi-feature &amp; outcome analysis of <code>tissue</code> data<a class="anchor-link" href="#5.5-MULTI-FEATURE-&amp;-OUTCOME-ANALYSIS-TISSUE-DATA">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13579,7 +13742,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="5.-Ranked-data-plotting">5. Ranked data plotting<a class="anchor-link" href="#5.-Ranked-data-plotting">&#182;</a></h2>
+<h2 id="6.-Ranked-data-plotting">6. Ranked data plotting<a class="anchor-link" href="#6.-Ranked-data-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13694,7 +13857,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="6.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">6. Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data processing &amp; plotting<a class="anchor-link" href="#6.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">&#182;</a></h2>
+<h2 id="7.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">7. Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data processing &amp; plotting<a class="anchor-link" href="#7.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13723,7 +13886,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#6.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
+<h3 id="7.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#7.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13827,7 +13990,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#6.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
+<h3 id="7.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#7.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13940,7 +14103,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">6.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#6.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
+<h3 id="7.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data<a class="anchor-link" href="#7.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -14056,169 +14219,6 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <hr>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="7.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">7. Realistic co-culture <code>dish</code>, <code>tissue</code>, and vasculature graph imaging<a class="anchor-link" href="#7.-Realistic-co-culture-dish,-tissue,-and-vasculature-graph-imaging">&#182;</a></h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Images of the simulations in each context are generated to highlight the differences in cancer and healthy cell spatial distributions over time.</p>
-<p>The main function <code>image</code> takes in a <code>.json</code> file output from the simulation and produces an image of either the populations, cell states, volume density, or vasculature graphs. For this analysis, only the population and vasculature graph figures were used.</p>
-<p>The population images were generated for the following files:</p>
-
-<pre><code>VITRO_DISH_TREAT_CH_0_NA_NA_1000_100_00.json
-VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
-
-</code></pre>
-<p>The vasculature graph images were generated for the following file:</p>
-
-<pre><code>VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.GRAPH.json
-
-</code></pre>
-<p>These represent the untreated realistic co-culture <code>dish</code> and <code>tissue</code> simulations.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
-<li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.json</code> files generated from simulation output)</li>
-<li><code>...TIMES</code> variables indicate which time points to make images at</li>
-<li><code>SIZE</code> variable indicates the size to make the image</li>
-<li><code>POPS_TO_IGNORE</code> indicate which cell population nubmers to ignore (where CAR T-cell populations are listed, but are not present in these untreated simulations)</li>
-<li><code>BGCOL</code> indicates what color to make the background of the image</li>
-<li><code>RADIUS</code> indicates the simulation radius out which to draw to (cells stop at radius 36, but the grpah exists within the margins and out to the full radius of 40)</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Untreated co-culture dish images</span>
-<span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_CELLS</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/coculture/cells/json/to/image/&#39;</span>
-<span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/coculture/svg/to/save/&#39;</span>
-<span class="n">DISH_TIMES</span> <span class="o">=</span> <span class="s1">&#39;0,4,7&#39;</span>
-
-<span class="c1"># Untreated tissue images</span>
-<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_CELLS</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/cells/json/to/image/&#39;</span>
-<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/svg/to/save/&#39;</span>
-<span class="n">TISSUE_TIMES</span> <span class="o">=</span> <span class="s1">&#39;1,16,31&#39;</span>
-
-<span class="c1"># Population image specifications</span>
-<span class="n">SIZE</span> <span class="o">=</span> <span class="s1">&#39;5&#39;</span>
-<span class="n">POPS_TO_IGNORE</span> <span class="o">=</span> <span class="s1">&#39;2,3&#39;</span>
-<span class="n">BGCOL</span> <span class="o">=</span> <span class="s1">&#39;#FFFFFF&#39;</span>
-<span class="n">RADIUS</span> <span class="o">=</span> <span class="s1">&#39;40&#39;</span>
-
-<span class="c1"># Tissue vasculature graph image specifications</span>
-<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/graph/json/to/image/&#39;</span>
-<span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span> <span class="o">=</span> <span class="s1">&#39;path/to/untreated/tissue/svg/to/save/&#39;</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Image-untreated-realistic-co-culture-dish-and-tissue-data">Image untreated realistic co-culture dish <code>dish</code> and <code>tissue</code> data<a class="anchor-link" href="#Image-untreated-realistic-co-culture-dish-and-tissue-data">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.image.image</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">DISH_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Example-figure">Example figure<a class="anchor-link" href="#Example-figure">&#182;</a></h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Example untreated realistic co-culture <code>dish</code> image.</p>
-<br>
-<img src=examples/figures/coculture/images/VITRO_DISH_TREAT_CH_0_NA_NA_1000_100_00_pops_0000.svg height=300 width=300>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Example untreated <code>tissue</code> image.</p>
-<br>
-<img src=examples/figures/tissue/images/VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00_pops_0310.svg height=300 width=300>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Example untreated <code>tissue</code> vasculature graph image.</p>
-<br>
-<img src=examples/figures/tissue/images/VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.GRAPH_graph_0310.svg height=300 width=300>
-</div>
-</div>
-</div>
     </div>
   </div>
 </body>
