@@ -4,59 +4,6 @@ import tarfile as tar
 from math import sqrt, pi, cos, sin, log
 import numpy as np
 
-__author__ = "Jessica S. Yu"
-__email__ = "jessicayu@u.northwestern.edu"
-
-'''
-ABM_IMAGE takes a directory of (or a single) .tar.xz or .json simulation files
-and draws the selected SVG images. Current support for four different views:
-
-    Hexagon based: total volume, total number of cells
-    Triangle based: cell types, cell populations
-
-Usage:
-    python image.py FILES [-h] [--nosave] [--noprint] [(-s|--size) SIZE]
-        [(-t|--time) TIME] [(-i|--indices) INDS] [--bgcol COLOR]
-        [--ignore IGNORE] [--number] [--volume] [--types] [--pops]
-        [--custom] [--customspec SPEC]
-
-    FILES
-        Path to .json, .tar.xz, or directory
-    [--nosave]
-        Do not save results to file
-    [--noprint]
-        Do not print results to console
-    [(-s|--size) SIZE]
-        Height of hexagon in pixels (default: 4)
-    [(-t|--time) TIME]
-        Comma separated list of time points or min:interval:max (default: 7,14,21)
-    [(-i|--indices) INDS]
-        Comma separated list of seeds for .tar.xz (default: 0)
-    [--bgcol COLOR]
-        Hex code for color of drawing background (default: #000000)
-    [--ignore IGNORE]
-        Comma separated list of populations to ignore
-    [--number]
-        Draw image for cell number
-    [--tissue]
-        Draw image for tissue cell number   
-    [--volume]
-        Draw image for total volume
-    [--types]
-        Draw image for cell types
-    [--pops]
-        Draw image for cell populations
-    [--custom]
-        Draw custom image based on custom spec
-    [--customspec SPEC]
-        Custom image specification in the form
-            [hex/tri]:index:divisor:list,of,ranges:list,of,colors:[hsv/rgb]
-        where hex or tri indicates the shape, index is the index of the value in
-        the cell array, divisor is the dividing value (use a,b) with tri to do
-        log(x/a, b), list of ranges is defines the bins, list of colors are
-        hex codes (no #) for the colors of each bin, and hsv/rgb specifies the
-        interpolation scheme
-'''
 def define_coord_constants():
     """Define coordinate constants."""
 
@@ -443,7 +390,66 @@ def _image(jsn, saveLoc, T, S, R, view, filename, nosave, ignore, bgcol, spec, p
             save_svg("\n".join(layers), w, h, saveLoc + filename.split("/")[-1], view, t, bgcol, padding)
 
 def image(files, saveLoc='', size='4', time='7,14,21', inds='0', radius='auto', bgcol='#000000', padding='10', ignore='-1', number=False, tissue=False, volume=False, types=False, pops=False, graph=False, custom=False, spec='loc:3:1:0,3,6:ff0000,00ff00,0000ff:hsv', nosave=False, noprint=False):
-    """Create image of ABM simulaton files."""
+    """Create image of ABM simulaton files.
+    Code adapted from Jessica S. Yu.
+
+    image takes a directory of (or a single) .tar.xz or .json simulation files
+    and draws the selected SVG images. Current support for four different views:
+
+        Hexagon based: total volume, total number of cells
+        Triangle based: cell types, cell populations
+
+    Usage:
+        image(files, saveLoc='', size='4', time='7,14,21', inds='0', radius='auto',
+            bgcol='#000000', padding='10', ignore='-1', number=False, tissue=False,
+            volume=False, types=False, pops=False, graph=False, custom=False,
+            spec='loc:3:1:0,3,6:ff0000,00ff00,0000ff:hsv', nosave=False, noprint=False)
+
+        files
+            Path to .json, .tar.xz, or directory.
+        saveLoc
+            Location of where to save file, default will save here.
+        [size]
+            Height of hexagon in pixels (default: 4)
+        [time]
+            Comma separated list of time points or min:interval:max (default: 7,14,21)
+        [inds]
+            Comma separated list of seeds for .tar.xz (default: 0)
+        [radius]
+            Radius to draw (default='auto').
+        [bgcol]
+            Hex code for color of drawing background (default: #000000)
+        [padding]
+            Padding to add to edge of drawing (defualt: 10).
+        [ignore]
+            Comma separated list of populations to ignore (default: -1, won't ignore any populations).
+        [number]
+            Draw image for cell number (default: False).
+        [tissue]
+            Draw image for tissue cell number (default: False).
+        [volume]
+            Draw image for total volume (default: False).
+        [types]
+            Draw image for cell types (default: False).
+        [pops]
+            Draw image for cell populations (default: False).
+        [custom]
+            Draw custom image based on custom spec (default: False).
+        [--customspec SPEC]
+            Custom image specification in the form
+            [hex/tri]:index:divisor:list,of,ranges:list,of,colors:[hsv/rgb]
+            where hex or tri indicates the shape, index is the index of the value in
+            the cell array, divisor is the dividing value (use a,b) with tri to do
+            log(x/a, b), list of ranges is defines the bins, list of colors are
+            hex codes (no #) for the colors of each bin, and hsv/rgb specifies the
+            interpolation scheme (default: 'loc:3:1:0,3,6:ff0000,00ff00,0000ff:hsv')
+        [nosave]
+            Do not save results to file (default: False).
+        [noprint]
+            Do not print results to console (default: False).
+
+        Must set one of of the following to True: number, tissue, volume, types, pops.
+    """
 
     # Parse arguments.
     if len(time.split(":")) == 3:

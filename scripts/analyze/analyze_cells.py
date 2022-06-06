@@ -3,145 +3,6 @@ import scripts.analyze.analyze_utilities
 import pickle
 import pandas as pd
 
-'''
-analyze_cells takes a directory of (or a single) .pkl simulation files
-and extracts the data into a dataframe in the form:
-
-    TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
-
-and saves it to a .pkl where the DATA are the following list of information:
-    
-    TIME
-    CANCER
-    CANCER LIVE
-    HEALTHY
-    HEALTHY LIVE
-    T-CELL
-    T-CELL LIVE
-    CD4
-    CD4 LIVE
-    CD8
-    CD8 LIVE
-    CANCER LIVE %
-    HEALTHY LIVE %
-    NEUTR CANCER
-    NEUTR CANCER LIVE
-    NEUTR HEALTHY
-    NEUTR HEALTHY LIVE
-    NEUTR T-CELL
-    NEUTR CD4
-    NEUTR CD8
-    NEUTR CANCER %
-    NEUTR CANCER LIVE %
-    NEUTR HEALTHY %
-    NEUTR HEALTHY LIVE %
-    NEUTR T-CELL %
-    NEUTR CD4 %
-    NEUTR CD8 %
-    APOPT CANCER
-    APOPT HEALTHY
-    APOPT T-CELL
-    APOPT CD4
-    APOPT CD8
-    APOPT CANCER %
-    APOPT HEALTHY %
-    APOPT T-CELL %
-    APOPT CD4 %
-    APOPT CD8 %
-    QUIES CANCER
-    QUIES CANCER LIVE
-    QUIES HEALTHY
-    QUIES HEALTHY LIVE
-    QUIES CANCER %
-    QUIES CANCER LIVE %
-    QUIES HEALTHY %
-    QUIES HEALTHY LIVE %
-    MIGRA CANCER
-    MIGRA CANCER LIVE
-    MIGRA HEALTHY
-    MIGRA HEALTHY LIVE
-    MIGRA T-CELL
-    MIGRA CD4
-    MIGRA CD8
-    MIGRA CANCER %
-    MIGRA CANCER LIVE %
-    MIGRA HEALTHY %
-    MIGRA HEALTHY LIVE %
-    MIGRA T-CELL %
-    MIGRA CD4 %
-    MIGRA CD8 %
-    PROLI CANCER
-    PROLI CANCER LIVE
-    PROLI HEALTHY
-    PROLI HEALTHY LIVE
-    PROLI T-CELL
-    PROLI CD4
-    PROLI CD8
-    PROLI CANCER %
-    PROLI CANCER LIVE %
-    PROLI HEALTHY LIVE %
-    PROLI HEALTHY %
-    PROLI T-CELL %
-    PROLI CD4 %
-    PROLI CD8 %
-    SENES CANCER
-    SENES CANCER LIVE
-    SENES HEALTHY
-    SENES HEALTHY LIVE
-    SENES T-CELL
-    SENES CD4
-    SENES CD8
-    SENES CANCER %
-    SENES CANCER LIVE %
-    SENES HEALTHY %
-    SENES HEALTHY LIVE %
-    SENES T-CELL %
-    SENES CD4 %
-    SENES CD8 %
-    NECRO CANCER
-    NECRO HEALTHY
-    NECRO CANCER %
-    NECRO HEALTHY %
-    CYTOT T-CELL
-    CYTOT CD8
-    CYTOT T-CELL %
-    CYTOT CD8 %
-    STIMU T-CELL
-    STIMU CD4
-    STIMU T-CELL %
-    STIMU CD4 %
-    EXHAU T-CELL
-    EXHAU CD4
-    EXHAU CD8
-    EXHAU T-CELL %
-    EXHAU CD4 %
-    EXHAU CD8 %
-    ANERG T-CELL
-    ANERG CD4
-    ANERG CD8
-    ANERG T-CELL %
-    ANERG CD4 %
-    ANERG CD8 %
-    STARV T-CELL %
-    STARV CD4 %
-    STARV CD8 %
-    PAUSE T-CELL %
-    PAUSE CD4 %
-    PUASE CD8%
-    AVG CELL CYCLES CANCER
-    AVG CELL CYCLES HEALTHY
-    AVG CELL CYCLES T-CELL
-    AVG CELL CYCLES CD4
-    AVG CELL CYCLES CD8
-    CELL VOLUMES CANCER
-    CELL VOLUMES HEALTHY
-    CELL VOLUMES T-CELL
-    CELL VOLUMES CD4
-    CELL VOLUMES CD8
-
-each in the format of a list of the value of the specified information at each point in time.
-'''
-
 def make_cells_df():
     """Initialize empty dataframe to contain cell information."""
 
@@ -682,7 +543,27 @@ def analyze_cell_simulations(file, TUMORID, file_extension, sharedLocs):
     return cellsDF
 
 def analyze_cells(files, saveLoc, sharedLocs=False):
-    """Iterate through all files to collect cell dynamcis information."""
+    """Iterate through all files to collect cell dynamcis information.
+
+    analyze_cells takes a directory of (or a single) .pkl simulation files
+    and extracts the data into a dataframe in the form:
+
+        TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
+
+    and saves it to a .pkl where the DATA are the list of cell count and state information as shown in the
+    make_cells_dict and make_cells_df functions. For these counts, each is in the format of a list of the value
+    of the specified information at each point in time.
+
+    Usage:
+        analyze_cells(files, saveLoc, sharedLocs=False)
+
+        files
+            Path to .pkl files or directory.
+        saveLoc
+            Location of where to save file.
+        sharedLocs
+            Collect CAR T-cell information for only CAR T-cells that share a location with at least one cancer cell (default: False).
+    """
 
     PKLFILES = scripts.analyze.analyze_utilities.get_pkl_files(files)
 

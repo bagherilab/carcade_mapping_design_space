@@ -6,41 +6,6 @@ from scripts.analyze.analyze_utilities import get_tumor_id
 import pickle
 import pandas as pd
 
-'''
-analyze_env takes a directory of (or a single) .pkl simulation files and
-extracts the data into a dataframe in the form:
-
-    TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
-
-and saves it to a .pkl where the DATA are the following list of information:
-
-    TIME
-    RADIUS
-    SEED
-    PLATE
-    NUTRIENTS
-    DOSE
-    TREAT RATIO
-    CAR AFFINITY
-    ANTIGENS CANCER
-    ANTIGENS HEALTHY
-    GLUCOSE
-    OXYGEN
-    TGFA
-    IL-2
-    GLUCOSE TOTAL
-    OXYGEN TOTAL
-    TGFA TOTAL
-    IL-2 TOTAL
-    GLUCOSE TOTAL CONC
-    TGFA TOTAL CONC
-    IL-2 TOTAL CONC
-    
-where GLUCOSE, OXYGEN, TGFA, and IL-2 are in the format of a list (per time point) of a list of concentrations at each radius.
-TOTAL columns are the total (absolute) amount of molecule in total area at each time point.
-TOTAL CONC columns are the total concentration amount of molecule across the entire simulation at each time point.
-'''
-
 def make_env_df():
     """Initialize empty dataframe to contain environment information."""
 
@@ -230,7 +195,48 @@ def analyze_env_simulations(file, TUMORID):
     return envDF
 
 def analyze_env(files, saveLoc):
-    """Iterate through all files to pass into functions that collect environment dynamics information."""
+    """Iterate through all files to pass into functions that collect environment dynamics information.
+
+    analyze_env takes a directory of (or a single) .pkl simulation files and extracts the data into a dataframe in the form:
+
+        TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
+
+    and saves it to a .pkl where the DATA are the following list of information (also shown in make_env_dict and make_env_df):
+
+        TIME
+        RADIUS
+        SEED
+        PLATE
+        NUTRIENTS
+        DOSE
+        TREAT RATIO
+        CAR AFFINITY
+        ANTIGENS CANCER
+        ANTIGENS HEALTHY
+        GLUCOSE
+        OXYGEN
+        TGFA
+        IL-2
+        GLUCOSE TOTAL
+        OXYGEN TOTAL
+        TGFA TOTAL
+        IL-2 TOTAL
+        GLUCOSE TOTAL CONC
+        TGFA TOTAL CONC
+        IL-2 TOTAL CONC
+
+    where GLUCOSE, OXYGEN, TGFA, and IL-2 are in the format of a list (per time point) of a list of concentrations at each radius.
+    TOTAL columns are the total (absolute) amount of molecule in total area at each time point.
+    TOTAL CONC columns are the total concentration amount of molecule across the entire simulation at each time point.
+
+    Usage:
+        analyze_env(files, saveLoc)
+
+        files
+            Path to .pkl files or directory.
+        saveLoc
+            Location of where to save file.
+    """
 
     PKLFILES = get_pkl_files(files)
 

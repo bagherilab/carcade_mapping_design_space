@@ -5,37 +5,6 @@ import scripts.analyze.analyze_utilities
 import pickle
 import pandas as pd
 
-'''
-analyze_spatial takes a directory of (or a single) .pkl simulation files and
-extracts the data into a dataframe in the form:
-
-    TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
-
-and saves it to a .pkl where the DATA are the following list of information:
-
-    TIME
-    SEED
-    PLATE
-    NUTRIENTS
-    DOSE
-    TREAT RATIO
-    CAR AFFINITY
-    ANTIGENS CANCER
-    ANTIGENS HEALTHY
-    CANCER
-    CANCER LIVE
-    HEALTHY
-    HEALTHY LIVE
-    T-CELL
-    T-CELL LIVE
-    CD4
-    CD4 LIVE
-    CD8
-    CD8 LIVE
-    
-where each cell population is in the format of a list of a list of counts at each radius.
-'''
-
 def make_spatial_df():
     """Initialize empty dataframe to contain cell spatial information."""
 
@@ -250,7 +219,47 @@ def analyze_spatial_simulations(file, TUMORID):
     return spatialsDF
 
 def analyze_spatial(files, saveLoc):
-    """Iterate through all files to collect cell dynamcis information."""
+    """Iterate through all files to collect cell dynamcis information.
+
+    analyze_spatial takes a directory of (or a single) .pkl simulation files and
+    extracts the data into a dataframe in the form:
+
+        TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
+
+    and saves it to a .pkl where the DATA are the following list of information (also shown in make_spatial_dict and make_spatial_df):
+
+        TIME
+        SEED
+        PLATE
+        NUTRIENTS
+        DOSE
+        TREAT RATIO
+        CAR AFFINITY
+        ANTIGENS CANCER
+        ANTIGENS HEALTHY
+        CANCER
+        CANCER LIVE
+        HEALTHY
+        HEALTHY LIVE
+        T-CELL
+        T-CELL LIVE
+        CD4
+        CD4 LIVE
+        CD8
+        CD8 LIVE
+
+    where each cell population is in the format of a list of a list of counts at each radius.
+
+    Usage:
+        analyze_spatial(files, saveLoc)
+
+        files
+            Path to .pkl files or directory.
+        saveLoc
+            Location of where to save file.
+        sharedLocs
+            Collect CAR T-cell information for only CAR T-cells that share a location with at least one cancer cell (default: False).
+    """
 
     PKLFILES = scripts.analyze.analyze_utilities.get_pkl_files(files)
 

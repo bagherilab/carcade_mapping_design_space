@@ -5,55 +5,6 @@ import pickle
 import tarfile as tar
 import numpy as np
 
-# Adapted from abm_scripts by Jessica S. Yu (jessicasyu@u.northwestern.edu)
-__author__ = "Alexis N. Prybutok"
-__email__ = "aprybutok@u.northwestern.edu"
-
-'''
-ABM_PARSE takes a directory of (or a single) .tar.xz or .json simulation files
-and extracts the data into a matrix in the form:
-
-    {
-        "setup": {
-            "radius": R,
-            "height": H,
-            "time": [],
-            "pops": [],
-            "types": [],
-            "coords": []
-        },
-        "agents": (N seeds) x (T timepoints) x (H height) x (C coordinates) x (P positions),
-        "environments": {
-            "glucose": (N seeds) x (T timepoints) x (H height) x (R radius)
-            "oxygen": (N seeds) x (T timepoints) x (H height) x (R radius)
-            "tgfa": (N seeds) x (T timepoints) x (H height) x (R radius)
-            "IL-2": (N seeds) x (T timepoints) x (H height) x (R radius)
-        }
-    }
-
-where each entry in the agents array is a structured entry of the shape:
-
-    "pop"       int8    population code
-    "type"      int8    cell type code
-    "volume"    int16   cell volume (rounded)
-    "cycle"     int16   average cell cycle length (rounded)
-
-and saves it to a .pkl. Also include a number of utility functions for
-extracting data into metrics and plots.
-
-Usage:
-    python parse.py FILES [--exclude EXCLUDE] [-h] [--nosave] [--noprint]
-
-    FILES
-        Path to .json, .tar.xz, or directory
-    [--exclude EXCLUDE]
-        Comma separated list of seeds to exclude from parsing
-    [--nosave]
-        Do not save results to file
-    [--noprint]
-        Do not print results to console
-'''
-
 def get_hex_coords(R):
     """Get hexagonal coordinates for given radius."""
 
@@ -187,7 +138,54 @@ def _parse(jsn, container):
         }
 
 def parse(files, saveLoc='', exclude=[], nosave=False, noprint=False):
-    """Parses simulation files."""
+    """Parses simulation files.
+    Code adapted from Jessica S. Yu.
+
+    parse takes a directory of (or a single) .tar.xz or .json simulation files
+    and extracts the data into a matrix in the form:
+
+        {
+            "setup": {
+                "radius": R,
+                "height": H,
+                "time": [],
+                "pops": [],
+                "types": [],
+                "coords": []
+            },
+            "agents": (N seeds) x (T timepoints) x (H height) x (C coordinates) x (P positions),
+            "environments": {
+                "glucose": (N seeds) x (T timepoints) x (H height) x (R radius)
+                "oxygen": (N seeds) x (T timepoints) x (H height) x (R radius)
+                "tgfa": (N seeds) x (T timepoints) x (H height) x (R radius)
+                "IL-2": (N seeds) x (T timepoints) x (H height) x (R radius)
+            }
+        }
+
+    where each entry in the agents array is a structured entry of the shape:
+
+        "pop"       int8    population code
+        "type"      int8    cell type code
+        "volume"    int16   cell volume (rounded)
+        "cycle"     int16   average cell cycle length (rounded)
+
+    and saves it to a .pkl. Also include a number of utility functions for
+    extracting data into metrics and plots.
+
+    Usage:
+        parse(files, saveLoc='', exclude=[], nosave=False, noprint=False)
+
+        files
+            Path to .json, .tar.xz, or directory.
+        saveLoc
+            Location of where to save file, default will save here.
+        [exclude]
+            Comma separated list of seeds to exclude from parsing (default: []).
+        [nosave]
+            Do not save results to file (default: False).
+        [noprint]
+            Do not print results to console (default: False).
+    """
 
     if len(exclude) > 0:
         exclude = [int(seed) for seed in exclude.split(",")]

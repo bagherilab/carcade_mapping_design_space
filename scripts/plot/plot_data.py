@@ -12,44 +12,6 @@ import pickle
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
-from argparse import ArgumentParser
-
-'''
-ABM_PLOT takes a directory of (or a single) .pkl simulation files that result from ABM_ANALYZE and
-plots the DATA features in the dataframe over time.
-
-Usage:
-    python plot_data.py FILES [--color COLOR] [--marker MARKER] [--saveLoc SAVELOC]
-
-    FILES
-        Path to .pkl or directory
-    [--color COLOR]
-        Feature by which to color data by. If X given, will color by axis along which data varies.
-        If two featuers vary, default will be used. (default: CAR AFFINITY)
-    [--marker MARKER]
-        Feature by which to change marker of data by (default: TREAT RATIO)
-    [--partial]
-        Flag indicating only partial dataset present instead of full combinatoral set.
-    [--saveLoc SAVELOC]
-        Location of where to save file, default will save here
-'''
-def get_parser():
-
-    # Setup argument parser.
-    parser = ArgumentParser(description="Plot ABM data from dataframe")
-    parser.add_argument(dest="files", help="Path to .pkl file or directory")
-    parser.add_argument("--color", default="CAR AFFINITY", dest="color",
-                        help="Feature by which to color data by (default: CAR AFFINITY)")
-    parser.add_argument("--marker", default="TREAT RATIO", dest="marker",
-                        help="Feature by which to change marker of data by (default: TREAT RATIO)")
-    parser.add_argument("--partial", default=False, dest="partial",
-                        action='store_true', help="Flag indicating only partial dataset present instead of full combinatoral set.")
-    parser.add_argument("--rank", default=False, dest="rank", action='store_true',
-                        help="Flag indicating to make rank parody plot using rank file.")
-    parser.add_argument("--saveLoc", default="", dest="saveLoc",
-                        help="Location of where to save file, default will save here")
-
-    return parser
 
 def plot_dish_tissue_compare_data(files, color, saveLoc):
     """Call plotters that compare rank and score from dish and tissue simulations."""
@@ -85,9 +47,6 @@ def plot_heuristics_data(saveLoc):
 def plot_kill_curve_exp_data(SAVELOC):
     """Call potters that plot experimental literature kill curve data."""
 
-    scripts.plot.plot_kill_curves.plot_kill_curve_exp(SAVELOC)
-    scripts.plot.plot_kill_curves.plot_kill_curve_normalized_exp(SAVELOC)
-    scripts.plot.plot_kill_curves.plot_kill_curve_exp_separated(SAVELOC)
     scripts.plot.plot_kill_curves.plot_kill_curve_normalized_exp_separated(SAVELOC)
 
     return
@@ -486,7 +445,24 @@ def plot_data_based_on_analysis_type(simsDF, ANALYSIS, COLOR, PARTIAL, FILEID, S
     return
 
 def plot_data(files, color, saveLoc='', partial=False):
-    """Iterate through all files and plot appropriate file types."""
+    """Iterate through all files and plot appropriate file types.
+
+    plot_data takes a directory of (or a single) .pkl simulation files that result from analyze_cells, analyze_env, analyze_spatial, or analyze_lysis and
+    plots the data features in the dataframe over time.
+
+    Usage:
+        plot_data(files, color, saveLoc='', partial=False)
+
+        files
+            Path to .pkl or directory.
+        color
+            Feature by which to color data by. If X given, will color by axis along which data varies.
+            If two featuers vary, default will be used.
+        [partial]
+            Flag indicating only partial dataset present instead of full combinatoral set.
+        [saveLoc]
+            Location of where to save file, default will save here.
+    """
 
     print("Making figures for the following files:")
 
@@ -509,8 +485,3 @@ def plot_data(files, color, saveLoc='', partial=False):
     print("Finished making plots for all files.")
 
     return
-
-if __name__ == "__main__":
-    parser = get_parser()
-    args = parser.parse_args()
-    plot_data(args.files, args.color, args.saveLoc, args.partial)

@@ -3,10 +3,6 @@ import scripts.parse.parse_utilities
 from scripts.parse.parse import get_radius
 import pickle
 import pandas as pd
-
-__author__ = "Alexis N. Prybutok"
-__email__ = "aprybutok@u.northwestern.edu"
-
 '''
 analyze_lysis takes a directory of (or a single) .LYSIS.json simulation files
 and extracts the data into a dataframe. The resulting file will contain a data frame in the form:
@@ -266,7 +262,42 @@ def analyze_lysis_simulation(file, TUMORID):
     return lysisDF
 
 def analyze_lysis(files, saveLoc):
-    """Iterate through all files to collect lysis dynamcis information."""
+    """Iterate through all files to collect lysis dynamcis information.
+
+    analyze_lysis takes a directory of (or a single) .LYSIS.json simulation files and extracts the data into a dataframe. The resulting file will contain a data frame in the form:
+
+        TUMOR ID | SEED | PLATE | DAMAGE | DOSE | TREAT RATIO | CAR AFFINITY | ANTIGENS CANCER | ANTIGENS HEALTHY | DATA
+
+    and saves it to a .pkl where the DATA are the following list of information (also shown in make_lysis_dict and make_lysis_df):
+
+            TIME
+            RADIUS
+            TISSUE SEEDED
+            CANCER SEEDED
+            HEALTHY SEEDED
+            T-CELL SEEDED
+            CD4 SEEDED
+            CD8 SEEDED
+            TIME EXACT                              list of exact times of cell death
+            RADIUS LYSED EXACT                      list of exact radius cell killed over time
+            TISSUE LYSED EXACT                      list of exact cells killed over time
+            TISSUE LYSED CUMULATIVE EXACT           list of cumulative tissue cells killed at exact times
+            CANCER LYSED CUMULATIVE EXACT           list of cumulative cancer cells killed at exact times
+            HEALTHY LYSED CUMULATIVE EXACT          list of cumulative healthy cells killed at exact times
+            TISSUE LYSED TOTAL                      list of total tissue cells killed at collection time points
+            CANCER LYSED TOTAL                      list of total cancer cells killed at collection time points
+            HEALTHY LYSED TOTAL                     list of total healthy cells killed at collection time points
+
+    each in the format of a list of the value of the specified information at each point in time.
+
+    Usage:
+        analyze_lysis(files, saveLoc)
+
+        files
+            Path to .LYSIS.json or directory.
+        saveLoc
+            Location of where to save file.
+    """
 
     # Get files
     LYSISFILES = scripts.analyze.analyze_utilities.get_json_files(files)

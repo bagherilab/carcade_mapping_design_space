@@ -8,24 +8,6 @@ import pandas as pd
 from itertools import combinations
 import matplotlib.pyplot as plt
 
-
-'''
-ABM_STATS takes a directory of (or a single) .pkl simulation files that result from ABM_ANALYZE and
-does statistics on the DATA features in the dataframe over time.
-
-Usage:
-    python abm_stats.py FILES [--color COLOR] [--marker MARKER] [--saveLoc SAVELOC]
-
-    FILES
-        Path to .pkl or directory
-    [--norm NORM]
-        Normalize final values by initial (INIT) or untreated (UNTREATED)
-    [--average]
-        Average across seed replicates
-    [--saveLoc SAVELOC]
-        Location of where to save file, default will save here
-'''
-
 def get_file_id(fileName):
     """Get file ID based on file name."""
 
@@ -231,7 +213,7 @@ def create_csv_files_with_simulations_sorted_by_response(simsDFanova, NORM, SCOR
 
     return
 
-def plot_heatmaps_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
+def plot_heatmaps_and_make_csv_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
     """Call functions that will make heatmaps, elbow plots, and make excel files."""
 
     # Plot output heatmaps
@@ -378,13 +360,10 @@ def average_conditions(simsDF, FILEID):
                             simsDFavg = simsDFavg.append(simsDictAvg, ignore_index=True)
     return simsDFavg
 
-def conduct_stats_analyses_all_data(simsDFanova, NORM, SCORE, PARTIAL, filesplit, FILEID, SAVELOC):
+def conduct_stats_analyses_all_data(simsDFanova, NORM, SCORE, FILEID, SAVELOC):
     """Conduct stats analysis on all data (not averaged)."""
 
-    # Count Xs in filesplit
-    X = scripts.plot.plot_utilities.count_x_in_file_name(filesplit)
-
-    plot_heatmaps_and_make_excel_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
+    plot_heatmaps_and_make_csv_files(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     return
 
@@ -396,14 +375,12 @@ def conduct_stats_analysis_averaged_data(simsDFanova, NORM, SCORE, FILEID, SAVEL
     simsDFavg = average_conditions(simsDFanova, FILEID)
     FILEIDAVG = FILEID + '_AVG'
 
-    plot_heatmaps_and_make_excel_files(simsDFavg, NORM, SCORE, FILEIDAVG, SAVELOC)
+    plot_heatmaps_and_make_csv_files(simsDFavg, NORM, SCORE, FILEIDAVG, SAVELOC)
 
     return
 
-def stats_data(simsDF, NORM, SCORE, AVG, PARTIAL, FILEID, SAVELOC):
+def stats_data(simsDF, NORM, SCORE, AVG, FILEID, SAVELOC):
     """Run stats analysis on given file."""
-
-    filesplit = FILEID.split('_')
 
     simsDF, untreatedDF = clean_data(simsDF)
 
@@ -421,7 +398,7 @@ def stats_data(simsDF, NORM, SCORE, AVG, PARTIAL, FILEID, SAVELOC):
     # Conduct analyses for data that is not averaged across replicates
     if not AVG:
 
-        conduct_stats_analyses_all_data(simsDFanova, NORM, SCORE, PARTIAL, filesplit, FILEID, SAVELOC)
+        conduct_stats_analyses_all_data(simsDFanova, NORM, SCORE, FILEID, SAVELOC)
 
     # Conduct analyses for data that is averaged across replicates
     else:
@@ -429,8 +406,26 @@ def stats_data(simsDF, NORM, SCORE, AVG, PARTIAL, FILEID, SAVELOC):
 
     return
 
-def stats(files, saveLoc, norm='INIT', score='SUM', average=False, partial=False):
-    """Run stats analysis on all given files."""
+def stats(files, saveLoc, norm='INIT', score='SUM', average=False):
+    """Run stats analysis on all given files.
+
+    stats.py takes a directory of (or a single) .pkl simulation files that result from analyze_cells.py and
+    does statistics on the DATA features in the dataframe over time.
+
+    Usage:
+        stats(files, saveLoc, norm='INIT', score='SUM', average=False)
+
+        files
+            Path to .pkl or directory.
+        savLoc
+            Location of where to save file, default will save here.
+        [norm]
+            Normalize final values by initial (INIT) or untreated (UNTREATED) (default: INIT).
+        [score]
+            Dictate which score type to use (default and only current option: SUM).
+        [average]
+            Average across seed replicates (default: False).
+    """
 
     # Get files
     PKLFILES = scripts.analyze.analyze_utilities.get_pkl_files(files)
@@ -451,6 +446,6 @@ def stats(files, saveLoc, norm='INIT', score='SUM', average=False, partial=False
         NORM = check_norm_arg(norm)
         SCORE = check_score_arg(score)
 
-        stats_data(simsDF, NORM, SCORE, average, partial, FILEID, saveLoc)
+        stats_data(simsDF, NORM, SCORE, average, FILEID, saveLoc)
 
     return
