@@ -176,7 +176,7 @@ def save_sorted_df_csv(simsDF, RANK, FILEID, NORM, SCORE, SAVELOC):
     else:
         add = ''
     f = SAVELOC + FILEID  + NORM + '_' + add + 'SORTED_NOTHRESHOLD' + '_' + RANK.replace('_', '') + '.csv'
-    simsDF.to_excel(f, header=True)
+    simsDF.to_csv(f, header=True)
 
     if RANK == 'Y_NORM_CANCER_LIVE':
         simsDF = simsDF[simsDF[RANK] < 1]

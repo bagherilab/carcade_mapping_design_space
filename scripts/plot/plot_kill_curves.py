@@ -180,7 +180,7 @@ def plot_kill_curve_normalized_sim(simsDF, FILEID, SAVELOC, TIME):
     if SAVELOC == '':
         plt.show()
     else:
-        plt.savefig(SAVELOC + FILEID + '_KILLCURVESIMNORM_' + str(TIME) + '.svg', bbox_inches='tight')
+        plt.savefig(SAVELOC + FILEID + '_KILLCURVE_NORM_SIM_' + str(TIME) + '.svg', bbox_inches='tight')
 
     return
 
@@ -241,6 +241,6 @@ def plot_kill_curve_normalized_exp_separated(SAVELOC):
         if SAVELOC == '':
             plt.show()
         else:
-            plt.savefig(SAVELOC + 'KILLCURVENORMEXP' + d["SAVE"] + '.svg', bbox_inches='tight')
+            plt.savefig(SAVELOC + 'KILLCURVE_NORM_EXP_' + d["SAVE"] + '.svg', bbox_inches='tight')
 
     return
