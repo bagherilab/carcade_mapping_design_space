@@ -11943,7 +11943,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.image.image</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.image.image</span> <span class="kn">import</span> <span class="nn">image</span>
 </pre></div>
 
 </div>
@@ -11956,9 +11956,9 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">DISH_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_COCULTURE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">DISH_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_CELLS</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="n">POPS_TO_IGNORE</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">pops</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">image</span><span class="p">(</span><span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_GRAPH</span><span class="p">,</span> <span class="n">DATA_PATH_IMAGE_UNTREATED_TISSUE_SVG</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">TISSUE_TIMES</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">RADIUS</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12070,7 +12070,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.plot.plot_data</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.plot.plot_data</span> <span class="kn">import</span> <span class="nn">plot_heuristics_data</span>
 </pre></div>
 
 </div>
@@ -12083,7 +12083,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_heuristics_data</span><span class="p">(</span><span class="n">RESULTS_PATH_HEURISTICS</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_heuristics_data</span><span class="p">(</span><span class="n">RESULTS_PATH_HEURISTICS</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12248,7 +12248,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.parse.parse</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.parse.parse</span> <span class="kn">import</span> <span class="nn">parse</span>
 </pre></div>
 
 </div>
@@ -12261,8 +12261,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_TAR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_PKL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_TAR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_PKL</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">parse</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_TAR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_PKL</span><span class="p">)</span>
+<span class="n">parse</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_TAR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_PKL</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12359,10 +12359,10 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.analyze.analyze_cells</span>
-<span class="kn">import</span> <span class="nn">scripts.analyze.analyze_env</span>
-<span class="kn">import</span> <span class="nn">scripts.analyze.analyze_spatial</span>
-<span class="kn">import</span> <span class="nn">scripts.analyze.analyze_lysis</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.analyze.analyze_cells</span> <span class="kn">import</span> <span class="nn">analyze_cells</span>
+<span class="kn">from</span> <span class="nn">scripts.analyze.analyze_env</span> <span class="kn">import</span> <span class="nn">analyze_env</span>
+<span class="kn">from</span> <span class="nn">scripts.analyze.analyze_spatial</span> <span class="kn">import</span> <span class="nn">analyze_spatial</span>
+<span class="kn">from</span> <span class="nn">scripts.analyze.analyze_lysis</span> <span class="kn">import</span> <span class="nn">analyze_lysis</span>
 </pre></div>
 
 </div>
@@ -12376,16 +12376,16 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Analyze monoculture dish data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_cells</span><span class="o">.</span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_CELLS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_env</span><span class="o">.</span><span class="n">analyze_env</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_ENVIRONMENT</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_spatial</span><span class="o">.</span><span class="n">analyze_spatial</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SPATIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_lysis</span><span class="o">.</span><span class="n">analyze_lysis</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_LYSIS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_LYSED</span><span class="p">)</span>
+<span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_CELLS</span><span class="p">)</span>
+<span class="n">analyze_env</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_ENVIRONMENT</span><span class="p">)</span>
+<span class="n">analyze_spatial</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SPATIAL</span><span class="p">)</span>
+<span class="n">analyze_lysis</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_LYSIS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_LYSED</span><span class="p">)</span>
 
 <span class="c1"># Analyze co-culture dish data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_cells</span><span class="o">.</span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_CELLS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_env</span><span class="o">.</span><span class="n">analyze_env</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_ENVIRONMENT</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_spatial</span><span class="o">.</span><span class="n">analyze_spatial</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SPATIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_lysis</span><span class="o">.</span><span class="n">analyze_lysis</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_LYSIS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_LYSED</span><span class="p">)</span>
+<span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_CELLS</span><span class="p">)</span>
+<span class="n">analyze_env</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_ENVIRONMENT</span><span class="p">)</span>
+<span class="n">analyze_spatial</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SPATIAL</span><span class="p">)</span>
+<span class="n">analyze_lysis</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_LYSIS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_LYSED</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12532,7 +12532,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.subset.subset</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.subset.subset</span> <span class="kn">import</span> <span class="nn">subset_data</span>
 </pre></div>
 
 </div>
@@ -12546,22 +12546,22 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Subset monoculture dish data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_OTHER</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SPATIAL</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_OTHER</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_LYSED</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_OTHER</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_OTHER</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SPATIAL</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_OTHER</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_LYSED</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_SUBSET_OTHER</span><span class="p">)</span>
 
 <span class="c1"># Subset co-culture dish data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_CELLS_IDEAL_PLUS_HA</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_CELLS_REALISTIC</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_IDEAL_PLUS_HA</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_REALISTIC</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_IDEAL_PLUS_HA</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_REALISTIC</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_IDEAL_PLUS_HA</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_REALISTIC</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_CELLS_IDEAL_PLUS_HA</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_CELLS_REALISTIC</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_IDEAL_PLUS_HA</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_REALISTIC</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_IDEAL_PLUS_HA</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_REALISTIC</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_IDEAL_PLUS_HA</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_SUBSET_OTHER_REALISTIC</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12665,7 +12665,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.plot.plot_data</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="nn">scripts.plot.plot_data</span> <span class="kn">import</span> <span class="nn">plot_data</span>
 </pre></div>
 
 </div>
@@ -12679,16 +12679,16 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot monoculture dish data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_CELLS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_ENVIRONMENT</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_SPATIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_LYSED</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_CELLS</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_ENVIRONMENT</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_SPATIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_MONOCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_FIGURES_LYSED</span><span class="p">)</span>
 
 <span class="c1"># Plot coculture dish data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_CELLS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_ENVIRONMENT</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_SPATIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_LYSED</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_CELLS</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_ENVIRONMENT</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_SPATIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">DISH_COCULTURE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_LYSED</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12863,7 +12863,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.stats.stats</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.stats.stats</span> <span class="kn">import</span> <span class="nn">stats</span>
 </pre></div>
 
 </div>
@@ -12876,12 +12876,12 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_DEFINED_HA</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_DEFINED_HA</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_MONOCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_MONOCULTURE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_FULL</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_DEFINED_HA</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_DEFINED_HA</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -12977,7 +12977,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.plot.plot_data</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.plot.plot_data</span> <span class="kn">import</span> <span class="nn">plot_kill_curve_exp_data</span>
 </pre></div>
 
 </div>
@@ -12990,7 +12990,7 @@ VITRO_DISH_TREAT_CH_2D_X_X_X_X_X_STATES_ANALYZED.pkl</code></pre>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_kill_curve_exp_data</span><span class="p">(</span><span class="n">RESULTS_PATH_EXPERIMENTAL_LITERATURE_KILL_CURVES</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_kill_curve_exp_data</span><span class="p">(</span><span class="n">RESULTS_PATH_EXPERIMENTAL_LITERATURE_KILL_CURVES</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13134,7 +13134,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.parse.parse</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.parse.parse</span> <span class="kn">import</span> <span class="nn">parse</span>
 </pre></div>
 
 </div>
@@ -13147,7 +13147,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_TAR</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_PKL</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">parse</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_TAR</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_PKL</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13208,8 +13208,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Tissue workspace variables</span>
-<span class="n">DATA_PATH_TISSUE_PARSED</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/parsed/&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATA_PATH_TISSUE_PARSED</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/parsed/&#39;</span>
 <span class="n">DATA_PATH_TISSUE_LYSIS</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/lysis/&#39;</span>
 <span class="n">RESULTS_PATH_TISSUE_CELLS</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/cells/&#39;</span>
 <span class="n">RESULTS_PATH_TISSUE_ENVIRONMENT</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/environment/&#39;</span>
@@ -13236,10 +13235,10 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.analyze.analyze_cells</span>
-<span class="kn">import</span> <span class="nn">scripts.analyze.analyze_env</span>
-<span class="kn">import</span> <span class="nn">scripts.analyze.analyze_spatial</span>
-<span class="kn">import</span> <span class="nn">scripts.analyze.analyze_lysis</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.analyze.analyze_cells</span> </span><span class="kn">import</span> <span class="nn">analyze_cells</span>
+<span class="kn">from</span> <span class="nn">scripts.analyze.analyze_env</span> <span class="kn">import</span> <span class="nn">analyze_env</span>
+<span class="kn">from</span> <span class="nn">scripts.analyze.analyze_spatial</span> <span class="kn">import</span> <span class="nn">analyze_spatial</span>
+<span class="kn">from</span> <span class="nn">scripts.analyze.analyze_lysis</span> <span class="kn">import</span> <span class="nn">analyze_lysis</span>
 </pre></div>
 
 </div>
@@ -13252,11 +13251,10 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Analyze tissue data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_cells</span><span class="o">.</span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_CELLS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_env</span><span class="o">.</span><span class="n">analyze_env</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_ENVIRONMENT</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_spatial</span><span class="o">.</span><span class="n">analyze_spatial</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SPATIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_lysis</span><span class="o">.</span><span class="n">analyze_lysis</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_LYSIS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_LYSED</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_CELLS</span><span class="p">)</span>
+<span class="n">analyze_env</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_ENVIRONMENT</span><span class="p">)</span>
+<span class="n">analyze_spatial</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SPATIAL</span><span class="p">)</span>
+<span class="n">analyze_lysis</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_LYSIS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_LYSED</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13359,7 +13357,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.subset.subset</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.subset.subset</span> <span class="kn">import</span> <span class="nn">subset_data</span>
 </pre></div>
 
 </div>
@@ -13372,11 +13370,10 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Subset tissue data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_CELLS</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_LYSED</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_CELLS</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_CELLS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_ENVIRONMENT</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SPATIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_LYSED</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_LYSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_ALL</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13466,6 +13463,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_CAR_AFFINITY</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/lysed/car/affinity/&#39;</span>
 <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_ANTIGENS_CANCER</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/lysed/antigens/cancer/&#39;</span>
 
+<span class="c1"># Partial workspace variables</span>
 <span class="n">TISSUE_PARTIAL</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 
@@ -13488,7 +13486,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.plot.plot_data</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.plot.plot_data</span> <span class="kn">import</span> <span class="nn">plot_data</span>
 </pre></div>
 
 </div>
@@ -13501,26 +13499,29 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot tissue data</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Plot tissue cell data</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_CELLS</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_CELLS_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_ENVIRONMENT_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="c1"># Plot tissue environment data</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_ENVIRONMENT_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 <span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_ENVIRONMENT_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 <span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_ENVIRONMENT_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 <span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_ENVIRONMENT</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_ENVIRONMENT_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="c1"># Plot tissue spatial data</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SPATIAL</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SPATIAL_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="c1"># Plot tissue lysed data</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_DOSE</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_DOSE</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_TREAT_RATIO</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_TREAT_RATIO</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_CAR_AFFINITY</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_CAR_AFFINITY</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_LYSED</span><span class="p">,</span> <span class="n">TISSUE_COLOR_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_LYSED_ANTIGENS_CANCER</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">TISSUE_PARTIAL</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13685,7 +13686,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.stats.stats</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.stats.stats</span> <span class="kn">import</span> <span class="nn">stats</span>
 </pre></div>
 
 </div>
@@ -13698,8 +13699,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARTIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARTIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARTIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_STATS</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">NOT_AVERAGE</span><span class="p">)</span>
+<span class="n">stats</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARTIAL</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_STATS_AVERAGE</span><span class="p">,</span> <span class="n">average</span><span class="o">=</span><span class="n">AVERAGE</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13777,7 +13778,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_EXCEL</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/tissue/compare/excel/file/file.xlsx&#39;</span>
-<span class="n">RESULTS_PATH_COMPARE_DISH_TISSUE_FIGURES</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/tissue/compare/figures/&#39;</span>
+<span class="n">RESULTS_PATH_DISH_COMPARE_DISH_TISSUE_FIGURES</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/tissue/compare/figures/&#39;</span>
 
 <span class="n">COMPARE_COLOR</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
 </pre></div>
@@ -13801,7 +13802,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.plot.plot_data</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.plot.plot_data</span> <span class="kn">import</span> <span class="nn">plot_dish_tissue_compare_data</span>
 </pre></div>
 
 </div>
@@ -13814,7 +13815,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_dish_tissue_compare_data</span><span class="p">(</span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_EXCEL</span><span class="p">,</span> <span class="n">COMPARE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_COMPARE_DISH_TISSUE_FIGURES</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_dish_tissue_compare_data</span><span class="p">(</span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_EXCEL</span><span class="p">,</span> <span class="n">COMPARE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COMPARE_DISH_TISSUE_FIGURES</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13953,7 +13954,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.analyze.analyze_cells</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.analyze.analyze_cells</span> <span class="kn">import</span> <span class="nn">analyze_cells</span>
 </pre></div>
 
 </div>
@@ -13966,8 +13967,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_cells</span><span class="o">.</span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span><span class="p">,</span> <span class="n">sharedLocs</span><span class="o">=</span><span class="n">SHARED_LOCATIONS</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">analyze</span><span class="o">.</span><span class="n">analyze_cells</span><span class="o">.</span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SHAREDLOCS</span><span class="p">,</span> <span class="n">sharedLocs</span><span class="o">=</span><span class="n">SHARED_LOCATIONS</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span><span class="p">,</span> <span class="n">sharedLocs</span><span class="o">=</span><span class="n">SHARED_LOCATIONS</span><span class="p">)</span>
+<span class="n">analyze_cells</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_PARSED</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SHAREDLOCS</span><span class="p">,</span> <span class="n">sharedLocs</span><span class="o">=</span><span class="n">SHARED_LOCATIONS</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14066,7 +14067,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.subset.subset</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.subset.subset</span> <span class="kn">import</span> <span class="nn">subset_data</span>
 </pre></div>
 
 </div>
@@ -14079,8 +14080,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SHAREDLOCS</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
+<span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SHAREDLOCS</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -14171,7 +14172,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">scripts.plot.plot_data</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">scripts.plot.plot_data</span> <span class="kn">import</span> <span class="nn">plot_data</span>
 </pre></div>
 
 </div>
@@ -14184,8 +14185,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
-<span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
+<span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
 </pre></div>
 
 </div>
