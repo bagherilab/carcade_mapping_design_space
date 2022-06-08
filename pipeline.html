@@ -14032,7 +14032,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 
 <span class="n">DISH_COCULTURE_XML_NAME</span> <span class="o">=</span> <span class="s1">&#39;VITRO_DISH_TREAT_CH_2D&#39;</span>
 
-<span class="n">RESULTS_PATH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/subest/effective/treatments/sharedlocs/&#39;</span>
+<span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/subest/effective/treatments/sharedlocs/&#39;</span>
 
 <span class="c1"># Tissue effective treatment workspace variables</span>
 <span class="n">DATA_PATH_TISSUE_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/sharedlocs/&#39;</span>
@@ -14079,7 +14079,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SHAREDLOCS</span><span class="p">,</span> <span class="n">DISH_COCULTURE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
 <span class="n">scripts</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset</span><span class="o">.</span><span class="n">subset_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SHAREDLOCS</span><span class="p">,</span> <span class="n">TISSUE_XML_NAME</span><span class="p">,</span> <span class="n">DATA_TYPE_SHAREDLOCS</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">subsetsRequested</span><span class="o">=</span><span class="n">SHAREDLOCS_ALL</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="n">STATES</span><span class="p">)</span>
 </pre></div>
 
@@ -14141,7 +14141,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Realistic co-culture dish effective treatment workspace variables</span>
 <span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/subset/effective/treatments/sharedlocs/&#39;</span>
-<span class="n">RESULTS_PATH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/effective/treatments/sharedlocs/&#39;</span>
+<span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/effective/treatments/sharedlocs/&#39;</span>
 
 <span class="c1"># Tissue effective treatment workspace variables</span>
 <span class="n">DATA_PATH_TISSUE_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/subset/sharedlocs/&#39;</span>
@@ -14184,7 +14184,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
 <span class="n">scripts</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">plot_data</span><span class="o">.</span><span class="n">plot_data</span><span class="p">(</span><span class="n">DATA_PATH_TISSUE_SUBSET_SHAREDLOCS</span><span class="p">,</span> <span class="n">SHAREDLOCS_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_TISSUE_FIGURES_SHAREDLOCS</span><span class="p">,</span> <span class="n">partial</span><span class="o">=</span><span class="n">SHAREDLOCS_PARTIAL</span><span class="p">)</span>
 </pre></div>
 
