@@ -6,9 +6,9 @@ Supporting code for the article:
 
 The `scripts/` directory contains all the scripts used for analyzing the output of the simulations using [CARCADE v1.0](https://github.com/bagherilab/CARCADE).
 
-The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file is not runable, but is meant to show the process in full and python commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
+The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file shows the process in full and python commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
 
-The `pipeline_example.ipynb` file is a runnable Jupyter Notebook that walks through an example of the data processing and plotting pipelines used to analyze the output of the simulations. In order to run this example notebook, clone this repository and install the packages listed in the `requirements.txt`, then run the various sections of interest in the notebook. No sections within the notebook are dependent on one another as we provide the outputs of all sections and the required folder structure used in the notebook.
+The `pipeline_example.ipynb` file is a Jupyter Notebook that walks through an example of the data processing and plotting pipelines used to analyze the output of the simulations. In order to run this example notebook, clone this repository and install the packages listed in the `requirements.txt`, then run the various sections of interest in the notebook. No sections within the notebook are dependent on one another as we provide the outputs of all sections and the required folder structure used in the notebook.
 
 The `requirements.txt` file lists the package requirements for running this code. Additionally, code was run using Python version 3.6.8.
 
@@ -22,7 +22,7 @@ The `examples/` directory contains the following folder structure:
     |___figures/
   ````
 
-The `examples/` directory contains example data files in the `files/` folder contains example data files that are used in the pipeline. These example files are sorted into `full/` data files, which are those directly used in the paper, and `toy/` data files, which are short time scale simulations that are not used in the paper but that are meant to show how the data processing pipeline works in a reasonable time frame.
+The `examples/` directory contains example data files in the `files/` folder and figure outputs from the pipeline in the `figures\` folder. The `files/` folder contains example data files that are used in the pipeline. These example files are sorted into `full/` data files, which are those directly used in the paper, and `toy/` data files, which are short time scale simulations that are not used in the paper but that are meant to show how the data processing pipeline works in a reasonable time frame.
 
 Files within these folders are sorted into subfolders by context or data type, including `coculture/`, `tissue/`, and `ranked/`. Files in `coculture/` folders correspond to co-culture `dish` context simulations. Files in `tissue/` folder correspond to `tissue` context simulations. Files in the `ranked/` folder enable comparison between the performance rank of the effective treatments from the realistic co-culture `dish` when used in the `tissue` context.
 
