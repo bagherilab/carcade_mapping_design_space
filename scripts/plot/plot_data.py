@@ -22,7 +22,7 @@ def plot_dish_tissue_compare_data(files, color, saveLoc):
     print('\t' + fileName)
 
     with open(files, 'rb') as f:
-        rankDF = pd.read_excel(f, header=0)
+        rankDF = pd.read_csv(f, header=0)
 
     rankDF['TREAT RATIO'] = rankDF['TREAT RATIO'].astype(str)
     rankDF['CAR AFFINITY'] = rankDF['CAR AFFINITY'].astype(str)
