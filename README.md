@@ -37,12 +37,6 @@ toy/
 |     |___subset/
 |     |___tars/
 |___ranked/
-|___tissue/
-|     |___analyzed/
-|     |___lysis/
-|     |___parsed/
-|     |___subset/
-|     |___tars/
 ```
 
 The `tars/` folder contains the compressed `.json` file outputs from the CARCADE model, where files are zipped together with replicates of the same simulation setup. The `parsed/` folder contains parsed `.pkl` files created from the `.tar` files. The `lysis/`, folder contains `.json.LYSIS` file outputs from the CARCADE model.
