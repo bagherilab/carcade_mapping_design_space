@@ -66,7 +66,7 @@ The data processing pipeline progresses through the following stages, each of wh
 
 + **parse** - processes the CARCADE compressed output `.tar.xz` files into `.pkl` files with specific data structure for easy parsing
 + **analyze** - analyzes the parsed `.pkl` files for simulaton information over time for all cell types (outputs `.pkl` files); this stage is used to collect the following types of simulation information:
-  - **cell** - cell counts, cell state counts/fractions, cell volumes, average cell cycle length, etc. This can be done for all cells (**cell**) or for only cells that share a location with at least one cancer cell (**sharedlocs**)
+  - **cells** - cell counts, cell state counts/fractions, cell volumes, average cell cycle length, etc. This can be done for all cells (**cells**) or for only cells that share a location with at least one cancer cell (**sharedlocs**)
   - **environment** - molecule/nutrient concentrations over time
   - **spatial** - cell counts across simulation radius over time
   - **lysed** - tissue cell killing over time
