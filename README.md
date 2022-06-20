@@ -10,7 +10,7 @@ Supporting code for the article:
   - [Clone GitHub repository](#clone-github-repository)
   - [Run Jupyter notebook](#run-jupyter-notebook)
 + [Pipeline summary](#pipeline-summary)
-+ [`example/` directory contents](#`example/`-directory-contents)
++ [`examples/` directory contents](#`examples/`-directory-contents)
   - [Directory overview](#directory-overview)
   - [`files/` directory contents](#`files/`-directory-contents)
     - [`toy/` directory contents](#`toy/`-directory-contents)
@@ -77,7 +77,7 @@ The data processing pipeline progresses through the following stages, each of wh
 
 Each of the provided pipelines walks through these processes.
 
-## `example/` directory contents
+## `examples/` directory contents
 
 ### Directory overview
 
