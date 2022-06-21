@@ -10,12 +10,12 @@ Supporting code for the article:
   - [Clone GitHub repository](#clone-github-repository)
   - [Run Jupyter notebook](#run-jupyter-notebook)
 + [Pipeline summary](#pipeline-summary)
-+ [`examples/` directory contents](#`examples/`-directory-contents)
++ [`examples/` directory contents](#examples-directory-contents)
   - [Directory overview](#directory-overview)
-  - [`files/` directory contents](#`files/`-directory-contents)
-    - [`toy/` directory contents](#`toy/`-directory-contents)
-    - [`full/` directory contents](#`full/`-directory-contents)
-  - [`figures/` directory contents](#`figures/`-directory-contents)
+  - [`files/` directory contents](#files-directory-contents)
+    - [`toy/` directory contents](#toy-directory-contents)
+    - [`full/` directory contents](#full-directory-contents)
+  - [`figures/` directory contents](#figures-directory-contents)
 
 
 ## Repository overview
@@ -24,7 +24,7 @@ The `scripts/` directory contains all the scripts used for analyzing the output 
 
 The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file shows the process in full and python commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
 
-The `pipeline_example.ipynb` file is a Jupyter Notebook that walks through an example of the data processing and plotting pipelines used to analyze the output of the simulations. In order to run this example notebook, clone this repository and install the packages listed in the `requirements.txt`, then run the various sections of interest in the notebook. No sections within the notebook are dependent on one another as we provide the outputs of all sections and the required folder structure used in the notebook.
+The `pipeline_example.ipynb` file is a Jupyter notebook that walks through an example of the data processing and plotting pipelines used to analyze the output of the simulations. In order to run this example notebook, clone this repository and install the packages listed in the `requirements.txt`, then run the various sections of interest in the notebook. No sections within the notebook are dependent on one another as we provide the outputs of all sections and the required folder structure used in the notebook.
 
 The `examples/` directory contains data files and figures used in the `pipeline.html` and `pipeline_example.ipynb`. More detail about the contents of this directory are described below.
 
@@ -52,7 +52,7 @@ $ git clone https://github.com/bagherilab/carcade_mapping_design_space.git
 
 ### Run Jupyter notebook
 
-To run the `pipeline_example.ipynb` jupyter notebook, navigate to the `carcade_mapping_design_space` repository folder and type the following command:
+To run the `pipeline_example.ipynb` Jupyter notebook, navigate to the `carcade_mapping_design_space` repository folder and type the following command:
 
 ```
 $ jupyter notebook
@@ -65,7 +65,7 @@ This will hopen up a web page with the contents of the repository. Click on the 
 The data processing pipeline progresses through the following stages, each of which has a corresponding folder with code required for this stage in the `scripts/` directory. Prior to entering this pipeline, output `.json` files are grouped by replicates (differing seeds of the same simulation setup) and compressed into `.tar.xz` files
 
 + **parse** - processes the CARCADE compressed output `.tar.xz` files into `.pkl` files with specific data structure for easy parsing
-+ **analyze** - analyzes the parsed `.pkl` files for simulaton information over time for all cell types (outputs `.pkl` files); this stage is used to collect the following types of simulation information:
++ **analyze** - analyzes the parsed `.pkl` files for simulation information over time for all cell types (outputs `.pkl` files); this stage is used to collect the following types of simulation information:
   - **cells** - cell counts, cell state counts/fractions, cell volumes, average cell cycle length, etc. This can be done for all cells (**cells**) or for only cells that share a location with at least one cancer cell (**sharedlocs**)
   - **environment** - molecule/nutrient concentrations over time
   - **spatial** - cell counts across simulation radius over time
