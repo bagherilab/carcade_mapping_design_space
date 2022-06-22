@@ -36,7 +36,7 @@ The `requirements.txt` file lists the package requirements for running this code
 
 Install or create a virtual environment with Python version 3.6.8.
 
-YOu can use `pip` to install the packages listed in the `requirements.txt` using the following command:
+You can use `pip` to install the packages listed in the `requirements.txt` using the following command:
 
 ```
 $ pip install -r requirements.txt
@@ -58,7 +58,7 @@ To run the `pipeline_example.ipynb` Jupyter notebook, navigate to the `carcade_m
 $ jupyter notebook
 ```
 
-This will hopen up a web page with the contents of the repository. Click on the `pipeline_example` to run the notebook.
+This will open up a web page with the contents of the repository. Click on the `pipeline_example` to run the notebook.
 
 ## Pipeline summary
 
