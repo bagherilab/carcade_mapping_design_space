@@ -4,7 +4,7 @@ Supporting code for the article:
 
 ## Summary of README contents
 
-+ [Repository-overview](#repository-overview)
++ [Repository overview](#repository-overview)
 + [Installation and running instructions](#installation-and-running-instructions)
   - [Install Python and requirements](#install-python-and-requirements)
   - [Clone GitHub repository](#clone-github-repository)
