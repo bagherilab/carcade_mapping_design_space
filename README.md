@@ -22,13 +22,13 @@ Supporting code for the article:
 
 The `scripts/` directory contains all the scripts used for analyzing the output of the simulations using [CARCADE v1.0](https://github.com/bagherilab/CARCADE).
 
-The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file shows the process in full and python commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
+The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file shows the process in full and python functions and commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
 
-The `pipeline_example.ipynb` file is a Jupyter notebook that walks through an example of the data processing and plotting pipelines used to analyze the output of the simulations. In order to run this example notebook, clone this repository and install the packages listed in the `requirements.txt`, then run the various sections of interest in the notebook. No sections within the notebook are dependent on one another as we provide the outputs of all sections and the required folder structure used in the notebook.
+The `pipeline_example.ipynb` file is a Jupyter notebook that walks through examples of the main components of the data processing and plotting pipelines used to analyze the output of the simulations.
 
-The `examples/` directory contains data files and figures used in the `pipeline.html` and `pipeline_example.ipynb`. More detail about the contents of this directory are described below.
+The `examples/` directory contains data files and figures used in the `pipeline.html` and `pipeline_example.ipynb`.
 
-The `requirements.txt` file lists the package requirements for running this code. Additionally, code was run using Python version 3.6.8.
+The `requirements.txt` file lists the package requirements for running this code.
 
 ## Installation and running instructions
 
@@ -58,11 +58,13 @@ To run the `pipeline_example.ipynb` Jupyter notebook, navigate to the `carcade_m
 $ jupyter notebook
 ```
 
-This will open up a web page with the contents of the repository. Click on the `pipeline_example` to run the notebook.
+This will open up a web page with the contents of the repository where you can click on the `pipeline_example.ipynb` file to open the notebook.
+
+No sections within the notebook are dependent on one another as we provide the outputs of all sections and the required folder structure used in the notebook.
 
 ## Pipeline summary
 
-The data processing pipeline progresses through the following stages, each of which has a corresponding folder with code required for this stage in the `scripts/` directory. Prior to entering this pipeline, output `.json` files are grouped by replicates (differing seeds of the same simulation setup) and compressed into `.tar.xz` files
+The data processing pipeline progresses through the following stages, each of which has a corresponding folder with code required for this stage in the `scripts/` directory. Prior to entering this pipeline, CARCADE model output simulation `.json` files from the growth profiler are grouped by replicates (differing seeds of the same simulation setup) and compressed into `.tar.xz` files
 
 + **parse** - processes the CARCADE compressed output `.tar.xz` files into `.pkl` files with specific data structure for easy parsing
 + **analyze** - analyzes the parsed `.pkl` files for simulation information over time for all cell types (outputs `.pkl` files); this stage is used to collect the following types of simulation information:
@@ -91,13 +93,13 @@ The `examples/` directory contains the following folder structure:
 
 where there are example data files in the `files/` folder and figure outputs from the pipeline in the `figures/` folder.
 
-The `files/` folder contains example data files that are used in the pipeline. `toy` simulations are those that are short time scale (2-day) simulations that enable time efficient exploration of the processing part of the pipeline. `full` simulations are full-length simulations used in the paper to enable data plotting and analysis.
+The `files/` folder contains example data files that are used in the pipeline. `toy` simulations are those that are short time scale (2-day) simulations that enable time-efficient exploration of the processing part of the pipeline. These are used for the **parse**, **analyze**, and **subset** parts of the example pipeline. `full` simulations are full-length simulations used in the paper to enable data plotting and analysis. These include model output `.json` files and subsetted data files directly used in the paper and as part of the **plot**, **stats**, and **image** part of the example pipeline.
 
 All figure outputs in the `figures/` folder are generated using the `full` data.
 
 ### `files/` directory contents
 
-These example files are sorted into `full/` and `toy/` data files with the following structure:
+`full` and `toy` example files are sorted into `full/` and `toy/` directories, respectively, within `files/` with the following structure:
 
 ```
 files/
@@ -105,15 +107,9 @@ files/
 |___toy/
 ```
 
-The `toy` data files in the `toy/` directory are short time scale (2-day) simulations that enable showing how the data processing pipeline works in a reasonable time frame. These are used for the **parse**, **analyze**, and **subset** parts of the example pipeline.
-
-The `full` data files in the `full/` directory contain model output `.json` files and subsetted data files directly used in the paper and as part of the **plot**, **stats**, and **image** part of the example pipeline.
-
-Files within the `full/` and `toy/` folders are sorted into subfolders by context or data type, including `coculture/`, `tissue/`, and `ranked/`. Files in `coculture/` folders correspond to co-culture `dish` context simulations. Files in `tissue/` folder correspond to `tissue` context simulations. Files in the `ranked/` folder enable comparison between the performance rank of the effective treatments from the realistic co-culture `dish` when used in the `tissue` context.
+Files within the `full/` and `toy/` directories are sorted into subfolders by context or data type, including `coculture/`, `tissue/`, and `ranked/`. Files in `coculture/` folders correspond to co-culture `dish` context simulations. Files in `tissue/` folder correspond to `tissue` context simulations. Files in the `ranked/` folder enable comparison between the performance rank of the effective treatments from the realistic co-culture `dish` when used in the `tissue` context.
 
 #### `toy/` directory contents
-
-`toy` simulations are those that are short time scale (2-day) simulations that enable time efficient exploration of the processing part of the pipeline.
 
 The `toy/` directory contains the following folder structure:
 
@@ -127,11 +123,11 @@ toy/
 |     |___tars/
 ```
 
-The `tars/` folder contains the compressed `.json` file outputs from the CARCADE model, where files are zipped together with replicates of the same simulation setup.
+The `tars/` folder contains the compressed `.json` file outputs from the CARCADE model growth profiler.
 
 The `parsed/` folder contains parsed `.pkl` files created from the `.tar` files.
 
-The `lysis/`, folder contains `.json.LYSIS` file outputs from the CARCADE model.
+The `lysis/`, folder contains `.LYSIS.json` file outputs from the CARCADE model lysis profiler.
 
 The `analyzed/` and `subset/` folders contain `.pkl` files, which are sorted into subfolders, corresponding to the cell analysis and subsetted analysis or lysis files that result from the analysis pipeline. The subfolder structure is as follows:
 
@@ -144,11 +140,7 @@ analyzed or subset/
 |___spatial/
 ````
 
-Each of these folders contain outputs from the processing pipeline described in the pipeline walkthroughs.
-
 #### `full/` directory contents
-
-`full` simulations are full-length simulations used in the paper to enable data plotting and analysis.
 
 The `full/` folder contains the following folder structure:
 
@@ -165,9 +157,9 @@ full/
 |     |___subset/
 ```
 
-The `subset/` folders contains the same structure and contents as the `subset/` folder in the toy file, except the contents are of full length simulations used in the paper.
+The `subset/` folders contains the same structure and contents as the `toy/subset/` folder, except the contents are of full length simulations used in the paper.
 
-The `jsons/` folders contain output `.json` files from the CARCADE model that are used in the imaging portion of the pipeline. The `coculture/` folder only contains `.json` files with cell location and type information. For the `tissue/` folder, these are separated into `cells/` and `graph/` `.json` files, where the `cells/` folder contains `.json` files with cell location and type information while the `graph/` folder contains `.json` files with vasculature graph information.
+The `jsons/` folders contain CARCADE output `.json` files that are used in the imaging portion of the pipeline. The `coculture/` folder only contains `.json` files with cell location and type information. For the `tissue/` folder, these are separated into `cells/` and `graph/` `.json` files, where the `cells/` folder contains `.json` files with cell location and type information and result from the growth profiler while the `graph/` folder contains `.GRAPH.json` files with vasculature graph information and result from the graph profiler.
 
 ### `figures/` directory contents
 
