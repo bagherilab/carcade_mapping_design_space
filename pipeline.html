@@ -11787,7 +11787,7 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This document shows the logical order in which data is processed to obtain the results in the paper, and the section order corresponds to the order in which the resulting data appeared in the paper. We walk through the full pipeline, starting with parsing simulation files (<code>.json</code>) into pickled numpy arrays (<code>.pkl</code>) and subsequentially selecting, plotting, and analyzing various subsets or all of the data. All necessary function calls to achieve the figures used in the paper are shown, and example figures for each section and type of plot are shown within this document.</p>
+<p>This document shows the logical order in which data is processed to obtain the results in the paper, and the section order corresponds to the order in which the resulting data appeared in the paper. We walk through the full pipeline, starting with parsing simulation files (<code>.json</code>) into pickled numpy arrays (<code>.pkl</code>) and subsequently selecting, plotting, and analyzing various subsets or all of the data. All necessary function calls to achieve the figures used in the paper are shown, and example figures for each section and type of plot are shown within this document.</p>
 
 </div>
 </div>
@@ -11812,7 +11812,7 @@ div#notebook {
 <li><a href="#2.-Heuristic-data-plotting">Heuristic data plotting</a></li>
 <li><a href="#3.-Monoculture-and-co-culture-dish-data-processing-&amp;-plotting">Monoculture and co-culture <code>dish</code> data processing &amp; plotting</a><ul>
 <li><a href="#3.1-Parse-monoculture-and-co-culture-dish-data">3.1 Parse monoculture and co-culture <code>dish</code> data</a></li>
-<li><a href="#3.2-Analyze-parsed-monoculture-and-co-culture-dish-data">3.2 Analayze parsed monoculture and co-culture <code>dish</code> data</a></li>
+<li><a href="#3.2-Analyze-parsed-monoculture-and-co-culture-dish-data">3.2 Analyze parsed monoculture and co-culture <code>dish</code> data</a></li>
 <li><a href="#3.3-Subset-analyzed-monoculture-and-co-culture-dish-data">3.3 Subset analyzed monoculture and co-culture <code>dish</code> data</a></li>
 <li><a href="#3.4-Plot-subsetted-monoculture-and-co-culture-dish-data">3.4 Plot subsetted monoculture and co-culture <code>dish</code> data</a></li>
 <li><a href="#3.5-Multi-feature-&amp;-outcome-analysis-of-monoculture-and-co-culture-dish-data">2.5 Multi-feature &amp; outcome analysis of monoculture and co-culture <code>dish</code> data</li>
@@ -11828,7 +11828,7 @@ div#notebook {
 </ul>
 </li>
 <li><a href="#6.-Ranked-data-plotting">Ranked data plotting</a></li>
-<li><a href="#7.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs datta processing &amp; plotting</a><ul>
+<li><a href="#7.-Effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data-processing-&amp;-plotting">Effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data processing &amp; plotting</a><ul>
 <li><a href="#7.1-Analyze-parsed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.1 Analyze parsed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
 <li><a href="#7.2-Subset-analyzed-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.2 Subset analyzed effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
 <li><a href="#7.3-Plot-effective-treatment-realistic-co-culture-dish-and-tissue-sharedlocs-data">7.3 Plot effective treatment realistic co-culture <code>dish</code> and <code>tissue</code> sharedlocs data</a></li>
@@ -11890,9 +11890,9 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 <li><code>DATA_PATH</code> variables are the path to subsetted data files (<code>.json</code> files generated from simulation output)</li>
 <li><code>...TIMES</code> variables indicate which time points to make images at</li>
 <li><code>SIZE</code> variable indicates the size to make the image</li>
-<li><code>POPS_TO_IGNORE</code> indicate which cell population nubmers to ignore (where CAR T-cell populations are listed, but are not present in these untreated simulations)</li>
+<li><code>POPS_TO_IGNORE</code> indicate which cell population numbers to ignore (where CAR T-cell populations are listed, but are not present in these untreated simulations)</li>
 <li><code>BGCOL</code> indicates what color to make the background of the image</li>
-<li><code>RADIUS</code> indicates the simulation radius out which to draw to (cells stop at radius 36, but the grpah exists within the margins and out to the full radius of 40)</li>
+<li><code>RADIUS</code> indicates the simulation radius out which to draw to (cells stop at radius 36, but the graph exists within the margins and out to the full radius of 40)</li>
 </ul>
 
 </div>
@@ -12114,7 +12114,7 @@ VIVO_TISSUE_TREAT_CH_0_NA_NA_1000_100_00.json
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Example heruistic figure.</p>
+<p>Example heuristic figure.</p>
 <br>
 <img src=examples/figures/heuristics/BINDING_HEURISTIC_CAR.svg height=300 width=300>
 </div>
@@ -12226,7 +12226,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for parsing simulations.</p>
 <ul>
-<li><code>DATA_PATH</code> variables are the path to simulaiton output data files (<code>.tar.xz</code> files of compressed simulation outputs)</li>
+<li><code>DATA_PATH</code> variables are the path to simulation output data files (<code>.tar.xz</code> files of compressed simulation outputs)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by parsing)</li>
 </ul>
 
@@ -12313,7 +12313,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Each main analyzing function (<code>analyze_cells</code>, <code>analyze_env</code>, <code>analyze_spatial</code>, and <code>analyze_lysis</code>) iterate through each parsed file (<code>.pkl</code>) in the data path and analyzes each simulation instance, extracting fields from the simulation setup, cells, and environment depending on the function.</p>
-<p><code>analyze_cells</code> collects cell counts for each population and state over time (files produced will end with <code>ANALYSED</code>).</p>
+<p><code>analyze_cells</code> collects cell counts for each population and state over time (files produced will end with <code>ANALYZED</code>).</p>
 <p><code>analyze_env</code> collects information on environmental species concentrations over time (files produced will end with <code>ENVIRONMENT</code>).</p>
 <p><code>analyze_spatial</code> collects cell counts for each population across simulation radii over time (files produced will end with <code>SPATIAL</code>).</p>
 <p><code>analyze_lysis</code> collects lysed cell information over time (files produced will end with <code>LYSED</code>).</p>
@@ -12329,7 +12329,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
 <ul>
 <li><code>DATA_PATH...PARSED</code> variables are the path to parsed data files (<code>.pkl</code> files generated by parsing)</li>
-<li><code>DATA_PATH...LYSIS</code> variables are the path to <code>LYSIS</code> data files (<code>.LYSIS.json</code> files generated direclty from the simulation outputs)</li>
+<li><code>DATA_PATH...LYSIS</code> variables are the path to <code>LYSIS</code> data files (<code>.LYSIS.json</code> files generated directly from the simulation outputs)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by analyzing)</li>
 </ul>
 
@@ -12435,8 +12435,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset reqiresments to a single data file. Each subset will also automatically include the untreated control if it is in the file directory where the data is being pulled from.</p>
-<p>A data subsetet for example might be all simulations where indicated features meet the following requirements:</p>
+<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset requirements to a single data file. Each subset will also automatically include the untreated control if it is in the file directory where the data is being pulled from.</p>
+<p>A data subset for example might be all simulations where indicated features meet the following requirements:</p>
 <ul>
 <li><code>TREAT RATIO</code> : 50-50</li>
 <li><code>CAR AFFINITY</code> : 1e-7</li>
@@ -12444,20 +12444,20 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </ul>
 <p>This means all data within this subset will have the specific values of the features listed above, but all features values of <code>DOSE</code>, and if applicable <code>ANTIGENS HEALTHY</code>, will be included. All subsets will be saved in the following format:</p>
 <p><code>XML_NAME</code> + <code>DOSE</code> + <code>TREAT RATIO</code> + <code>CAR AFFINITY</code> + <code>ANTIGENS CANCER</code> + <code>ANTIGENS HEALTHY</code></p>
-<p>where the gap between values is separed by a <code>_</code>, values specified in the subset are replaced with the desired value, and values not specified in the subset are replaced by an <code>X</code> to indicate that all values of that feature are present.</p>
+<p>where the gap between values is separated by a <code>_</code>, values specified in the subset are replaced with the desired value, and values not specified in the subset are replaced by an <code>X</code> to indicate that all values of that feature are present.</p>
 <p>Thus, the above example would produce the following name for the monoculture <code>dish</code> data:</p>
 
 <pre><code>VITRO_DISH_TREAT_C_2D_X_50-50_1e-07_1000_NA_DATATYPE.pkl
 
 </code></pre>
-<p>Where <code>DATATYPE</code> is either <code>ANALYZED</code> for cells, <code>ENVIRONMENT</code> for enviornment, <code>SPATIAL</code> for spatial, or <code>LYSED</code> for lysed analyses.</p>
+<p>Where <code>DATATYPE</code> is either <code>ANALYZED</code> for cells, <code>ENVIRONMENT</code> for environment, <code>SPATIAL</code> for spatial, or <code>LYSED</code> for lysed analyses.</p>
 <p>And would produce the following name for the co-culture <code>dish</code> data:</p>
 
 <pre><code>VITRO_DISH_TREAT_CH_2D_X_50-50_1e-07_1000_X_DATATYPE.pkl
 
 </code></pre>
 <p>where the <code>X</code> in place of the <code>ANTIGENS HEALTHY</code> would be replaced by a value if a value were instead specified.</p>
-<p>We can also collect all the data together into one file by not specifying a subset. We only need to do this for the cell (<code>ANALYZED</code>) data for the monoculture <code>dish</code> and co-culture <code>dish</code> data. Additionally, we can collect this with or without specifying the <code>states</code> flag, which if <code>True</code> will collect only the cell population and state counts data over time, but will exclude the volume and cell cycle distribution data. This is used particularlly because files including the distribution data are very large. The <code>states</code> flag is only relevant to the <code>analyze_cells</code> function.</p>
+<p>We can also collect all the data together into one file by not specifying a subset. We only need to do this for the cell (<code>ANALYZED</code>) data for the monoculture <code>dish</code> and co-culture <code>dish</code> data. Additionally, we can collect this with or without specifying the <code>states</code> flag, which if <code>True</code> will collect only the cell population and state counts data over time, but will exclude the volume and cell cycle distribution data. This is used particularly because files including the distribution data are very large. The <code>states</code> flag is only relevant to the <code>analyze_cells</code> function.</p>
 
 </div>
 </div>
@@ -12471,7 +12471,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <ul>
 <li><code>DATA_PATH</code> variables are the path to analyzed data files (<code>.pkl</code> files generated by analyzing data)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by subsetting)</li>
-<li><code>...XML_NAME</code> variables are strings (that vary based on data setup) that will preceed the file name extension (that vary based on subset selected)</li>
+<li><code>...XML_NAME</code> variables are strings (that vary based on data setup) that will precede the file name extension (that vary based on subset selected)</li>
 <li><code>...SUBSET...</code> variables are the requested data subsets to make (<code>;</code> separated lists with tuples containing keys to specific feature values that simulations in subset must include)</li>
 <li><code>...ALL</code> variables indicate to collect all data without subsetting</li>
 <li><code>DATA_TYPE</code> variables indicate which type of analyzed data is being fed into the subsetting function</li>
@@ -12703,7 +12703,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <span class="n">DISH_COCULTURE_COLOR</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
 
 <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_CELLS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/cells/&#39;</span>
-<span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_ENVIRONMENT</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/ffigures/environment/&#39;</span>
+<span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_ENVIRONMENT</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/environment/&#39;</span>
 <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_SPATIAL</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/spatial/&#39;</span>
 <span class="n">RESULTS_PATH_DISH_COCULTURE_FIGURES_LYSED</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/figures/lysed/&#39;</span>
 </pre></div>
@@ -13174,7 +13174,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><p>Set up workspace variables for parsing simulations.</p>
 <ul>
-<li><code>DATA_PATH</code> variables are the path to simulaiton output data files (<code>.tar.xz</code> files of compressed simulation outputs)</li>
+<li><code>DATA_PATH</code> variables are the path to simulation output data files (<code>.tar.xz</code> files of compressed simulation outputs)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by parsing)</li>
 </ul>
 
@@ -13255,7 +13255,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Each main analyzing function (<code>analyze_cells</code>, <code>analyze_env</code>, <code>analyze_spatial</code>, and <code>analyze_lysis</code>) iterate through each parsed file (<code>.pkl</code>) in the data path and analyzes each simulation instance, extracting fields from the simulation setup, cells, and environment depending on the function.</p>
-<p><code>analyze_cells</code> collects cell counts for each population and state over time (files produced will end with <code>ANALYSED</code>).</p>
+<p><code>analyze_cells</code> collects cell counts for each population and state over time (files produced will end with <code>ANALYZED</code>).</p>
 <p><code>analyze_env</code> collects information on environmental species concentrations over time (files produced will end with <code>ENVIRONMENT</code>).</p>
 <p><code>analyze_spatial</code> collects cell counts for each population across simulation radii over time (files produced will end with <code>SPATIAL</code>).</p>
 <p><code>analyze_lysis</code> collects lysed cell information over time (files produced will end with <code>LYSED</code>).</p>
@@ -13271,7 +13271,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <h4 id="WORKSPACE-VARIABLES">WORKSPACE VARIABLES<a class="anchor-link" href="#WORKSPACE-VARIABLES">&#182;</a></h4><p>Set up workspace variables for analyzing simulations.</p>
 <ul>
 <li><code>DATA_PATH...PARSED</code> variables are the path to parsed data files (<code>.pkl</code> files generated by parsing)</li>
-<li><code>DATA_PATH...LYSIS</code> variables are the path to <code>LYSIS</code> data files (<code>.LYSIS.json</code> files generated direclty from the simulation outputs)</li>
+<li><code>DATA_PATH...LYSIS</code> variables are the path to <code>LYSIS</code> data files (<code>.LYSIS.json</code> files generated directly from the simulation outputs)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.pkl</code> files generated by analyzing)</li>
 </ul>
 
@@ -13362,7 +13362,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset reqiresments to a single data file. Since not all possible combinations of the <code>tissue</code> data was collected, only the subset of all data is required.</p>
+<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset requirements to a single data file. Since not all possible combinations of the <code>tissue</code> data was collected, only the subset of all data is required.</p>
 
 </div>
 </div>
@@ -13422,7 +13422,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Subst-tissue-simulations">Subst <code>tissue</code> simulations<a class="anchor-link" href="#Subst-tissue-simulations">&#182;</a></h4>
+<h4 id="Subset-tissue-simulations">Subset <code>tissue</code> simulations<a class="anchor-link" href="#Subst-tissue-simulations">&#182;</a></h4>
 </div>
 </div>
 </div>
@@ -13838,8 +13838,8 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>After finding the effective treatments from the realistic co-culture <code>dish</code> context and analyzing them in <code>tissue</code>, a score and rank for each simulation (averaged across replicates) were provided in both contexts and combined into a single <code>.xlsx</code> file for analysis.</p>
-<p>The main function <code>plot_dish_tissue_compare_data</code> takes this <code>.xlsx</code> file as an input and generates parity and ladder plots for the rank and score of these simulations in the <code>dish</code> compared to the the <code>tissue</code> context.</p>
+<p>After finding the effective treatments from the realistic co-culture <code>dish</code> context and analyzing them in <code>tissue</code>, a score and rank for each simulation (averaged across replicates) were provided in both contexts and combined into a single <code>.csv</code> file for analysis.</p>
+<p>The main function <code>plot_dish_tissue_compare_data</code> takes this <code>.csv</code> file as an input and generates parity and ladder plots for the rank and score of these simulations in the <code>dish</code> compared to the the <code>tissue</code> context.</p>
 
 </div>
 </div>
@@ -13850,7 +13850,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="Workspace-variables">Workspace variables<a class="anchor-link" href="#Workspace-variables">&#182;</a></h4><ul>
-<li><code>DATA_PATH</code> variables are the path to excel data file (<code>.xlsx</code> file generated for this analysis)</li>
+<li><code>DATA_PATH</code> variables are the path to csv data file (<code>.csv</code> file generated for this analysis)</li>
 <li><code>RESULT_PATH</code> variables are the path for result files (<code>.svg</code> files generated by plotting the data)</li>
 <li><code>COMPARE_COLOR</code> variables indicate which feature to color the variables by (choosing the color to be <code>X</code> will enable the function to automatically color the data based on each feature)</li>
 </ul>
@@ -13863,7 +13863,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_EXCEL</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/tissue/compare/excel/file/file.xlsx&#39;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_CSV</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/tissue/compare/csv/file/file.csv&#39;</span>
 <span class="n">RESULTS_PATH_COMPARE_DISH_TISSUE_FIGURES</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/tissue/compare/figures/&#39;</span>
 
 <span class="n">COMPARE_COLOR</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
@@ -13901,7 +13901,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_dish_tissue_compare_data</span><span class="p">(</span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_EXCEL</span><span class="p">,</span> <span class="n">COMPARE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_COMPARE_DISH_TISSUE_FIGURES</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plot_dish_tissue_compare_data</span><span class="p">(</span><span class="n">DATA_PATH_COMPARE_DISH_TISSUE_CSV</span><span class="p">,</span> <span class="n">COMPARE_COLOR</span><span class="p">,</span> <span class="n">RESULTS_PATH_COMPARE_DISH_TISSUE_FIGURES</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13953,7 +13953,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To further analyze the spatial differences between the dish and tissue contexts, an additional analysis on the effective treatments is compared to show the cell state dynamics over time for only those CAR T-cells that share locations with at least one cancer cell. This analysis pipeline paraells that for the full analyses above but a different type of data is collected at the analysis stage.</p>
+<p>To further analyze the spatial differences between the dish and tissue contexts, an additional analysis on the effective treatments is compared to show the cell state dynamics over time for only those CAR T-cells that share locations with at least one cancer cell. This analysis pipeline parallels that for the full analyses above but a different type of data is collected at the analysis stage.</p>
 
 </div>
 </div>
@@ -13983,7 +13983,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The main analyzing function used in this analysis (<code>analyze_cells</code>) iterates through each parsed file (<code>.pkl</code>) in the data path and analyzes each simulation instance, extracting fields from the simulation setup, cells, and environment depending on the function.</p>
-<p><code>analyze_cells</code> collects cell counts for each population and state over time (files produced will end with <code>ANALYSED</code>).</p>
+<p><code>analyze_cells</code> collects cell counts for each population and state over time (files produced will end with <code>ANALYZED</code>).</p>
 <p>When the <code>sharedLocs</code> flag is set to <code>True</code>, only the data for CAR T-cells that share a location with at least one cancer cell is collected. When this flag is used, files produced will end with <code>SHAREDLOCS</code>.</p>
 
 </div>
@@ -14085,7 +14085,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset reqiresments to a single data file. Since not all possible combinations of the <code>tissue</code> data was collected and only the effective treatment realistic co-culture <code>dish</code> are desired, only the subset of all data is required.</p>
+<p>The main subsetting function (<code>subset_data</code>) takes in a given desired subset of data and iterates through each analyzed file in the data path (<code>.pkl</code>) and adds simulations matching the subset requirements to a single data file. Since not all possible combinations of the <code>tissue</code> data was collected and only the effective treatment realistic co-culture <code>dish</code> are desired, only the subset of all data is required.</p>
 
 </div>
 </div>
@@ -14118,7 +14118,7 @@ The <code>parse.py</code> file contains general parsing functions.</p>
 
 <span class="n">DISH_COCULTURE_XML_NAME</span> <span class="o">=</span> <span class="s1">&#39;VITRO_DISH_TREAT_CH_2D&#39;</span>
 
-<span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/subest/effective/treatments/sharedlocs/&#39;</span>
+<span class="n">RESULTS_PATH_DISH_COCULTURE_EFFECTIVE_TREATMENTS_SUBSET_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/dish/coculture/subset/effective/treatments/sharedlocs/&#39;</span>
 
 <span class="c1"># Tissue effective treatment workspace variables</span>
 <span class="n">DATA_PATH_TISSUE_SHAREDLOCS</span> <span class="o">=</span> <span class="s1">&#39;path/to/tissue/files/sharedlocs/&#39;</span>
