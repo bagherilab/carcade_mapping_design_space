@@ -1,6 +1,6 @@
 Supporting code for the article:
 
-> AN Prybutok, JS Yu, JN Leonard\*, and N Bagheri\*. (2022). Mapping CAR T-cell design space using agent-based models. *Frontiers in Molecular Biosciences.* \*co-corresponding authorship.
+> AN Prybutok, JS Yu, JN Leonard\*, and N Bagheri\*. (2022). Mapping CAR T-cell design space using agent-based models. *Frontiers in Molecular Biosciences.* 9:849363. doi: 10.3389/fmolb.2022.849363 \*co-corresponding authorship.
 
 ## Summary of README contents
 
@@ -22,7 +22,7 @@ Supporting code for the article:
 
 The `scripts/` directory contains all the scripts used for analyzing the output of the simulations using [CARCADE v1.0](https://github.com/bagherilab/CARCADE).
 
-The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file shows the process in full and python functions and commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
+The `pipeline.html` file walks through the data processing and plotting pipeline used to analyze the output of the simulations. Sample plots are included for each plotting section. This file shows the process in full and Python functions and commands used to generate all outputs. Go to https://bagherilab.github.io/carcade_mapping_design_space/pipeline.html to view the published html page.
 
 The `pipeline_example.ipynb` file is a Jupyter notebook that walks through examples of the main components of the data processing and plotting pipelines used to analyze the output of the simulations.
 
@@ -44,7 +44,7 @@ $ pip install -r requirements.txt
 
 ### Clone GitHub repository
 
-In the command line, navigate to location on your computer where folder where you would like this repository stored and run the following command:
+In the command line, navigate to the location on your computer where you would like this repository stored and run the following command:
 
 ```
 $ git clone https://github.com/bagherilab/carcade_mapping_design_space.git
@@ -66,7 +66,7 @@ No sections within the notebook are dependent on one another as we provide the o
 
 The data processing pipeline progresses through the following stages, each of which has a corresponding folder with code required for this stage in the `scripts/` directory. Prior to entering this pipeline, CARCADE model output simulation `.json` files from the growth profiler are grouped by replicates (differing seeds of the same simulation setup) and compressed into `.tar.xz` files
 
-+ **parse** - processes the CARCADE compressed output `.tar.xz` files into `.pkl` files with specific data structure for easy parsing
++ **parse** - processes the CARCADE compressed output `.tar.xz` files into `.pkl` files with a specific data structure for easy parsing
 + **analyze** - analyzes the parsed `.pkl` files for simulation information over time for all cell types (outputs `.pkl` files); this stage is used to collect the following types of simulation information:
   - **cells** - cell counts, cell state counts/fractions, cell volumes, average cell cycle length, etc. This can be done for all cells (**cells**) or for only cells that share a location with at least one cancer cell (**sharedlocs**)
   - **environment** - molecule/nutrient concentrations over time
@@ -74,8 +74,8 @@ The data processing pipeline progresses through the following stages, each of wh
   - **lysed** - tissue cell killing over time
 + **subset** - grabs subsets of analyzed `.pkl` simulation files within a given folder that match specified setup information and stores them in one combined `.pkl` file
 + **plot** - plots slices of data given subsetted `.pkl` file based on type of data contained
-+ **stats** - analyzes whole data and outcomes of given subsetted `.pkl` file based on type of data contained
-+ **image** - produces `.svg` images of cells or graph vasculature from given `.json` files
++ **stats** - analyzes and plots whole data and outcomes of given subsetted `.pkl` file based on type of data contained
++ **image** - produces `.svg` images of tissue cells or graph vasculature at specified time points from given `.json` files
 
 Each of the provided pipelines walks through these processes.
 
@@ -91,15 +91,16 @@ The `examples/` directory contains the following folder structure:
     |___figures/
   ````
 
-where there are example data files in the `files/` folder and figure outputs from the pipeline in the `figures/` folder.
+where there are example data files used as inputs for the pipeline are stored in the `files/` folder and figure outputs from the pipeline are stored in the `figures/` folder.
 
-The `files/` folder contains example data files that are used in the pipeline. `toy` simulations are those that are short time scale (2-day) simulations that enable time-efficient exploration of the processing part of the pipeline. These are used for the **parse**, **analyze**, and **subset** parts of the example pipeline. `full` simulations are full-length simulations used in the paper to enable data plotting and analysis. These include model output `.json` files and subsetted data files directly used in the paper and as part of the **plot**, **stats**, and **image** part of the example pipeline.
-
-All figure outputs in the `figures/` folder are generated using the `full` data.
++ The `files/` folder contains two types of example data files that are used in the pipeline.
+  - `toy` simulations are those that are short time scale (2-day) simulations that enable time-efficient exploration of the processing part of the pipeline. These are used for the **parse**, **analyze**, and **subset** parts of the example pipeline.
+  - `full` simulations are full-length simulations used in the paper to enable data plotting and analysis. These include model output `.json` files and subsetted data files directly used in the paper and as part of the **plot**, **stats**, and **image** part of the example pipeline.
++ All figure outputs in the `figures/` folder are generated using the `full` data.
 
 ### `files/` directory contents
 
-`full` and `toy` example files are sorted into `full/` and `toy/` directories, respectively, within `files/` with the following structure:
+`full` and `toy` example files are sorted into `full/` and `toy/` directories, respectively, within the `files/` directory with the following structure:
 
 ```
 files/
@@ -107,7 +108,11 @@ files/
 |___toy/
 ```
 
-Files within the `full/` and `toy/` directories are sorted into subfolders by context or data type, including `coculture/`, `tissue/`, and `ranked/`. Files in `coculture/` folders correspond to co-culture `dish` context simulations. Files in `tissue/` folder correspond to `tissue` context simulations. Files in the `ranked/` folder enable comparison between the performance rank of the effective treatments from the realistic co-culture `dish` when used in the `tissue` context.
+where files within the `full/` and `toy/` directories are sorted into subfolders by context or data type, including `coculture/`, `tissue/`, and `ranked/`.
+
++ Files in `coculture/` folders correspond to co-culture `dish` context simulations.
++ Files in the `tissue/` folder correspond to `tissue` context simulations.
++ Files in the `ranked/` folder enable comparison between the performance rank of the effective treatments from the realistic co-culture `dish` when used in the `tissue` context.
 
 #### `toy/` directory contents
 
@@ -123,13 +128,14 @@ toy/
 |     |___tars/
 ```
 
-The `tars/` folder contains the compressed `.json` file outputs from the CARCADE model growth profiler.
+where each of the subfolders contains `toy` co-culture `dish` context simulation files for different aspects of the example pipeline:
 
-The `parsed/` folder contains parsed `.pkl` files created from the `.tar` files.
++ The `tars/` folder contains the compressed `.json` file outputs from the CARCADE model growth profiler.
++ The `parsed/` folder contains parsed `.pkl` files created from the `.tar` files.
++ The `lysis/`, folder contains `.LYSIS.json` file outputs from the CARCADE model lysis profiler.
++ The `analyzed/` and `subset/` folders contain `.pkl` files, which are sorted into subfolders, corresponding to the cell analysis and subsetted analysis or lysis files that result from the analysis pipeline.
 
-The `lysis/`, folder contains `.LYSIS.json` file outputs from the CARCADE model lysis profiler.
-
-The `analyzed/` and `subset/` folders contain `.pkl` files, which are sorted into subfolders, corresponding to the cell analysis and subsetted analysis or lysis files that result from the analysis pipeline. The subfolder structure is as follows:
+The subfolder structure for the `analyzed/` or `subset/` folders is as follows:
 
 ```
 analyzed or subset/
@@ -157,13 +163,18 @@ full/
 |     |___subset/
 ```
 
-The `subset/` folders contains the same structure and contents as the `toy/subset/` folder, except the contents are of full length simulations used in the paper.
+where the subfolders within the `coculture/` and `tissue/` contains `full` co-culture `dish` or `tissue` context files, respectively, for different aspects of the example pipeline:
 
-The `jsons/` folders contain CARCADE output `.json` files that are used in the imaging portion of the pipeline. The `coculture/` folder only contains `.json` files with cell location and type information. For the `tissue/` folder, these are separated into `cells/` and `graph/` `.json` files, where the `cells/` folder contains `.json` files with cell location and type information and result from the growth profiler while the `graph/` folder contains `.GRAPH.json` files with vasculature graph information and result from the graph profiler.
++ The `subset/` folders contains the same structure and contents as the `toy/coculture/subset/` folder, except the contents are of full-length simulations used in the paper.
++ The `jsons/` folders contain CARCADE output `.json` files that are used in the imaging portion of the pipeline.
+  - The `coculture/` folder only contains `.json` files of co-culture `dish` context simulations with cell location and type information.
+  - For the `tissue/` folder, these are separated into `cells/` and `graph/` `.json` files for `tissue` context simulations, where the `cells/` folder contains `.json` files with cell location and type information and result from the growth profiler while the `graph/` folder contains `.GRAPH.json` files with vasculature graph information and result from the graph profiler.
+
+Figures generated from these `full` files are shown in the `pipeline.html`.
 
 ### `figures/` directory contents
 
-The `figures/` folder contains `.svg` and `.pdf`  figure outputs from the analysis pipeline. These figures are sorted within this folder by type or context using the following folder structure:
+The `figures/` folder contains `.svg` and `.pdf` figure outputs from the analysis pipeline. These figures are sorted within this folder by type or context using the following folder structure:
 
 ```
 figures/
@@ -174,15 +185,13 @@ figures/
 |___tissue/
 ```
 
-The `coculture/` folder contains sorted figures corresponding to co-culture `dish` context simulations.
+where these type or context subfolders contain the following:
 
-The `tissue/` folder contains sorted figures corresponding to correspond to `tissue` context simulations.
-
-The `heuristics/` folder contains figure outputs describing the binding heuristics for CAR-antigen and PD1-PDL1 binding used in the model.
-
-The `kill_curves/` folder contains figures showing the kill curves based on data from experimental literature.
-
-The `ranked/` folder contains images comparing the rank of effective treatments from the realistic co-culture `dish` context to the `tissue` context.
++ The `coculture/` folder contains sorted figures corresponding to co-culture `dish` context simulations.
++ The `tissue/` folder contains sorted figures corresponding to correspond to `tissue` context simulations.
++ The `heuristics/` folder contains figure outputs describing the binding heuristics for CAR-antigen and PD1-PDL1 binding used in the model.
++ The `kill_curves/` folder contains figures showing the kill curves based on data from experimental literature.
++ The `ranked/` folder contains images comparing the rank of effective treatments from the realistic co-culture `dish` context to the `tissue` context.
 
 The `coculture/` and `tissue/` folders contain the following subfolders:
 
